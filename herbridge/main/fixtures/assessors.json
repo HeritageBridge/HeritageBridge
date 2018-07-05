@@ -1,0 +1,38 @@
+[
+  {
+    "pk": "1", 
+    "model": "main.assessor", 
+    "fields": {
+      "name": "Athos", 
+      "email": "athos@dumas.org",
+      "deviceToken":"dddd0000-0000-0000-0000-000000000001"
+    }
+  },
+  {
+    "pk": "2", 
+    "model": "main.assessor", 
+    "fields": {
+      "name": "Porthos", 
+      "email": "porthos@mteers.org",
+      "deviceToken":"dddd0000-0000-0000-0000-000000000002"
+    }
+  },
+  {
+    "pk": "3", 
+    "model": "main.assessor", 
+    "fields": {
+      "name": "Aramis", 
+      "email": "aramis@mteers.org",
+      "deviceToken":"dddd0000-0000-0000-0000-000000000003"
+    }
+  },
+  {
+    "pk": "4", 
+    "model": "main.assessor", 
+    "fields": {
+      "name": "d'Artagnan", 
+      "email": "dartagnan@mteers.org",
+      "deviceToken":"dddd0000-0000-0000-0000-000000000004"
+    }
+  }
+]

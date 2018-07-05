@@ -1,0 +1,9 @@
+[
+  {
+    "pk": "1", 
+    "model": "main.image", 
+    "fields": {
+      "image": "sample/geotagged-photo-hongkong.jpg"
+    }
+  }
+]

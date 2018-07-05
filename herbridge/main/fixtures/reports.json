@@ -1,0 +1,23 @@
+[
+  {
+    "pk": "aaaa0000-0000-0000-0000-000000000001", 
+    "model": "main.report", 
+    "fields": {
+      "title": "Report 1", 
+      "type": "field_report",
+      "createdAt":"2018-07-05 17:16:31.679695+00:00",
+      "assessor":"1",
+      "coverImage":"1"
+    }
+  },
+  {
+    "pk": "aaaa0000-0000-0000-0000-000000000002", 
+    "model": "main.report", 
+    "fields": {
+      "title": "Report 2", 
+      "type": "risk_report",
+      "createdAt":"2018-07-05 17:16:31.679695+00:00",
+      "assessor":"3"
+    }
+  }
+]

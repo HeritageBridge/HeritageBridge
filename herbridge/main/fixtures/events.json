@@ -1,0 +1,13 @@
+[
+  {
+    "pk": "1", 
+    "model": "main.event", 
+    "fields": {
+      "name":"Acid Rain",
+      "primaryHazard":"burning rain from the sky",
+      "secondaryHazard":"drainage",
+      "startDate":"2018-05-01",
+      "endDate":"2018-05-05"
+    }
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "pk": "bbbb0000-0000-0000-0000-000000000001", 
+    "model": "main.resource", 
+    "fields": {
+      "images": [
+        "1"
+      ],
+      "name":"Castle Dumas",
+      "notes":"nice old castle",
+      "hazards":"True",
+      "safetyHazards":"False",
+      "interventionRequired":"True",
+    }
+  }
+]
