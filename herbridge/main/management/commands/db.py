@@ -52,7 +52,7 @@ class Command(BaseCommand):
 
         return conn
         
-    def install(self,dryrun=True):
+    def install(self,dryrun=False):
         dbuser = settings.DATABASES['default']['USER']
         dbpw = settings.DATABASES['default']['PASSWORD']
         dbname = settings.DATABASES['default']['NAME']
