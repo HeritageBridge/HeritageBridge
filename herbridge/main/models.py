@@ -1,20 +1,27 @@
 import os
 import uuid
 from django.contrib.gis.db import models
-
+from PIL import Image as PILImage
+from io import BytesIO
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
-
+from datetime import datetime
 import exifread
 
 class Image(models.Model):
     image = models.ImageField(
         upload_to="images",
     )
-    # thumbnail = models.ImageField(
-        # upload_to='images/%Y/%m/%d/',
-        # max_length=500,
-    # )
+    
+    orientation = models.CharField(
+        max_length=10,
+        choices=(('portrait','portrait'),('landscape','landscape')),
+        editable=False,
+    )
+    captureDate = models.DateTimeField(
+        null=True,
+        editable=False,
+    )
     geom = models.PointField(null=True, blank=True)
     
     ## this is not actually a db field, but a property definition
@@ -27,71 +34,57 @@ class Image(models.Model):
     
     def __str__(self):
         return self.image.url
-
-    ## UNUSED July 5 2018 - new thumbnail strategy generates them on demand
-    ## and the thumbnail files are not stored on disk.
-    def create_thumbnail(self,imagefile):
-
-        from PIL import Image as PILImage
-        from io import BytesIO
-        from django.core.files.uploadedfile import SimpleUploadedFile
-
-        # original code for this method came from
-        # http://snipt.net/danfreak/generate-thumbnails-in-django-with-pil/
-
-        # If there is no image associated with this.
-        # do not create thumbnail
-        if not self.image:
-            return
-
-        # Set our max thumbnail size in a tuple (max width, max height)
-        THUMBNAIL_SIZE = (99, 66)
-
-        if self.image.name.lower().endswith(".jpg"):
-            PIL_TYPE = 'jpeg'
-            FILE_EXTENSION = 'jpg'
-            DJANGO_TYPE = 'image/jpeg'
-
-        elif self.image.name.lower().endswith(".png"):
-            PIL_TYPE = 'png'
-            FILE_EXTENSION = 'png'
-            DJANGO_TYPE = 'image/png'
-
-        # Open original photo which we want to thumbnail using PIL's Image
-        image = PILImage.open(BytesIO(open(self.image.path,'rb').read()))
         
-        # We use our PIL Image object to create the thumbnail, which already
-        # has a thumbnail() convenience method that contrains proportions.
-        # Additionally, use PIL.Image.ANTIALIAS to make the image look better.
-        # Without antialiasing the image pattern artifacts may result.
-        image.thumbnail(THUMBNAIL_SIZE, PILImage.ANTIALIAS)
+    def get_tags(self):
+        return exifread.process_file(self.image)
 
-        # Save the thumbnail
-        temp_handle = BytesIO()
-        image.save(temp_handle, PIL_TYPE)
-        temp_handle.seek(0)
+    def get_orientation(self,tags):
+        '''pretty naive way of calculating the orientation'''
 
-        # Save image to a SimpleUploadedFile which can be saved into
-        # ImageField
-        suf = SimpleUploadedFile(os.path.split(self.image.name)[-1],
-                temp_handle.read(), content_type=DJANGO_TYPE)
-        # Save SimpleUploadedFile into image field
-        self.thumbnail.save(
-            '%s_thumbnail.%s' % (os.path.splitext(suf.name)[0], FILE_EXTENSION),
-            suf,
-            save=False
-        )
+        orientation = None
+        orient_tag = tags.get('Image Orientation',None)
 
-    def get_geotags(self):
+        if orient_tag:
+            if "horizontal" in str(orient_tag).lower():
+                orientation = "landscape"
+            else:
+                orientation = "portrait"
 
-        tags = exifread.process_file(self.image)
+        else:
+            image = PILImage.open(BytesIO(open(self.image.path,'rb').read()))
+            landscape = image.size[1] < image.size[0]
+            if landscape:
+                orientation = "landscape"
+            else:
+                orientation = "portrait"
+        print(f"orientation: {orientation}")
+        return orientation
+
+    def get_geotags(self,tags):
+        '''get all spatial exif tags from image'''
+
         geotags = {}
         for k,v in tags.items():
             if k.startswith("GPS"):
                 geotags[k] = v
         return geotags
         
+    def get_date(self,tags):
+        '''get the date from the exif tags and return a datetime object'''
+
+        ## 7-11-18: No timezone support is attempted here, though django would
+        ## accept it.
+        date_tag = tags.get('Image DateTime',None)
+        if not date_tag:
+            return None
+            
+        date = datetime.strptime(str(date_tag), '%Y:%m:%d %H:%M:%S')
+        print(f"date: {date}")
+        return date
+        
+        
     def make_geom_from_geotags(self,geotags):
+        '''process the spatial exif tags and return wkt'''
         
         raw_lat = geotags['GPS GPSLatitude']
         raw_long = geotags['GPS GPSLongitude']
@@ -118,34 +111,14 @@ class Image(models.Model):
         
         wkt = "POINT ({} {})".format(long,lat)
         return wkt
-
-    def __unicode__(self):
-        return '{"thumbnail": "%s", "image": "%s"}' % (self.thumbnail.url, self.image.url)
-
-    def save(self, *args, **kwargs):
-
-        ## UNUSED July 5, 2018 -- manually handle the creation of thumbnails
-        ## which uses create_thumbnail() above and stores the files to disk
-        # if not self.thumbnail:
-            # print("no thumb yet")
-            # print(self.image.path)
-            # print("%Y")
-            # self.create_thumbnail(self.image)
-        # else:
-            # fname = os.path.splitext(self.image.path.split("/")[-1])[0]
-            # tname = os.path.splitext(self.thumbnail.path.split("/")[-1])[0]
-            # print(fname,tname)
-            # if tname != fname+"_thumbnail":
-                # self.create_thumbnail(self.image)
-                
-        force_update = False
-        if self.id:
-            force_update = True
         
-        # get and create geometry from geo tags
-        gts = self.get_geotags()
+    def get_geometry(self,tags):
+        '''look for geom tags, process, and return wkt'''
+        
+        gts = self.get_geotags(tags)
+        
         if not gts:
-            return
+            return None
 
         necessary_tags = [
             'GPS GPSLongitude',
@@ -156,9 +129,26 @@ class Image(models.Model):
         
         for nt in necessary_tags:
             if not nt in gts.keys():
-                return
+                return None
+        
+        wkt = self.make_geom_from_geotags(gts)
+        print(f"wkt: {wkt}")
+        return wkt
 
-        self.geom = self.make_geom_from_geotags(gts)
+    def __unicode__(self):
+        return '{"thumbnail": "%s", "image": "%s"}' % (self.thumbnail.url, self.image.url)
+
+    def save(self, *args, **kwargs):
+        '''override the default save method'''
+
+        tags = self.get_tags()
+        self.captureDate = self.get_date(tags)
+        self.orientation = self.get_orientation(tags)
+        self.geom = self.get_geometry(tags)
+
+        force_update = False
+        if self.id:
+            force_update = True
         super(Image, self).save(force_update=force_update)
         
 class Resource(models.Model):
