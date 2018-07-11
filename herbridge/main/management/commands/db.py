@@ -71,7 +71,16 @@ class Command(BaseCommand):
                 print(command)
             else:
                 os.system(f'psql -U postgres -c "{command}"')
-            
+    
+    def delete_old_migration_files(self):
+        '''delete all old migration files to wipe the slate clean'''
+        
+        mdir = os.path.join(settings.BASE_DIR,'main','migrations')
+        for f in os.listdir(mdir):
+            if f == "__init__.py" or f == "__pycache__":
+                continue
+            os.remove(os.path.join(mdir,f))
+    
     def setup_db(self,loaddata=False):
         dbname = settings.DATABASES['default']['NAME']
         conn = self.make_db_connection(db_conn=False)
@@ -80,6 +89,9 @@ class Command(BaseCommand):
         cursor.execute(f"DROP DATABASE {dbname}")
         print(f"creating db: {dbname}")
         cursor.execute(f"CREATE DATABASE {dbname} WITH ENCODING 'UTF8'")
+        
+        print("deleting existing migration files")
+        self.delete_old_migration_files()
         
         management.call_command('makemigrations')
         management.call_command('migrate')
