@@ -3,7 +3,35 @@
     "pk": "1", 
     "model": "main.image", 
     "fields": {
-      "image": "sample/geotagged-photo-hongkong.jpg"
+      "image": "sample/geotagged-portrait-hk.jpg"
+    }
+  },
+  {
+    "pk": "2", 
+    "model": "main.image", 
+    "fields": {
+      "image": "sample/_DSC1014.JPG"
+    }
+  },
+  {
+    "pk": "3", 
+    "model": "main.image", 
+    "fields": {
+      "image": "sample/_DSC1029.JPG"
+    }
+  },
+  {
+    "pk": "4", 
+    "model": "main.image", 
+    "fields": {
+      "image": "sample/2017-02-27-StairTypes-296.jpg"
+    }
+  },
+  {
+    "pk": "5", 
+    "model": "main.image", 
+    "fields": {
+      "image": "sample/2017-02-27-StairTypes-337.jpg"
     }
   }
 ]
