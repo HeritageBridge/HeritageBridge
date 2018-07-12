@@ -22,6 +22,10 @@ from main import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
+    path('api/', views.api_ref, name='api_ref'),
+    path('api/<str:model_name>/', views.api_dispatch, name='api_dispatch'),
+    path('api/<str:model_name>/<int:id>/', views.api_dispatch, name='api_dispatch'),
+    path('api/<str:model_name>/<uuid:id>/', views.api_dispatch, name='api_dispatch'),
 ]
 
 if settings.DEBUG:

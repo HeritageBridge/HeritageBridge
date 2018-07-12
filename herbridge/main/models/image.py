@@ -1,4 +1,5 @@
 import os
+import json
 from django.contrib.gis.db import models
 from PIL import Image as PILImage
 from io import BytesIO
@@ -26,7 +27,7 @@ class Image(models.Model):
     ## this is not actually a db field, but a property definition
     thumbnail = ImageSpecField(
         source='image',
-        processors=[ResizeToFill(100, 50)],
+        processors=[ResizeToFill(100, 100)],
         format='JPEG',
         options={'quality': 60}
     )
@@ -149,3 +150,22 @@ class Image(models.Model):
         if self.id:
             force_update = True
         super(Image, self).save(force_update=force_update)
+        
+    def as_json(self):
+    
+        if self.geom:
+            lat,long = self.geom.coords[1],self.geom.coords[0]
+        else:
+            lat,long = None,None
+    
+        data = {
+            "url":self.image.url,
+            "thumbnailURL":self.thumbnail.url,
+            "latitude":lat,
+            "longitude":long,
+            "captureDate":int(self.captureDate.timestamp()),
+        }
+
+        print(json.dumps(data,indent=1))
+        
+        return data

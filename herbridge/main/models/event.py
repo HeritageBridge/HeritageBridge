@@ -1,3 +1,4 @@
+import datetime
 from django.contrib.gis.db import models
 
 class Event(models.Model):
@@ -18,3 +19,23 @@ class Event(models.Model):
     )
     startDate = models.DateField()
     endDate = models.DateField()
+    
+    def as_json(self):
+        
+        startDateTime = datetime.datetime.combine(self.startDate,datetime.time())
+        startEpoch = int(startDateTime.timestamp())
+        
+        endDateTime = datetime.datetime.combine(self.endDate,datetime.time())
+        endEpoch = int(startDateTime.timestamp())
+        
+        data = {
+            "id":self.pk,
+            "name":self.name,
+            "primaryHazard":self.primaryHazard,
+            "secondaryHazard":self.secondaryHazard,
+            "startDate":startEpoch,
+            "endDate":endDateTime,
+        }
+
+        return data
+    

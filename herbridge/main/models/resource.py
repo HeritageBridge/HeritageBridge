@@ -1,5 +1,6 @@
 import uuid
 from django.contrib.gis.db import models
+from main.utils.serializers import HBSerializer
 
 class Resource(models.Model):
 
@@ -35,9 +36,8 @@ class Resource(models.Model):
         null=True,
         blank=True,
     )
-    images = models.ForeignKey(
+    images = models.ManyToManyField(
         "Image",
-        on_delete=models.CASCADE,
     )
     condition = models.CharField(
         max_length=25,
@@ -59,3 +59,18 @@ class Resource(models.Model):
     hazards = models.NullBooleanField()
     safetyHazards = models.NullBooleanField()
     interventionRequired = models.NullBooleanField()
+    
+    def as_json(self):
+
+        data = {
+            "id":self.pk,
+            "name":self.name,
+            "notes":self.notes,
+            "images":HBSerializer().serialize(self.images.all()),
+            "condition":self.condition,
+            "hazards":self.hazards,
+            "safetyHazards":self.safetyHazards,
+            "interventionRequired":self.interventionRequired,
+        }
+
+        return data

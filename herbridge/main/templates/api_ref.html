@@ -1,0 +1,9 @@
+<h4>api reference</h4>
+<p>spec: see <a href="https://gist.github.com/khanlou/313ba7864bdf1dddcc5547b3fa1d62c4">this gist</a> for more info</p>
+<p>endpoints:</p>
+<ul>
+    {% for link in ref_links %}
+    <li><a href="{{link.0}}">{{link.0}}</a> - {{link.1}}</li>
+    {% endfor %}
+</ul>
+<p>Note that some object ids are integers, and some are UUIDs. The reasoning behind this is to use integers where possible (for ease of use and debugging) but use UUIDs when there will be a 1-to-1 relationship between objects in HerBridge and EAMENA. It's likely that as development continues, some of the integer ids will be upgraded to UUIDs.</p>
