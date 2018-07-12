@@ -1,23 +1,35 @@
 [
   {
-    "pk": "aaaa0000-0000-0000-0000-000000000001", 
+    "pk": "a0000000-0000-0000-0000-000000000001", 
     "model": "main.report", 
     "fields": {
       "title": "Report 1", 
       "type": "field_report",
+      "incident":"1",
       "createdAt":"2018-07-05 17:16:31.679695+00:00",
       "assessor":"1",
-      "coverImage":"1"
+      "coverImage":"1",
+      "resources":[
+        "bbbb0000-0000-0000-0000-000000000001"
+      ]
     }
   },
   {
-    "pk": "aaaa0000-0000-0000-0000-000000000002", 
+    "pk": "a0000000-0000-0000-0000-000000000002", 
     "model": "main.report", 
     "fields": {
-      "title": "Report 2", 
+      "title": "Report 2",
       "type": "risk_report",
+      "incident":"1",
       "createdAt":"2018-07-05 17:16:31.679695+00:00",
-      "assessor":"3"
+      "assessor":"3",
+      "coverImage":"5",
+      "resources":[
+        "bbbb0000-0000-0000-0000-000000000001",
+        "bbbb0000-0000-0000-0000-000000000002",
+        "bbbb0000-0000-0000-0000-000000000003",
+        "bbbb0000-0000-0000-0000-000000000004"
+      ]
     }
   }
 ]

@@ -1,16 +1,63 @@
 [
   {
-    "pk": "bbbb0000-0000-0000-0000-000000000001", 
+    "pk": "b0000000-0000-0000-0000-000000000001", 
     "model": "main.resource", 
     "fields": {
-      "images": [
+      "images":[
         "1"
       ],
       "name":"Castle Dumas",
       "notes":"nice old castle",
+      "type":"place",
       "hazards":"True",
       "safetyHazards":"False",
-      "interventionRequired":"True",
+      "interventionRequired":"True"
+    }
+  },
+  {
+    "pk": "b0000000-0000-0000-0000-000000000002", 
+    "model": "main.resource", 
+    "fields": {
+      "images":[
+        "2"
+      ],
+      "name":"Dumas Keep",
+      "notes":"this is the stronghold of the castle and features a few great staircases",
+      "type":"feature",
+      "hazards":"True",
+      "safetyHazards":"False",
+      "interventionRequired":"True"
+    }
+  },
+  {
+    "pk": "b0000000-0000-0000-0000-000000000003", 
+    "model": "main.resource", 
+    "fields": {
+      "images":[
+        "3"
+      ],
+      "name":"North Staircase",
+      "notes":"modeled after stairs in Hong Kong",
+      "type":"component",
+      "hazards":"False",
+      "safetyHazards":"False",
+      "interventionRequired":"False"
+    }
+  },
+  {
+    "pk": "b0000000-0000-0000-0000-000000000004", 
+    "model": "main.resource", 
+    "fields": {
+      "images": [
+        "4",
+        "5"
+      ],
+      "name":"South Staircase",
+      "notes":"modeled after stairs in Hong Kong",
+      "type":"component",
+      "hazards":"False",
+      "safetyHazards":"False",
+      "interventionRequired":"False"
     }
   }
 ]
