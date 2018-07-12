@@ -141,6 +141,7 @@ FIXTURES_TO_LOAD = (
     'events.json',
     'images.json',
     'assessors.json',
+    'resources.json',
     'reports.json',
 )
 
