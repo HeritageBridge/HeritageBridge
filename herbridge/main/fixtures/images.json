@@ -3,7 +3,7 @@
     "pk": "1", 
     "model": "main.image", 
     "fields": {
-      "image": "sample/geotagged-portrait-hk.jpg"
+      "image": "sample/geotagged-photo-hongkong.jpg"
     }
   },
   {
