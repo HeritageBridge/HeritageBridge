@@ -16,12 +16,17 @@ class Command(BaseCommand):
             help='')
         parser.add_argument('--loaddata',action='store_true',default=False,
             help='loads fixtures containing sample data')
+        parser.add_argument('--removemigrations',action='store_true',default=False,
+            help='removes all existing migration files')
 
     def handle(self, *args, **options):
         if options['operation'] == 'test':
             self.make_db_connection()
         if options['operation'] == 'setup':
-            self.setup_db(loaddata=options['loaddata'])
+            self.setup_db(
+                loaddata=options['loaddata'],
+                remove_migrations=options['removemigrations'],
+            )
         if options['operation'] == 'install':
             self.install()
         if options['operation'] == 'uninstall':
@@ -81,7 +86,7 @@ class Command(BaseCommand):
                 continue
             os.remove(os.path.join(mdir,f))
     
-    def setup_db(self,loaddata=False):
+    def setup_db(self,loaddata=False,remove_migrations=False):
         dbname = settings.DATABASES['default']['NAME']
         conn = self.make_db_connection(db_conn=False)
         cursor = conn.cursor()
@@ -90,8 +95,9 @@ class Command(BaseCommand):
         print(f"creating db: {dbname}")
         cursor.execute(f"CREATE DATABASE {dbname} WITH ENCODING 'UTF8'")
         
-        print("deleting existing migration files")
-        self.delete_old_migration_files()
+        if remove_migrations:
+            print("deleting existing migration files")
+            self.delete_old_migration_files()
         
         management.call_command('makemigrations')
         management.call_command('migrate')
