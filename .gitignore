@@ -1,5 +1,6 @@
 # HerBridge-specific exclusions
 /herbridge/herbridge/static/*
+/herbridge/herbridge/media/CACHE
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
