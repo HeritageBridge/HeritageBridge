@@ -1,5 +1,4 @@
 import os
-import json
 from django.contrib.gis.db import models
 from PIL import Image as PILImage
 from io import BytesIO
@@ -166,6 +165,4 @@ class Image(models.Model):
             "captureDate":int(self.captureDate.timestamp()),
         }
 
-        print(json.dumps(data,indent=1))
-        
         return data
