@@ -47,10 +47,6 @@ class Resource(models.Model):
         max_length=10,
         choices=RESOURCE_TYPES,
     )
-    condition = models.CharField(
-        max_length=25,
-        choices=RESOURCE_TYPES,
-    )
     notes = models.CharField(
         max_length=250,
         null=True,
