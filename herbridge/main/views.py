@@ -10,19 +10,20 @@ def home(request):
 
 def api_ref(request):
 
-    lookup = {
-        'assessor':Assessor,
-        'event':Event,
-        'image':Image,
-        'report':Report,
-        'resource':Resource,
-    }
+    model_list = [
+        'assessor',
+        'event',
+        'image',
+        'report',
+        'resource',
+    ]
     
     ref_links = []
-    for k,v in lookup.items():
-        ref_links.append((f"/api/{k}/","list all"))
-        ob = v.objects.all()[0]
-        ref_links.append((f"/api/{k}/{ob.pk}/","get by id"))
+    for name in model_list:
+        model = get_model(name)
+        ref_links.append((f"/api/{name}/","list all"))
+        ob = model.objects.all()[0]
+        ref_links.append((f"/api/{name}/{ob.pk}/","get by id"))
 
     return render(request, 'api_ref.html', {'ref_links':ref_links})
     
@@ -69,7 +70,7 @@ def api_dispatch(request,model_name=None,id=None):
         'resource':Resource,
     }
 
-    if not model_name or not model_name in lookup:  
+    if not model_name or not model_name in lookup:
         raise Http404()
 
     model = lookup[model_name]
@@ -84,3 +85,4 @@ def api_dispatch(request,model_name=None,id=None):
         data = HBSerializer().serialize(i)
         
     return JsonResponse(data, safe=False)
+
