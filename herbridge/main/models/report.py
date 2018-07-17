@@ -23,7 +23,7 @@ class Report(models.Model):
     title = models.CharField(
         max_length=100,
     )
-    createdAt = models.DateTimeField(auto_now_add=True)
+    createdAt = models.DateTimeField()
     type = models.CharField(
         max_length=25,
         choices=TYPE_CHOICES,
