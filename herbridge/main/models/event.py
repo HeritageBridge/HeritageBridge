@@ -1,4 +1,3 @@
-import datetime
 from django.contrib.gis.db import models
 
 class Event(models.Model):

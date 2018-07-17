@@ -151,7 +151,8 @@ class Image(models.Model):
         if self.id:
             force_update = True
         super(Image, self).save(force_update=force_update)
-        
+    
+    ## DEPRECATED JULY 17 - WAS PART OF EARLY API
     def as_json(self):
     
         if self.geom:

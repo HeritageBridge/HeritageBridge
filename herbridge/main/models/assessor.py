@@ -17,6 +17,7 @@ class Assessor(models.Model):
         else:
             return self.email
     
+    ## DEPRECATED JULY 17 - WAS PART OF EARLY API
     def as_json(self):
 
         data = {
