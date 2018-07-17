@@ -17,8 +17,13 @@ class Event(models.Model):
         blank=True,
         null=True,
     )
-    startDate = models.DateField()
-    endDate = models.DateField()
+    startDate = models.DateTimeField()
+    endDate = models.DateTimeField()
+
+    serializer = None
+    
+    ## DEPRECATED JULY 17 - WAS PART OF EARLY API
+    import datetime
     
     def as_json(self):
         

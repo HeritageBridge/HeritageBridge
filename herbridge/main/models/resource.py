@@ -56,6 +56,9 @@ class Resource(models.Model):
     safetyHazards = models.NullBooleanField()
     interventionRequired = models.NullBooleanField()
     
+    serializer = None
+    
+    ## DEPRECATED JULY 17 - WAS PART OF EARLY API
     def as_json(self):
 
         data = {

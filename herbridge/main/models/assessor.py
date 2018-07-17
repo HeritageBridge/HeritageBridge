@@ -8,6 +8,8 @@ class Assessor(models.Model):
         blank=True,
     )
     deviceToken = models.UUIDField(blank=True)
+    
+    serializer = None
 
     def __str__(self):
         if self.name:

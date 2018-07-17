@@ -51,6 +51,8 @@ class Report(models.Model):
         "Resource",
     )
     
+    serializer = None
+    
     def get_resources(self):
         '''gets the resources that are related to this report and sorts them
         into categories as defined in the JSON spec. it may be good to build

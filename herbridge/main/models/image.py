@@ -31,6 +31,8 @@ class Image(models.Model):
         options={'quality': 60}
     )
     
+    serializer = None
+    
     def __str__(self):
         return self.image.url
         
