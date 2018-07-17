@@ -1,6 +1,5 @@
 import uuid
 from django.contrib.gis.db import models
-from main.utils.serializers import HBSerializer
 
 class Resource(models.Model):
 
@@ -56,8 +55,12 @@ class Resource(models.Model):
     safetyHazards = models.NullBooleanField()
     interventionRequired = models.NullBooleanField()
     
+    serializer = None
+    
+    ## DEPRECATED JULY 17 - WAS PART OF EARLY API
     def as_json(self):
-
+        from main.utils.serializers import HBSerializer
+        
         data = {
             "id":self.pk,
             "name":self.name,

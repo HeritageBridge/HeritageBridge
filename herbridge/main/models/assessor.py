@@ -8,6 +8,8 @@ class Assessor(models.Model):
         blank=True,
     )
     deviceToken = models.UUIDField(blank=True)
+    
+    serializer = None
 
     def __str__(self):
         if self.name:
@@ -15,6 +17,7 @@ class Assessor(models.Model):
         else:
             return self.email
     
+    ## DEPRECATED JULY 17 - WAS PART OF EARLY API
     def as_json(self):
 
         data = {

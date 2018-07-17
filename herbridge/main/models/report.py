@@ -1,6 +1,5 @@
 import uuid
 from django.contrib.gis.db import models
-from main.utils.serializers import HBSerializer
 
 class Report(models.Model):
 
@@ -24,7 +23,7 @@ class Report(models.Model):
     title = models.CharField(
         max_length=100,
     )
-    createdAt = models.DateTimeField(auto_now_add=True)
+    createdAt = models.DateTimeField()
     type = models.CharField(
         max_length=25,
         choices=TYPE_CHOICES,
@@ -51,16 +50,18 @@ class Report(models.Model):
         "Resource",
     )
     
+    serializer = None
+    
     def get_resources(self):
         '''gets the resources that are related to this report and sorts them
         into categories as defined in the JSON spec. it may be good to build
         these categories directly from the Resource().type choices, but they
         are hard-coded for now.'''
-        
-        places = HBSerializer().serialize(self.resources.filter(type="place"))
-        features = HBSerializer().serialize(self.resources.filter(type="feature"))
-        components = HBSerializer().serialize(self.resources.filter(type="component"))
-        
+
+        places = self.resources.filter(type="place")
+        features = self.resources.filter(type="feature")
+        components = self.resources.filter(type="component")
+
         data = {
             'areas':places,
             'sites':features,
@@ -69,7 +70,14 @@ class Report(models.Model):
 
         return data
     
+    ## DEPRECATED JULY 17 - WAS PART OF EARLY API
     def as_json(self):
+        from main.utils.serializers import HBSerializer
+    
+        sorted_resources = self.get_resources()
+        resources = {}
+        for cat,objs in sorted_resources.items():
+            resources[cat] = HBSerializer().serialize(objs)
 
         data = {
             "id":self.pk,
@@ -79,7 +87,7 @@ class Report(models.Model):
             "type":self.type,
             "coverImage":self.coverImage.as_json(),
             "assessor":self.assessor.as_json(),
-            "resources":self.get_resources(),
+            "resources":resources,
         }
 
         return data

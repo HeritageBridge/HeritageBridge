@@ -31,6 +31,8 @@ class Image(models.Model):
         options={'quality': 60}
     )
     
+    serializer = None
+    
     def __str__(self):
         return self.image.url
         
@@ -149,7 +151,8 @@ class Image(models.Model):
         if self.id:
             force_update = True
         super(Image, self).save(force_update=force_update)
-        
+    
+    ## DEPRECATED JULY 17 - WAS PART OF EARLY API
     def as_json(self):
     
         if self.geom:
