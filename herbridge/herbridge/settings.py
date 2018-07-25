@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'imagekit',
     'main',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -145,6 +146,27 @@ FIXTURES_TO_LOAD = (
     'resources.json',
     'reports.json',
 )
+
+## configuration for S3 media storage
+## please copy these settings to local_settings.py and update
+## AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_STORAGE_BUCKET_NAME
+
+# AWS_ACCESS_KEY_ID = 'xxxx'
+# AWS_SECRET_ACCESS_KEY = 'xxxx'
+
+# AWS_STORAGE_BUCKET_NAME = 'xxxx'
+# AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+
+# AWS_S3_OBJECT_PARAMETERS = {
+    # 'CacheControl': 'max-age=86400',
+# }
+
+# AWS_LOCATION = 'static'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/"
+
+# DEFAULT_FILE_STORAGE = 'herbridge.storage_backends.MediaStorage'
+# MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
 
 try:
     from herbridge.local_settings import *
