@@ -1,5 +1,6 @@
 import os
 from django.contrib.gis.db import models
+from django.db.models.signals import post_delete
 from PIL import Image as PILImage
 from io import BytesIO
 from imagekit.models import ImageSpecField
@@ -169,3 +170,9 @@ class Image(models.Model):
         }
 
         return data
+
+## explicitly handle file deletion, works locally and for S3
+def delete_file(sender, instance, **kwargs):
+    instance.image.delete(save=False)
+    
+post_delete.connect(delete_file, sender=Image)
