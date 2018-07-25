@@ -6,13 +6,20 @@ from io import BytesIO
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 from datetime import datetime
+import uuid
 import exifread
 
 class Image(models.Model):
+
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+        unique=True,
+    )
     image = models.ImageField(
         upload_to="images",
     )
-    
     orientation = models.CharField(
         max_length=10,
         choices=(('portrait','portrait'),('landscape','landscape')),
