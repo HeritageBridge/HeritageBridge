@@ -80,29 +80,23 @@ class EventSerializer(serializers.ModelSerializer):
 
 class ImageSerializer(serializers.ModelSerializer):
     
-    url = serializers.CharField(max_length=150)
-    thumbnailUrl = serializers.CharField(max_length=150)
+    image = serializers.ImageField()
     latitude = serializers.FloatField()
     longitude = serializers.FloatField()
     captureDate = serializers.FloatField()
     
-    ## note: this is only the start for the image creation, not fully wired up
-    ## image upload via multipart data is not yet implemented.
     def create(self, validated_data):
 
         captureDate = datetime.fromtimestamp(validated_data.get('captureDate',None))
-
         wkt = "POINT ({} {})".format(
             validated_data['longitude'],
             validated_data['latitude']
         )
-
         data = {
             'captureDate':captureDate,
             'geom':wkt,
-            'image':None
+            'image':validated_data['image']
         }
-
         return Image.objects.create(**data)
 
     def to_representation(self,obj):
@@ -114,6 +108,7 @@ class ImageSerializer(serializers.ModelSerializer):
             lat,lon = None,None
 
         return {
+            'id':obj.pk,
             'url':obj.image.url,
             'thumbnailUrl':obj.thumbnail.url,
             'latitude':lat,
@@ -124,8 +119,8 @@ class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
         fields = (
+            'image',
             'url',
-            'thumbnailUrl',
             'latitude',
             'longitude',
             'captureDate',
