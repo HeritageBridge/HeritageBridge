@@ -44,6 +44,9 @@ class Image(models.Model):
     def __str__(self):
         return self.image.url
         
+    def __unicode__(self):
+        return '{"thumbnail": "%s", "image": "%s"}' % (self.thumbnail.url, self.image.url)
+        
     def get_tags(self):
         return exifread.process_file(self.image)
 
@@ -144,10 +147,10 @@ class Image(models.Model):
         print(f"wkt: {wkt}")
         return wkt
 
-    def __unicode__(self):
-        return '{"thumbnail": "%s", "image": "%s"}' % (self.thumbnail.url, self.image.url)
+    
 
-    def save(self, *args, **kwargs):
+    ## DEPRECATED JULY 25 - saving/creation now happens in ImageSerializer
+    def save_old(self, *args, **kwargs):
         '''override the default save method'''
 
         tags = self.get_tags()
