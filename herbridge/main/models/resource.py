@@ -19,9 +19,9 @@ class Resource(models.Model):
     )
     
     RESOURCE_TYPES = (
-        ("place","Place"),
-        ("feature","Feature"),
-        ("component","Component"),
+        ("area","Area"),
+        ("building","Building"),
+        ("object","Object"),
     )
     
     id = models.UUIDField(
