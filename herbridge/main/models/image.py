@@ -29,6 +29,7 @@ class Image(models.Model):
         null=True,
         editable=False,
     )
+    caption = models.CharField(max_length=250,null=True,blank=True)
     geom = models.PointField(null=True, blank=True)
     
     ## this is not actually a db field, but a property definition

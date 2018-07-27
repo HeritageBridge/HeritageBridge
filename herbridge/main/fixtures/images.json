@@ -1,37 +1,49 @@
 [
   {
-    "pk": "1", 
+    "pk": "e0000000-0000-0000-0000-000000000001", 
     "model": "main.image", 
     "fields": {
-      "image": "sample/geotagged-photo-hongkong.jpg"
+      "image": "sample/geotagged-photo-hongkong.jpg",
+      "geom": "POINT (31.255325 29.963477)",
+      "captureDate": "2010-11-29 15:31:56+00:00",
+      "caption": "stairs in hong kong (coordinates in Egypt)"
     }
   },
   {
-    "pk": "2", 
+    "pk": "e0000000-0000-0000-0000-000000000002", 
     "model": "main.image", 
     "fields": {
-      "image": "sample/_DSC1014.JPG"
+      "image": "sample/_DSC1014.JPG",
+      "geom": "POINT (32.1 30.3232)",
+      "captureDate": "2010-02-28 15:30:56+00:00"
     }
   },
   {
-    "pk": "3", 
+    "pk": "e0000000-0000-0000-0000-000000000003", 
     "model": "main.image", 
     "fields": {
-      "image": "sample/_DSC1029.JPG"
+      "image": "sample/_DSC1029.JPG",
+      "geom": "POINT (31.34325 29.53477)",
+      "captureDate": "2011-11-29 15:12:56+00:00",
+      "caption": "more stairs in hong kong (coordinates in Egypt)"
     }
   },
   {
-    "pk": "4", 
+    "pk": "e0000000-0000-0000-0000-000000000004", 
     "model": "main.image", 
     "fields": {
-      "image": "sample/2017-02-27-StairTypes-296.jpg"
+      "image": "sample/2017-02-27-StairTypes-296.jpg",
+      "geom": "POINT (31.125325 29.965)",
+      "captureDate": "2010-12-03 15:45:56+00:00"
     }
   },
   {
-    "pk": "5", 
+    "pk": "e0000000-0000-0000-0000-000000000005", 
     "model": "main.image", 
     "fields": {
-      "image": "sample/2017-02-27-StairTypes-337.jpg"
+      "image": "sample/2017-02-27-StairTypes-337.jpg",
+      "geom": "POINT (31.325325 29.913477)",
+      "captureDate": "2010-04-06 11:30:56+00:00"
     }
   }
 ]

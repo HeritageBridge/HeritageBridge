@@ -41,7 +41,6 @@ class AssessorSerializer(serializers.ModelSerializer):
 class EventSerializer(serializers.ModelSerializer):
 
     ## define the id field here and any fields different from the model fields
-    id = serializers.IntegerField(max_value=None, min_value=None)
     startDate = serializers.FloatField(max_value=None, min_value=None)
     endDate = serializers.FloatField(max_value=None, min_value=None)
 
@@ -95,7 +94,8 @@ class ImageSerializer(serializers.ModelSerializer):
         data = {
             'captureDate':captureDate,
             'geom':wkt,
-            'image':validated_data['image']
+            'image':validated_data['image'],
+            'caption':validated_data['caption']
         }
         return Image.objects.create(**data)
 
@@ -106,6 +106,11 @@ class ImageSerializer(serializers.ModelSerializer):
             lon = obj.geom.coords[0]
         else:
             lat,lon = None,None
+            
+        if not obj.captureDate:
+            captureDate = None
+        else:
+            captureDate = obj.captureDate.timestamp()
 
         return {
             'id':obj.pk,
@@ -113,7 +118,8 @@ class ImageSerializer(serializers.ModelSerializer):
             'thumbnailUrl':obj.thumbnail.url,
             'latitude':lat,
             'longitude':lon,
-            'captureDate':obj.captureDate.timestamp(),
+            'captureDate':captureDate,
+            'caption':obj.caption
         }
 
     class Meta:
@@ -129,8 +135,7 @@ class ImageSerializer(serializers.ModelSerializer):
 class ResourceSerializer(serializers.ModelSerializer):
 
     ## define the id field here and any fields different from the model fields
-    id = serializers.UUIDField()
-    images = ImageSerializer(many=True)
+    # images = ImageSerializer(many=True)
     
     def create(self, validated_data):
         
@@ -143,7 +148,7 @@ class ResourceSerializer(serializers.ModelSerializer):
     def to_representation(self, obj):
 
         images = ImageSerializer(obj.images,many=True).data
-
+        
         return {
             'id':obj.pk,
             'name':obj.name,
@@ -173,7 +178,6 @@ class ResourceSerializer(serializers.ModelSerializer):
 class ReportSerializer(serializers.ModelSerializer):
 
     ## define the id field here and any fields different from the model fields
-    id = serializers.UUIDField()
     incident = EventSerializer()
     createdAt = serializers.FloatField(max_value=None, min_value=None)
     assessor = AssessorSerializer()
