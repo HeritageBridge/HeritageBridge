@@ -130,6 +130,7 @@ class ImageSerializer(serializers.ModelSerializer):
             'latitude',
             'longitude',
             'captureDate',
+            'caption'
         )
         
 class ResourceSerializer(serializers.ModelSerializer):
