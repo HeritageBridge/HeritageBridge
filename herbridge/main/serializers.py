@@ -141,14 +141,14 @@ class ImageSerializer(serializers.ModelSerializer):
         
 class ResourceSerializer(serializers.ModelSerializer):
 
-    ## define the id field here and any fields different from the model fields
-    # images = ImageSerializer(many=True)
-    
     def create(self, validated_data):
         
         image_data = validated_data.pop('images')
-        
+        image_uuids = [str(i.pk) for i in image_data]
+
         resource = Resource.objects.create(**validated_data)
+
+        resource.images.set(image_uuids)
         
         return resource
     
@@ -188,7 +188,6 @@ class ReportSerializer(serializers.ModelSerializer):
     incident = EventSerializer()
     createdAt = serializers.FloatField(max_value=None, min_value=None)
     assessor = AssessorSerializer()
-    coverImage = ImageSerializer()
     resources = ResourceSerializer(many=True)
     
     def create(self, validated_data):
@@ -200,24 +199,32 @@ class ReportSerializer(serializers.ModelSerializer):
         ## extract all of the necessary nested data from the submission
         event_data = validated_data.pop('incident')
         assessor_data = validated_data.pop('assessor')
-        image_data = validated_data.pop('coverImage')
         resource_data = validated_data.pop('resources')
 
         ## then create the report instance itself (sans any related objects)
         report = Report.objects.create(**validated_data)
-        
+
         ## create and relate event
         serialized_event = EventSerializer(data=event_data)
         serialized_event.is_valid(raise_exception=True)
         event = serialized_event.save()
         report.incident = event
-        
+
         ## create and relate assessor
         serialized_assessor = AssessorSerializer(data=assessor_data)
         serialized_assessor.is_valid(raise_exception=True)
         assessor = serialized_assessor.save()
         report.assessor = assessor
-        
+
+        ## create and relate resources
+        resources = []
+        for resource in resource_data:
+            resource['images'] = [i.pk for i in resource['images']]
+            serialized_resource = ResourceSerializer(data=resource)
+            serialized_resource.is_valid(raise_exception=True)
+            r = serialized_resource.save()
+        report.resources.set(resources)
+
         report.save()
 
         return report
@@ -253,4 +260,3 @@ class ReportSerializer(serializers.ModelSerializer):
             'assessor',
             'resources',
         )
-
