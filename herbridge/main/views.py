@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import generics
-from rest_framework.parsers import MultiPartParser
+from rest_framework.parsers import MultiPartParser, JSONParser
 from main.models import get_model
 
 def home(request):
@@ -32,7 +32,7 @@ class ListView(generics.ListCreateAPIView):
     """
     Returns a list of all instances as specified by the model name in the url.
     """
-    parser_classes = (MultiPartParser, )
+    parser_classes = (MultiPartParser,JSONParser)
     @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
         return super(ListView, self).dispatch(request, *args, **kwargs)
