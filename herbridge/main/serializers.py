@@ -1,5 +1,6 @@
 from datetime import datetime
 from rest_framework import serializers
+import pytz
 from main.models import (
     Assessor,
     Event,
@@ -46,12 +47,14 @@ class EventSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         
+        utc = pytz.utc
+        
         ## convert the linux epoch timestamps into a date string that can be
         ## used to create the new object.
         startDate = datetime.fromtimestamp(validated_data.get('startDate',None))
-        validated_data['startDate'] = startDate
+        validated_data['startDate'] = utc.localize(startDate)
         endDate = datetime.fromtimestamp(validated_data.get('endDate',None))
-        validated_data['endDate'] = endDate
+        validated_data['endDate'] = utc.localize(endDate)
         
         return Event.objects.create(**validated_data)
 
@@ -85,8 +88,11 @@ class ImageSerializer(serializers.ModelSerializer):
     captureDate = serializers.FloatField()
     
     def create(self, validated_data):
-
+        
+        utc = pytz.utc
         captureDate = datetime.fromtimestamp(validated_data.get('captureDate',None))
+        captureDate = utc.localize(captureDate)
+        
         wkt = "POINT ({} {})".format(
             validated_data['longitude'],
             validated_data['latitude']
@@ -186,9 +192,10 @@ class ReportSerializer(serializers.ModelSerializer):
     resources = ResourceSerializer(many=True)
     
     def create(self, validated_data):
-    
+        
+        utc = pytz.utc
         createdAt = datetime.fromtimestamp(validated_data.get('createdAt',None))
-        validated_data['createdAt'] = createdAt
+        validated_data['createdAt'] = utc.localize(createdAt)
 
         ## extract all of the necessary nested data from the submission
         event_data = validated_data.pop('incident')
