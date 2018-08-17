@@ -12,11 +12,11 @@ def home(request):
 def api_ref(request):
 
     model_list = [
-        'assessor',
-        'event',
-        'image',
-        'report',
-        'resource',
+        'assessors',
+        'events',
+        'images',
+        'reports',
+        'resources',
     ]
     
     ref_links = []
@@ -64,11 +64,11 @@ from main.models import Assessor, Event, Image, Report, Resource
 def api_dispatch(request,model_name=None,id=None):
 
     lookup = {
-        'assessor':Assessor,
-        'event':Event,
-        'image':Image,
-        'report':Report,
-        'resource':Resource,
+        'assessors':Assessor,
+        'events':Event,
+        'images':Image,
+        'reports':Report,
+        'resources':Resource,
     }
 
     if not model_name or not model_name in lookup:

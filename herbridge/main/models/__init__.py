@@ -35,11 +35,11 @@ def get_model(model_name):
     '''
     
     lookup = {
-        'assessor':Assessor,
-        'event':Event,
-        'image':Image,
-        'report':Report,
-        'resource':Resource,
+        'assessors':Assessor,
+        'events':Event,
+        'images':Image,
+        'reports':Report,
+        'resources':Resource,
     }
     
     return lookup.get(model_name,None)

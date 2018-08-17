@@ -6,7 +6,7 @@ from django.test import TestCase
 from main.models import Assessor, Image, Resource, Event, Report
 
 class AssessorTestCase(TestCase):
-    url = "/api/assessor/"
+    url = "/api/assessors/"
     
     fixtures = ['images']
 
@@ -24,7 +24,7 @@ class AssessorTestCase(TestCase):
         self.assertEquals(response.status_code,201)
     
 class ResourceTestCase(TestCase):
-    url = "/api/resource/"
+    url = "/api/resources/"
     fixtures = ['images']
     
     def test_create_resource_from_json_post(self):
