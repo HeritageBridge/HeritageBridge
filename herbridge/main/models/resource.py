@@ -22,6 +22,7 @@ class Resource(models.Model):
         ("area","Area"),
         ("building","Building"),
         ("object","Object"),
+        ("unknown","Unknown"),
     )
     
     id = models.UUIDField(

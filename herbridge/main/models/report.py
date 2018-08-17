@@ -63,11 +63,13 @@ class Report(models.Model):
         places = self.resources.filter(type="place")
         features = self.resources.filter(type="feature")
         components = self.resources.filter(type="component")
+        unknown = self.resources.filter(type="unknown")
 
         data = {
             'areas':places,
             'sites':features,
             'objects':components,
+            'unknown':unknown
         }
 
         return data
