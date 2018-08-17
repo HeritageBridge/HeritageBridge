@@ -22,6 +22,8 @@ class Report(models.Model):
     )
     title = models.CharField(
         max_length=100,
+        blank=True,
+        null=True,
     )
     createdAt = models.DateTimeField()
     type = models.CharField(

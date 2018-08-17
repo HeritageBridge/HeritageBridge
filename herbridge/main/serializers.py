@@ -185,30 +185,31 @@ class ResourceSerializer(serializers.ModelSerializer):
 class ReportSerializer(serializers.ModelSerializer):
 
     ## define the id field here and any fields different from the model fields
-    incident = EventSerializer()
+    incident = EventSerializer(required=False)
     createdAt = serializers.FloatField(max_value=None, min_value=None)
     assessor = AssessorSerializer()
     resources = ResourceSerializer(many=True)
-    
+
     def create(self, validated_data):
-        
+
         utc = pytz.utc
         createdAt = datetime.fromtimestamp(validated_data.get('createdAt',None))
         validated_data['createdAt'] = utc.localize(createdAt)
 
         ## extract all of the necessary nested data from the submission
-        event_data = validated_data.pop('incident')
+        event_data = validated_data.pop('incident',None)
         assessor_data = validated_data.pop('assessor')
         resource_data = validated_data.pop('resources')
 
         ## then create the report instance itself (sans any related objects)
         report = Report.objects.create(**validated_data)
-
+        
         ## create and relate event
-        serialized_event = EventSerializer(data=event_data)
-        serialized_event.is_valid(raise_exception=True)
-        event = serialized_event.save()
-        report.incident = event
+        if event_data:
+            serialized_event = EventSerializer(data=event_data)
+            serialized_event.is_valid(raise_exception=True)
+            event = serialized_event.save()
+            report.incident = event
 
         ## create and relate assessor
         serialized_assessor = AssessorSerializer(data=assessor_data)
@@ -232,7 +233,9 @@ class ReportSerializer(serializers.ModelSerializer):
     def to_representation(self, obj):
 
         ## fully serialize these related objects for the best output
-        event = EventSerializer(obj.incident).data
+        event = None
+        if obj.incident:
+            event = EventSerializer(obj.incident).data
         coverImage = ImageSerializer(obj.coverImage).data
         assessor = AssessorSerializer(obj.assessor).data
         resources = ResourceSerializer(obj.resources,many=True).data

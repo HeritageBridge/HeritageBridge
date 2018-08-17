@@ -50,10 +50,10 @@ class ResourceTestCase(TestCase):
         response_content = str(response.content, encoding='utf8')
 
 class ReportTestCase(TestCase):
-    url = "/api/report/"
+    url = "/api/reports/"
     fixtures = ['images']
     
-    def test_create_report_from_json_post(self):
+    def test_create_full_report_from_json_post(self):
 
         image_uuids = [str(i.pk) for i in Image.objects.all()]
         report_post_data = {
@@ -117,3 +117,46 @@ class ReportTestCase(TestCase):
         
         number_of_Assessors = len(Assessor.objects.all())
         self.assertEquals(number_of_Assessors,1)
+        
+    def test_create_untitled_no_incident_report_from_json_post(self):
+
+        image_uuids = [str(i.pk) for i in Image.objects.all()]
+        report_post_data = {
+            "id": "a0000000-0000-0000-0000-000000000011",
+            "title": "",
+            "createdAt": 1530810991.0,
+            "type": "field_report",
+            "coverImage": "e0000000-0000-0000-0000-000000000004",
+            "assessor": {
+                "email": "athos@dumas.org",
+                "name": "Athos",
+                "deviceToken": "dddd0000-0000-0000-0000-000000000001"
+            },
+            "resources": [
+                {
+                    "id": "b0000000-0000-0000-0000-000000000010",
+                    "name": "Castle Dumas 2",
+                    "notes": "nice old castle",
+                    "images": [ "e0000000-0000-0000-0000-000000000001"],
+                    "condition": "unknown",
+                    "type": "area",
+                    "hazards": True,
+                    "safetyHazards": False,
+                    "interventionRequired": True
+                }
+            ]
+        }
+        
+        response = self.client.post(self.url,
+            json.dumps(report_post_data),
+            content_type='application/json'
+        )
+        
+        response_content = str(response.content, encoding='utf8')
+        self.assertEquals(response.status_code,201)
+        
+        print(json.dumps(json.loads(response_content),indent=1))
+
+        number_of_Reports = len(Report.objects.all())
+        self.assertEquals(number_of_Reports,1)
+
