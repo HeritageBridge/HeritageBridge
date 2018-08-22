@@ -224,6 +224,7 @@ class ReportSerializer(serializers.ModelSerializer):
             serialized_resource = ResourceSerializer(data=resource)
             serialized_resource.is_valid(raise_exception=True)
             r = serialized_resource.save()
+            resources.append(r)
         report.resources.set(resources)
 
         report.save()
