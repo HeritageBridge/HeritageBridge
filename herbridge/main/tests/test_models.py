@@ -159,4 +159,7 @@ class ReportTestCase(TestCase):
 
         number_of_Reports = len(Report.objects.all())
         self.assertEquals(number_of_Reports,1)
+        
+        number_of_Resources = len(Resource.objects.all())
+        self.assertEquals(number_of_Resources,1)
 
