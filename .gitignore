@@ -112,3 +112,6 @@ venv.bak/
 
 # Jetbrains (PyCharm)
 .idea/
+
+# React (JS)
+node_modules
