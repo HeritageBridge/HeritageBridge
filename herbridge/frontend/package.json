@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack --mode development ./src/index.js --output ./static/frontend/main.js",
-    "build": "webpack --mode production ./src/index.js --output ./static/frontend/main.js"
+    "build": "npm run clean && webpack --mode production ./src/index.js --output ./static/frontend/main.js",
+    "dev": "npm run clean && webpack --mode development --watch ./src/index.js --output ./static/frontend/main.js",
+    "clean": "rm -f static/frontend/*.hot-update.json && rm -f static/frontend/*.hot-update.js"
   },
   "keywords": [],
   "author": "",
@@ -23,5 +24,8 @@
     "weak-key": "^1.0.0",
     "webpack": "^4.12.1",
     "webpack-cli": "^3.0.8"
+  },
+  "dependencies": {
+    "react-hot-loader": "^4.3.6"
   }
 }
