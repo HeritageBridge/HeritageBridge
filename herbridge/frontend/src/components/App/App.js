@@ -15,14 +15,14 @@ class App extends React.Component {
     render() {
         return (
             <div className="amal-app">
-                <h1>Heritage Bridge!</h1>
-                <TextField id="input-with-icon-grid" label="EAMENA Resource No." InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <SearchOutlined/>
-                                </InputAdornment>
-                            ),
-                        }}/>
+                <h1>Heritage Bridge</h1>
+                <TextField label="EAMENA Resource No." InputProps={{
+                    startAdornment: (
+                        <InputAdornment position="start">
+                            <SearchOutlined/>
+                        </InputAdornment>
+                    ),
+                }}/>
             </div>
         )
     }
