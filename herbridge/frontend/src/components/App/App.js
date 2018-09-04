@@ -1,7 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import TextField from '../TextField'
-import { hot } from 'react-hot-loader'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import TextField from '@material-ui/core/TextField'
+import SearchOutlined from '@material-ui/icons/SearchOutlined'
+import {hot} from 'react-hot-loader'
 
 // Main react component for frontend application
 class App extends React.Component {
@@ -14,7 +16,13 @@ class App extends React.Component {
         return (
             <div className="amal-app">
                 <h1>Heritage Bridge!</h1>
-                <TextField placeholder="Search"/>
+                <TextField id="input-with-icon-grid" label="EAMENA Resource No." InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchOutlined/>
+                                </InputAdornment>
+                            ),
+                        }}/>
             </div>
         )
     }
@@ -22,7 +30,7 @@ class App extends React.Component {
 
 // Swap in the main react component in the "app" div
 const wrapper = document.getElementById("app");
-wrapper ? ReactDOM.render(<App />, wrapper) : null;
+wrapper ? ReactDOM.render(<App/>, wrapper) : null;
 
 // Export the app as a hot-reloadable component
 export default hot(module)(App)
