@@ -12,7 +12,10 @@ class App extends React.Component {
     render() {
         return (
             <div className="amal-app">
-                <h1>Heritage Bridge</h1>
+                <img src="static/frontend/logo-herbridge.svg" style={{
+                    margin: '0 auto',
+                    display: 'block'
+                }} />
             </div>
         )
     }
