@@ -4,24 +4,37 @@ import {hot} from 'react-hot-loader'
 import Grid from '@material-ui/core/Grid'
 import TargetResource from '../TargetResource'
 
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+        main: '#008FED'
+    },
+    secondary: {
+        main: '#f44336',
+    },
+  },
+});
+
 // Main react component for frontend application
 class App extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
     }
 
     render() {
         return (
             <div className="amal-app">
-                <Grid container spacing={32} direction="column">
-                    <Grid item>
-                        <img src="static/frontend/logo-herbridge.svg" style={{ margin: '0 auto', display: 'block' }} />
+                <MuiThemeProvider theme={theme}>
+                    <Grid container spacing={32} direction="column">
+                        <Grid item>
+                            <img src="static/frontend/logo-herbridge.svg" style={{ margin: '0 auto', display: 'block' }} />
+                        </Grid>
+                        <Grid item>
+                            <TargetResource/>
+                        </Grid>
                     </Grid>
-                    <Grid item>
-                        <TargetResource/>
-                    </Grid>
-                </Grid>
+                </MuiThemeProvider>
             </div>
         )
     }
