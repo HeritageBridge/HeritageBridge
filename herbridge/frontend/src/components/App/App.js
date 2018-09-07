@@ -16,10 +16,7 @@ class App extends React.Component {
             <div className="amal-app">
                 <Grid container spacing={32} direction="column">
                     <Grid item>
-                        <img src="static/frontend/logo-herbridge.svg" style={{
-                                            margin: '0 auto',
-                                            display: 'block'
-                                        }} />
+                        <img src="static/frontend/logo-herbridge.svg" style={{ margin: '0 auto', display: 'block' }} />
                     </Grid>
                     <Grid item>
                         <TargetResource/>
