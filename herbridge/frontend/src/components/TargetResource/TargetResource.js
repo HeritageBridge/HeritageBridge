@@ -9,11 +9,11 @@ import SearchOutlined from '@material-ui/icons/SearchOutlined';
 import TargetResourceList from './TargetResourceList'
 
 export default class TargetResource extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      query: '',
-      resources: [
+  static defaultProps = {
+    onSearch: (query) => {},
+    onResourceSelected: (resource) => {},
+    onResourceDeselected: (resource) => {},
+    resources: [
         {
           id: 'b0000000-0000-0000-0000-000000000001',
           name: 'Castle Dumas',
@@ -108,6 +108,12 @@ export default class TargetResource extends React.Component {
           interventionRequired: false
         }
       ]
+  }
+  
+  constructor(props) {
+    super(props);
+    this.state = {
+      query: ''
     };
   }
   
@@ -116,7 +122,7 @@ export default class TargetResource extends React.Component {
   };
   
   handleResourceSearchEnter = () => {
-    console.log('enter', this.state.query)
+    this.props.onSearch(this.state.query)
   };
   
   handleResourceSearchKeyPress = (event) => {
@@ -124,6 +130,14 @@ export default class TargetResource extends React.Component {
       event.preventDefault();
       this.handleResourceSearchEnter()
     }
+  };
+  
+  handleResourceSelected = (resource) => {
+    this.props.onResourceSelected(resource)
+  };
+  
+  handleResourceDeselected = (resource) => {
+    this.props.onResourceDeselected(resource)
   };
   
   render() {
@@ -155,7 +169,11 @@ export default class TargetResource extends React.Component {
               />
             </Grid>
             <Grid item xs={12}>
-              <TargetResourceList resources={this.state.resources}/>
+              <TargetResourceList
+                resources={this.props.resources}
+                onSelect={this.handleResourceSelected}
+                onDeselect={this.handleResourceDeselected}
+              />
             </Grid>
           </Grid>
         </div>

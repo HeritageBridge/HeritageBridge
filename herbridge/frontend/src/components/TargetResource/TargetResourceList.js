@@ -9,6 +9,8 @@ import {capitalize} from '../../utils/utils'
 export default class extends React.Component {
   static defaultProps = {
     resources: [],
+    onDeselect: (resource) => {},
+    onSelect: (resource) => {}
   }
   
   constructor(props) {
@@ -21,9 +23,11 @@ export default class extends React.Component {
   handleToggle = (resource) => {
     const {selected} = this.state
     if (selected === resource) {
+      this.props.onDeselect(selected)
       this.setState({selected: null})
     } else {
       this.setState({selected: resource})
+      this.props.onSelect(resource)
     }
   };
   

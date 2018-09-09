@@ -23,6 +23,18 @@ class App extends React.Component {
     super(props);
   }
   
+  handleResourceSearch = (query) => {
+    console.log('search', query)
+  }
+  
+  handleResourceSelect = (resource) => {
+    console.log('select', resource.name)
+  }
+  
+  handleResourceDeselect = (resource) => {
+    console.log('deselect', resource.name)
+  }
+  
   render() {
     return (
       <div className="amal-app">
@@ -32,7 +44,7 @@ class App extends React.Component {
               <img src="static/frontend/logo-herbridge.svg" style={{margin: '0 auto', display: 'block'}}/>
             </Grid>
             <Grid item>
-              <TargetResource/>
+              <TargetResource onSearch={this.handleResourceSearch} onResourceSelected={this.handleResourceSelect} onResourceDeselected={this.handleResourceDeselect}/>
             </Grid>
           </Grid>
         </MuiThemeProvider>
