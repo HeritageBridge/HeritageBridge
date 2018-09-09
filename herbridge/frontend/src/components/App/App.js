@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {hot} from 'react-hot-loader'
 import Grid from '@material-ui/core/Grid'
+import PhotoGrid from '../PhotoGrid'
 import TargetResource from '../TargetResource'
 import LogoHerBridge from '../Svg/logo-herbridge.svg';
 import Svg from 'react-svg-inline'
@@ -47,6 +48,9 @@ class App extends React.Component {
             </Grid>
             <Grid item>
               <TargetResource onSearch={this.handleResourceSearch} onResourceSelected={this.handleResourceSelect} onResourceDeselected={this.handleResourceDeselect}/>
+            </Grid>
+            <Grid item>
+              <PhotoGrid/>
             </Grid>
           </Grid>
         </MuiThemeProvider>
