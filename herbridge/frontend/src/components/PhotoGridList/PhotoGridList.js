@@ -9,8 +9,12 @@ import ListSubheader from "@material-ui/core/ListSubheader"
 import Typography from "@material-ui/core/Typography/Typography";
 import CheckCircleRounded from "@material-ui/icons/CheckCircleRounded"
 import {formattedDateStringFromISOString} from "../../utils/utils"
+import bs from 'binary-search'
 
 export default class extends React.Component {
+  indexBinarySearchComparator = (a,b) => (a - b)
+  indexSortComparator = (a, b) => (a > b)
+  
   static defaultProps = {
     sections: [
       {
@@ -68,87 +72,84 @@ export default class extends React.Component {
           }]
       }
     ],
-    onSelect: (image) => {
-    },
-    onSelectAll: (images) => {
-    },
-    onDeselect: (image) => {
-    },
-    onDeselectAll: (images) => {
-    }
+    onSelectionChanged: (selectedIndexes) => {}
+  }
+  
+  componentWillReceiveProps(nextProps) {
+    let selectedIndexes = []
+    const {sections} = nextProps
+    sections.map((s, i) => {
+      selectedIndexes[i] = []
+    })
+    this.setState({selectedIndexes})
   }
   
   constructor(props) {
     super(props)
-    this.state = {
-      selected: []
-    }
+    
+    let selectedIndexes = []
+    const {sections} = props
+    sections.map((s, i) => {
+      selectedIndexes[i] = []
+    })
+    this.state = {selectedIndexes}
   }
   
-  handleToggleImageSection = (sectionIndex) => {
-    console.log(`toggle section ${sectionIndex}`)
-    
-    // const { images } = this.props
-    // const { selected } = this.state
-    // if (selected.length < images.length) {
-    //   this.setState({ selected: images.slice() })
-    //   this.props.onSelectAll(images)
-    // } else {
-    //   this.setState({ selected: [] })
-    //   this.props.onDeselectAll(images)
-    // }
-  }
-  
-  handleToggleImage = (image, index, sectionIndex) => {
-    // console.log(`toggle image ${index} of section ${sectionIndex}`, image.url)
-    
-    let { selected } = this.state
-    let current = selected[sectionIndex]
-    // console.log('current', current)
-    
-    if (current === undefined) {
-      
-      // initialize, skip straight to adding it
-      selected[sectionIndex] = [];
-      selected[sectionIndex].push(index)
-      this.setState({ selected });
-      
-    } else if (current.indexOf(index) !== -1) {
-    
-      // already inside, remove
-      selected[sectionIndex] = current.filter(i => i !== index)
-      this.setState({ selected });
-      
+  handleImageSectionToggle = (sectionIndex) => {
+    const {sections} = this.props
+    const section = sections[sectionIndex]
+    let {selectedIndexes} = this.state
+    if (section === undefined) {
+      return
+    } else if (this.isSectionAtIndexSelected(sectionIndex)) {
+      selectedIndexes[sectionIndex] = []
     } else {
-    
-      // not inside, add
-      current.push(index)
-      selected[sectionIndex] = current
-      this.setState({ selected })
-    
+      selectedIndexes[sectionIndex] = section.images.map((image, index) => index)
     }
-    
-    console.log('selected', this.state)
-    // let { selected } = this.state
-    // const index = selected.indexOf(image)
-    // if (index === -1) {
-    //   selected.push(image)
-    // } else {
-    //   selected.splice(index, 1)
-    // }
-    // this.setState({ selected })
-    // if (index === -1) {
-    //   this.props.onSelect(image)
-    //   console.log('select', image)
-    // } else {
-    //   this.props.onDeselect(image)
-    //   console.log('deselect', image)
-    // }
+    this.setState({selectedIndexes})
+    this.props.onSelectionChanged(selectedIndexes)
+  }
+  
+  handleImageToggle = (image, index, sectionIndex) => {
+    let {selectedIndexes} = this.state
+    let currentSectionIndexes = selectedIndexes[sectionIndex]
+    if (currentSectionIndexes === undefined) {
+      selectedIndexes[sectionIndex] = []
+      selectedIndexes[sectionIndex].push(index)
+    } else if (bs(currentSectionIndexes, index, this.indexBinarySearchComparator) >= 0) {
+      selectedIndexes[sectionIndex] = currentSectionIndexes.filter(i => i !== index)
+    } else {
+      currentSectionIndexes.push(index)
+      currentSectionIndexes.sort(this.indexSortComparator)
+      selectedIndexes[sectionIndex] = currentSectionIndexes
+    }
+    this.setState({selectedIndexes})
+    this.props.onSelectionChanged(selectedIndexes)
+  }
+  
+  isImageAtIndexSelected = (index, sectionIndex) => {
+    const {selectedIndexes} = this.state
+    const currentSectionIndexes = selectedIndexes[sectionIndex]
+    if (currentSectionIndexes === undefined) {
+      return false
+    } else {
+      return bs(currentSectionIndexes, index, this.indexBinarySearchComparator) >= 0
+    }
+  }
+  
+  isSectionAtIndexSelected = (sectionIndex) => {
+    const {sections} = this.props
+    const section = sections[sectionIndex]
+    if (section === undefined) {
+      return false
+    }
+    let {selectedIndexes} = this.state
+    const currentSectionIndexes = selectedIndexes[sectionIndex]
+    return section.images.length === currentSectionIndexes.length
   }
   
   render() {
     const {sections} = this.props
-    const {selected} = this.state
     return (
       <Paper style={{maxWidth: 608, margin: '0 auto'}}>
         <div className="amal-target-resource" style={{minHeight: 100, padding: 32}}>
@@ -166,8 +167,8 @@ export default class extends React.Component {
                 <ListSubheader component="div" style={{padding: 0}}>
                   <Checkbox
                     color="primary"
-                    onChange={this.handleToggleImageSection.bind(this, sectionIndex)}
-                    checked={false}
+                    onChange={this.handleImageSectionToggle.bind(this, sectionIndex)}
+                    checked={this.isSectionAtIndexSelected(sectionIndex)}
                   />
                   {formattedDateStringFromISOString(section.date)}
                 </ListSubheader>
@@ -175,7 +176,7 @@ export default class extends React.Component {
               {section.images.map((image, index) => (
                 <GridListTile key={image.thumbnailUrl} cols={1} style={{width: 115}}>
                   <ButtonBase style={{height: 115, width: 115}}
-                              onClick={this.handleToggleImage.bind(this, image, index, sectionIndex)}>
+                              onClick={this.handleImageToggle.bind(this, image, index, sectionIndex)}>
                     <div className="overlay" style={{
                       width: '100%',
                       height: '100%',
@@ -191,9 +192,9 @@ export default class extends React.Component {
                       backgroundImage: `url(${image.url})`,
                       backgroundSize: 'cover',
                       backgroundPosition: 'center 40%',
-                      opacity: selected.indexOf(image) !== -1 ? 0.75 : 1
+                      opacity: this.isImageAtIndexSelected(index, sectionIndex) ? 0.75 : 1
                     }}/>
-                    {selected.indexOf(image) !== -1 ?
+                    {this.isImageAtIndexSelected(index, sectionIndex) ?
                       <CheckCircleRounded style={{position: 'absolute', top: 16, right: 16, fill: '#fff'}}/> : <div/>}
                   </ButtonBase>
                 </GridListTile>

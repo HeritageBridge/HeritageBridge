@@ -24,6 +24,7 @@ const theme = createMuiTheme({
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {sections: []}
   }
   
   handleResourceSearch = (query) => {
@@ -38,6 +39,10 @@ class App extends React.Component {
     console.log('deselect', resource.name)
   }
   
+  handlePhotoSelectionChanged = indexes => {
+    console.log('handle photo selection changed', indexes)
+  }
+  
   render() {
     return (
       <div className="amal-app" style={{ margin: 32 }}>
@@ -50,7 +55,7 @@ class App extends React.Component {
               <TargetResource onSearch={this.handleResourceSearch} onResourceSelected={this.handleResourceSelect} onResourceDeselected={this.handleResourceDeselect}/>
             </Grid>
             <Grid item>
-              <PhotoGridList />
+              <PhotoGridList onSelectionChanged={this.handlePhotoSelectionChanged} />
             </Grid>
           </Grid>
         </MuiThemeProvider>
