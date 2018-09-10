@@ -1,13 +1,13 @@
 import React from 'react';
+import ButtonBase from '@material-ui/core/ButtonBase';
 import Checkbox from '@material-ui/core/Checkbox';
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
-import GridListTileBar from "@material-ui/core/GridListTileBar"
 import ListSubheader from "@material-ui/core/ListSubheader"
 import Typography from "@material-ui/core/Typography/Typography";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction/ListItemSecondaryAction";
+import CheckCircleRounded from "@material-ui/icons/CheckCircleRounded"
 
 export default class extends React.Component {
   static defaultProps = {
@@ -128,29 +128,26 @@ export default class extends React.Component {
             </GridListTile>
             {images.map(image => (
               <GridListTile key={image.thumbnailUrl} cols={1} style={{ width: 115 }}>
-                <div className="overlay" style={{
-                  width:'100%',
-                  height:'100%',
-                  position:'absolute',
-                  backgroundColor:'#000'
-                }}/>
-                <img
-                  src={image.thumbnailUrl}
-                  alt={image.url}
-                  style={{ cursor: 'pointer', opacity: selected.indexOf(image) !== -1 ? 0.6 : 1.0 }}
-                  onClick={this.handleToggleImage.bind(this, image)}
-                />
-                { selected.indexOf(image) !== -1 ? <GridListTileBar
-                  actionIcon={
-                    <Checkbox
-                      color="secondary"
-                      checked={selected.indexOf(image) !== -1}
-                      onChange={this.handleToggleImage.bind(this, image)}
-                      style={{ color: '#fff' }}
-                    />
-                  }
-                  style={{ background: 'rgba(0,0,0,0)' }}
-                /> : <div/> }
+                <ButtonBase style={{ height: 115, width: 115 }} onClick={this.handleToggleImage.bind(this, image)}>
+                  <div className="overlay" style={{
+                    width:'100%',
+                    height:'100%',
+                    position:'absolute',
+                    backgroundColor:'#000'
+                  }}/>
+                  <span style={{
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                    backgroundImage: `url(${image.url})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center 40%',
+                    opacity: selected.indexOf(image) !== -1 ? 0.75 : 1
+                  }} />
+                  { selected.indexOf(image) !== -1 ? <CheckCircleRounded style={{ position: 'absolute', top: 16, right: 16, fill: '#fff' }}/> : <div/> }
+                </ButtonBase>
               </GridListTile>
             ))}
           </GridList>
