@@ -37,11 +37,11 @@ class App extends React.Component {
   
   render() {
     return (
-      <div className="amal-app">
+      <div className="amal-app" style={{ margin: 32 }}>
         <MuiThemeProvider theme={theme}>
           <Grid container spacing={32} direction="column">
             <Grid item>
-              <img src="static/frontend/logo-herbridge.svg" style={{margin: '0 auto', display: 'block'}}/>
+              <img src="/media/frontend/logo-herbridge.svg" style={{margin: '0 auto', display: 'block'}}/>
             </Grid>
             <Grid item>
               <TargetResource onSearch={this.handleResourceSearch} onResourceSelected={this.handleResourceSelect} onResourceDeselected={this.handleResourceDeselect}/>

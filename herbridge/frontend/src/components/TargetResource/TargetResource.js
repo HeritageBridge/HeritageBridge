@@ -149,7 +149,7 @@ export default class TargetResource extends React.Component {
               <Typography variant="subheading">EAMENA Resources</Typography>
             </Grid>
             <Grid item xs={6} style={{display: 'table-cell', verticalAlign: 'middle'}}>
-              <img src="static/frontend/logo-eamena.svg" style={{display: 'block', margin: '6px 0 0 auto'}}/>
+              <img src="/media/frontend/logo-eamena.svg" style={{display: 'block', margin: '6px 0 0 auto'}}/>
             </Grid>
           </Grid>
           <Grid container spacing={8} direction="column" style={{marginTop: 16}}>
