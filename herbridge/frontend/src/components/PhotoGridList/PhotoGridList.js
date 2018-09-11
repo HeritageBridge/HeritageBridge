@@ -6,6 +6,8 @@ import Grid from "@material-ui/core/Grid";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import ListSubheader from "@material-ui/core/ListSubheader"
+import LogoAmalInHeritage from '../Svg/logo-amal-in-heritage.svg'
+import Svg from 'react-svg-inline'
 import Typography from "@material-ui/core/Typography/Typography";
 import CheckCircleRounded from "@material-ui/icons/CheckCircleRounded"
 import {formattedDateStringFromISOString} from "../../utils/utils"
@@ -158,7 +160,7 @@ export default class extends React.Component {
               <Typography variant="subheading">Amal in Heritage</Typography>
             </Grid>
             <Grid item xs={6} style={{display: 'table-cell', verticalAlign: 'middle'}}>
-              <img src="static/frontend/logo-amal-in-heritage.svg" style={{display: 'block', margin: '6px 0 0 auto'}}/>
+              <Svg svg={LogoAmalInHeritage} style={{ display: 'block', margin: '6px 0 0 auto', width: 48 }}/>
             </Grid>
           </Grid>
           {sections.map((section, sectionIndex) => (
