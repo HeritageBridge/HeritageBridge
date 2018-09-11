@@ -114,5 +114,6 @@ venv.bak/
 .idea/
 
 # React (JS)
-frontend.js
+# We're keeping the statically generated js file to simplify deployment
+# frontend.js
 node_modules
