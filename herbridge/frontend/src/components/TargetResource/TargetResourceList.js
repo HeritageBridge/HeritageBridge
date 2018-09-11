@@ -34,7 +34,7 @@ export default class extends React.Component {
   render() {
     const {selected} = this.state
     return (
-      <List>
+      <List dense>
         {this.props.resources.map((resource, index) => (
           <ListItem key={resource.id} style={{ paddingLeft: 12 }}>
             <span style={{
