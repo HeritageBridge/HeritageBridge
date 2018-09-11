@@ -42,7 +42,7 @@ class App extends React.Component {
     console.log('deselect', resource.name)
   }
   
-  handlePhotoSelectionChanged = indexes => {
+  handlePhotoSelectionChanged = (indexes) => {
     console.log('handle photo selection changed', indexes)
   }
   
