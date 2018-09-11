@@ -9,7 +9,6 @@ import SearchOutlined from '@material-ui/icons/SearchOutlined';
 import TargetResourceList from './TargetResourceList'
 import LogoEamena from '../Svg/logo-eamena.svg'
 import Svg from 'react-svg-inline'
-import LogoHerBridge from "../Svg/logo-herbridge.svg";
 
 export default class TargetResource extends React.Component {
   static defaultProps = {
