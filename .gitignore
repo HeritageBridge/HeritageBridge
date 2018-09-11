@@ -106,3 +106,13 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Mac
+.DS_Store
+
+# Jetbrains (PyCharm)
+.idea/
+
+# React (JS)
+frontend.js
+node_modules

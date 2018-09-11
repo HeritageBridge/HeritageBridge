@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'imagekit',
     'main',
     'storages',
+    'frontend',
 ]
 
 MIDDLEWARE = [
