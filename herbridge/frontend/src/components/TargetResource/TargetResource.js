@@ -7,6 +7,9 @@ import Typography from '@material-ui/core/Typography';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchOutlined from '@material-ui/icons/SearchOutlined';
 import TargetResourceList from './TargetResourceList'
+import LogoEamena from '../Svg/logo-eamena.svg'
+import Svg from 'react-svg-inline'
+import LogoHerBridge from "../Svg/logo-herbridge.svg";
 
 export default class TargetResource extends React.Component {
   static defaultProps = {
@@ -149,7 +152,7 @@ export default class TargetResource extends React.Component {
               <Typography variant="subheading">EAMENA Resources</Typography>
             </Grid>
             <Grid item xs={6} style={{display: 'table-cell', verticalAlign: 'middle'}}>
-              <img src="/media/frontend/logo-eamena.svg" style={{display: 'block', margin: '6px 0 0 auto'}}/>
+              <Svg svg={LogoEamena} style={{ display: 'block', margin: '6px 0 0 auto', width: 69 }}/>
             </Grid>
           </Grid>
           <Grid container spacing={8} direction="column" style={{marginTop: 16}}>

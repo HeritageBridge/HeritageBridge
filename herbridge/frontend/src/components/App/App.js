@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 import {hot} from 'react-hot-loader'
 import Grid from '@material-ui/core/Grid'
 import TargetResource from '../TargetResource'
+import LogoHerBridge from '../Svg/logo-herbridge.svg';
+import Svg from 'react-svg-inline'
 
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 
@@ -41,7 +43,7 @@ class App extends React.Component {
         <MuiThemeProvider theme={theme}>
           <Grid container spacing={32} direction="column">
             <Grid item>
-              <img src="/media/frontend/logo-herbridge.svg" style={{margin: '0 auto', display: 'block'}}/>
+              <Svg svg={LogoHerBridge} style={{ display: 'block', margin: '0 auto', width: 111 }}/>
             </Grid>
             <Grid item>
               <TargetResource onSearch={this.handleResourceSearch} onResourceSelected={this.handleResourceSelect} onResourceDeselected={this.handleResourceDeselect}/>

@@ -19,8 +19,10 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "prop-types": "^15.6.2",
+    "raw-loader": "^0.5.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-svg-inline": "^2.1.1",
     "webpack": "^4.12.1",
     "webpack-cli": "^3.0.8"
   },
