@@ -7,6 +7,9 @@ import TargetResource from '../TargetResource'
 import LogoHerBridge from '../Svg/logo-herbridge.svg';
 import Svg from 'react-svg-inline'
 
+import { fakeResources } from '../../data/fake.resources'
+import { fakePhotoSections } from '../../data/fake.photo.sections'
+
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
@@ -24,7 +27,7 @@ const theme = createMuiTheme({
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {sections: []}
+    this.state = {}
   }
   
   handleResourceSearch = (query) => {
@@ -52,10 +55,10 @@ class App extends React.Component {
               <Svg svg={LogoHerBridge} style={{ display: 'block', margin: '0 auto', width: 111 }}/>
             </Grid>
             <Grid item>
-              <TargetResource onSearch={this.handleResourceSearch} onResourceSelected={this.handleResourceSelect} onResourceDeselected={this.handleResourceDeselect}/>
+              <TargetResource resources={fakeResources} onSearch={this.handleResourceSearch} onResourceSelected={this.handleResourceSelect} onResourceDeselected={this.handleResourceDeselect}/>
             </Grid>
             <Grid item>
-              <PhotoGridList onSelectionChanged={this.handlePhotoSelectionChanged} />
+              <PhotoGridList sections={fakePhotoSections} onSelectionChanged={this.handlePhotoSelectionChanged} />
             </Grid>
           </Grid>
         </MuiThemeProvider>
