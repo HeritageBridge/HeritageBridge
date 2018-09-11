@@ -116,4 +116,6 @@ venv.bak/
 # React (JS)
 # We're keeping the statically generated js file to simplify deployment
 # frontend.js
+*.hot-update.js
+*.hot-update.json
 node_modules
