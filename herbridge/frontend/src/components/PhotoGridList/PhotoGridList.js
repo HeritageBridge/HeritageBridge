@@ -13,6 +13,8 @@ import CheckCircleRounded from "@material-ui/icons/CheckCircleRounded"
 import {formattedDateStringFromISOString} from "../../utils/utils"
 import bs from 'binary-search'
 
+import { InlineDatePicker } from 'material-ui-pickers/DatePicker'
+
 export default class extends React.Component {
   indexBinarySearchComparator = (a,b) => (a - b)
   indexSortComparator = (a, b) => (a > b)
@@ -106,6 +108,28 @@ export default class extends React.Component {
             </Grid>
             <Grid item xs={6} style={{display: 'table-cell', verticalAlign: 'middle'}}>
               <Svg svg={LogoAmalInHeritage} style={{ display: 'block', margin: '6px 0 0 auto', width: 48 }}/>
+            </Grid>
+          </Grid>
+          <Grid container spacing={16}>
+            <Grid item>
+              <InlineDatePicker
+                onlyCalendar
+                keyboard
+                format="DD MMM YYYY"
+                label="Start Date"
+                value={new Date("Aug 24 1989")}
+                onChange={(event) => console.log('start date changed', event)}
+              />
+            </Grid>
+            <Grid item>
+              <InlineDatePicker
+                onlyCalendar
+                keyboard
+                format="DD MMM YYYY"
+                label="End Date"
+                value={new Date("Aug 26 1989")}
+                onChange={(event) => console.log('end date changed', event)}
+              />
             </Grid>
           </Grid>
           {sections.map((section, sectionIndex) => (

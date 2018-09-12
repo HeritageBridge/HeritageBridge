@@ -6,6 +6,8 @@ import PhotoGridList from '../PhotoGridList'
 import TargetResource from '../TargetResource'
 import LogoHerBridge from '../Svg/logo-herbridge.svg';
 import Svg from 'react-svg-inline'
+import MomentUtils from 'material-ui-pickers/utils/moment-utils'
+import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
 
 import { fakeResources } from '../../data/fake.resources'
 import { fakePhotoSections } from '../../data/fake.photo.sections'
@@ -50,17 +52,19 @@ class App extends React.Component {
     return (
       <div className="amal-app" style={{ margin: 32 }}>
         <MuiThemeProvider theme={theme}>
-          <Grid container spacing={32} direction="column">
-            <Grid item>
-              <Svg svg={LogoHerBridge} style={{ display: 'block', margin: '0 auto', width: 111 }}/>
+          <MuiPickersUtilsProvider utils={MomentUtils}>
+            <Grid container spacing={32} direction="column">
+              <Grid item>
+                <Svg svg={LogoHerBridge} style={{ display: 'block', margin: '0 auto', width: 111 }}/>
+              </Grid>
+              <Grid item>
+                <TargetResource resources={fakeResources} onSearch={this.handleResourceSearch} onResourceSelected={this.handleResourceSelect} onResourceDeselected={this.handleResourceDeselect}/>
+              </Grid>
+              <Grid item>
+                <PhotoGridList sections={fakePhotoSections} onSelectionChanged={this.handlePhotoSelectionChanged} />
+              </Grid>
             </Grid>
-            <Grid item>
-              <TargetResource resources={fakeResources} onSearch={this.handleResourceSearch} onResourceSelected={this.handleResourceSelect} onResourceDeselected={this.handleResourceDeselect}/>
-            </Grid>
-            <Grid item>
-              <PhotoGridList sections={fakePhotoSections} onSelectionChanged={this.handlePhotoSelectionChanged} />
-            </Grid>
-          </Grid>
+          </MuiPickersUtilsProvider>
         </MuiThemeProvider>
       </div>
     )
