@@ -10,8 +10,8 @@ import LogoAmalInHeritage from '../Svg/logo-amal-in-heritage.svg'
 import Svg from 'react-svg-inline'
 import Typography from "@material-ui/core/Typography/Typography";
 import CheckCircleRounded from "@material-ui/icons/CheckCircleRounded"
-import {formattedDateStringFromISOString} from "../../utils/utils"
 import bs from 'binary-search'
+import moment from 'moment'
 
 import { InlineDatePicker } from 'material-ui-pickers/DatePicker'
 
@@ -21,7 +21,10 @@ export default class extends React.Component {
   
   static defaultProps = {
     sections: [],
-    onSelectionChanged: (selectedIndexes) => {}
+    startDate: moment().subtract(3, "days").toDate(),
+    endDate: moment().toDate(),
+    onSelectionChanged: (selectedIndexes) => {},
+    onDateRangeChanged: (startDate, endDate) => {},
   }
   
   componentWillReceiveProps(nextProps) {
@@ -41,7 +44,21 @@ export default class extends React.Component {
     sections.map((s, i) => {
       selectedIndexes[i] = []
     })
-    this.state = {selectedIndexes}
+    this.state = {
+      selectedIndexes,
+      startDate: props.startDate,
+      endDate: props.endDate
+    }
+  }
+  
+  handleStartDateChanged = (startDate) => {
+    this.setState({ startDate })
+    this.props.onDateRangeChanged(startDate, this.state.endDate)
+  }
+  
+  handleEndDateChanged = (endDate) => {
+    this.setState({ endDate })
+    this.props.onDateRangeChanged(this.state.startDate, endDate)
   }
   
   handleImageSectionToggle = (sectionIndex) => {
@@ -115,20 +132,22 @@ export default class extends React.Component {
               <InlineDatePicker
                 onlyCalendar
                 keyboard
-                format="DD MMM YYYY"
+                format="D MMMM YYYY"
                 label="Start Date"
-                value={new Date("Aug 24 1989")}
-                onChange={(event) => console.log('start date changed', event)}
+                maxDate={this.state.endDate}
+                value={this.state.startDate}
+                onChange={(md) => this.handleStartDateChanged(md.toDate())}
               />
             </Grid>
             <Grid item>
               <InlineDatePicker
                 onlyCalendar
                 keyboard
-                format="DD MMM YYYY"
+                format="D MMMM YYYY"
                 label="End Date"
-                value={new Date("Aug 26 1989")}
-                onChange={(event) => console.log('end date changed', event)}
+                minDate={this.state.startDate}
+                value={this.state.endDate}
+                onChange={(md) => this.handleEndDateChanged(md.toDate())}
               />
             </Grid>
           </Grid>
@@ -141,7 +160,7 @@ export default class extends React.Component {
                     onChange={this.handleImageSectionToggle.bind(this, sectionIndex)}
                     checked={this.isSectionAtIndexSelected(sectionIndex)}
                   />
-                  {formattedDateStringFromISOString(section.date)}
+                  {moment(section.date).format('D MMMM YYYY')}
                 </ListSubheader>
               </GridListTile>
               {section.images.map((image, index) => (

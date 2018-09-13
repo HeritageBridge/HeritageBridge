@@ -44,6 +44,10 @@ class App extends React.Component {
     console.log('deselect', resource.name)
   }
   
+  handlePhotoDateRangeChanged = (startDate, endDate) => {
+    console.log('date range changed', startDate, endDate)
+  }
+  
   handlePhotoSelectionChanged = (indexes) => {
     console.log('handle photo selection changed', indexes)
   }
@@ -61,7 +65,7 @@ class App extends React.Component {
                 <TargetResource resources={fakeResources} onSearch={this.handleResourceSearch} onResourceSelected={this.handleResourceSelect} onResourceDeselected={this.handleResourceDeselect}/>
               </Grid>
               <Grid item>
-                <PhotoGridList sections={fakePhotoSections} onSelectionChanged={this.handlePhotoSelectionChanged} />
+                <PhotoGridList sections={fakePhotoSections} onDateRangeChanged={this.handlePhotoDateRangeChanged} onSelectionChanged={this.handlePhotoSelectionChanged} />
               </Grid>
             </Grid>
           </MuiPickersUtilsProvider>
