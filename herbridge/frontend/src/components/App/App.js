@@ -12,10 +12,11 @@ import LogoHerBridge from '../Svg/logo-herbridge.svg';
 import Svg from 'react-svg-inline'
 import MomentUtils from 'material-ui-pickers/utils/moment-utils'
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
-import { fakeResources } from '../../data/fake.resources'
-import { fakePhotoSections } from '../../data/fake.photo.sections'
+import {fakeResources} from '../../data/fake.resources'
+import {fakePhotoSections} from '../../data/fake.photo.sections'
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
-import { flatMap } from '../../utils/utils'
+import {flatMap} from '../../utils/utils'
+
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -97,7 +98,7 @@ class App extends React.Component {
   
   handlePhotoSelectionChanged = (indexes) => {
     console.log('handle photo selection changed', indexes)
-    this.setState({ selectedPhotoIndexes: indexes })
+    this.setState({selectedPhotoIndexes: indexes})
   }
   
   getLoginContent = () => {
