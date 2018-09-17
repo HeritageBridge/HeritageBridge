@@ -119,3 +119,5 @@ venv.bak/
 *.hot-update.js
 *.hot-update.json
 node_modules
+*.hot-update.json
+*.hot-update.js
