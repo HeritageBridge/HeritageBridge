@@ -36,7 +36,7 @@ class App extends React.Component {
       isLoggedIn: false,
       loginError: null,
       loginIsLoading: false,
-      selectedPhotoConfirmationIndex: -1,
+      selectedPhotoConfirmationIndex: 0,
       selectedPhotoIndexes: null,
     }
   }
@@ -118,6 +118,7 @@ class App extends React.Component {
   
   getLoginContent = () => {
     const {selectedPhotoIndexes, selectedPhotoConfirmationIndex} = this.state
+    const selectedPhotos = this.getSelectedPhotos()
     return (
       <Grid
         container
@@ -152,7 +153,7 @@ class App extends React.Component {
               <PhotoConfirmation
                 selectedIndex={selectedPhotoConfirmationIndex}
                 onSelectionChanged={this.handlePhotoConfirmationSelectionChanged}
-                images={this.getSelectedPhotos()}/>
+                images={selectedPhotos}/>
             </Grid>
           </Grid>
         </Grid>

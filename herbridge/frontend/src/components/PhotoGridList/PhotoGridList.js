@@ -127,7 +127,7 @@ export default class extends React.Component {
     const {sections} = this.props
     return (
       <Paper style={{margin: '0 auto'}}>
-        <div className="amal-target-resource" style={{minHeight: 100, padding: 32}}>
+        <div style={{minHeight: 100, padding: 32}}>
           <Grid container spacing={16}>
             <Grid item xs={6}>
               <Typography variant="subheading">Amal in Heritage</Typography>
