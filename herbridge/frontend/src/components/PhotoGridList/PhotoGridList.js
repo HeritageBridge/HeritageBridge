@@ -21,6 +21,7 @@ export default class extends React.Component {
   
   static defaultProps = {
     sections: [],
+    selectedIndexes: null,
     startDate: moment().subtract(3, "days").toDate(),
     endDate: moment().toDate(),
     onSelectionChanged: (selectedIndexes) => {},
@@ -28,24 +29,32 @@ export default class extends React.Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    let selectedIndexes = []
-    const {sections} = nextProps
-    sections.map((s, i) => {
-      selectedIndexes[i] = []
-    })
-    this.setState({selectedIndexes})
+    let newSelectedIndexes = []
+    const {sections, selectedIndexes} = nextProps
+    if (selectedIndexes !== null) {
+      newSelectedIndexes = selectedIndexes
+    } else {
+      sections.map((s, i) => {
+        newSelectedIndexes[i] = []
+      })
+    }
+    this.setState({selectedIndexes: newSelectedIndexes})
   }
   
   constructor(props) {
     super(props)
     
-    let selectedIndexes = []
-    const {sections} = props
-    sections.map((s, i) => {
-      selectedIndexes[i] = []
-    })
+    let newSelectedIndexes = []
+    const {sections, selectedIndexes} = props
+    if (selectedIndexes !== null) {
+      newSelectedIndexes = selectedIndexes
+    } else {
+      sections.map((s, i) => {
+        newSelectedIndexes[i] = []
+      })
+    }
     this.state = {
-      selectedIndexes,
+      selectedIndexes: newSelectedIndexes,
       startDate: props.startDate,
       endDate: props.endDate
     }
@@ -117,7 +126,7 @@ export default class extends React.Component {
   render() {
     const {sections} = this.props
     return (
-      <Paper style={{maxWidth: 608, margin: '0 auto'}}>
+      <Paper style={{margin: '0 auto'}}>
         <div className="amal-target-resource" style={{minHeight: 100, padding: 32}}>
           <Grid container spacing={16}>
             <Grid item xs={6}>

@@ -4,6 +4,7 @@ import api from '../../lib/api'
 import cookies from '../../utils/cookies'
 import {hot} from 'react-hot-loader'
 import Grid from '@material-ui/core/Grid'
+import PhotoConfirmation from '../PhotoConfirmation'
 import PhotoGridList from '../PhotoGridList'
 import TargetResource from '../TargetResource'
 import Login from '../Login'
@@ -11,10 +12,10 @@ import LogoHerBridge from '../Svg/logo-herbridge.svg';
 import Svg from 'react-svg-inline'
 import MomentUtils from 'material-ui-pickers/utils/moment-utils'
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
-import {fakeResources} from '../../data/fake.resources'
-import {fakePhotoSections} from '../../data/fake.photo.sections'
-import {createMuiTheme, MuiThemeProvider} from '@material-ui/core/styles';
-
+import { fakeResources } from '../../data/fake.resources'
+import { fakePhotoSections } from '../../data/fake.photo.sections'
+import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
+import { flatMap } from '../../utils/utils'
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -34,6 +35,7 @@ class App extends React.Component {
       isLoggedIn: false,
       loginError: null,
       loginIsLoading: false,
+      selectedPhotoIndexes: null,
     }
   }
   
@@ -95,24 +97,50 @@ class App extends React.Component {
   
   handlePhotoSelectionChanged = (indexes) => {
     console.log('handle photo selection changed', indexes)
+    this.setState({ selectedPhotoIndexes: indexes })
   }
   
   getLoginContent = () => {
+    const {selectedPhotoIndexes} = this.state
     return (
-      <Grid container spacing={32} direction="column">
+      <Grid
+        container
+        spacing={32}
+        direction="column">
         <Grid item>
-          <Svg svg={LogoHerBridge} style={{display: 'block', margin: '0 auto', width: 111}}/>
+          <Svg
+            svg={LogoHerBridge}
+            style={{ display: 'block', margin: '0 auto', width: 111 }}/>
         </Grid>
         <Grid item>
-          <TargetResource resources={fakeResources}
-                          onSearch={this.handleResourceSearch}
-                          onResourceSelected={this.handleResourceSelect}
-                          onResourceDeselected={this.handleResourceDeselect}/>
+          <TargetResource
+            resources={fakeResources}
+            onSearch={this.handleResourceSearch}
+            onResourceSelected={this.handleResourceSelect}
+            onResourceDeselected={this.handleResourceDeselect}/>
         </Grid>
         <Grid item>
-          <PhotoGridList sections={fakePhotoSections}
-                         onDateRangeChanged={this.handlePhotoDateRangeChanged}
-                         onSelectionChanged={this.handlePhotoSelectionChanged}/>
+          <Grid
+            container
+            spacing={32}>
+            <Grid
+              item
+              xs={6}>
+              <PhotoGridList
+                sections={fakePhotoSections}
+                selectedIndexes={selectedPhotoIndexes}
+                onDateRangeChanged={this.handlePhotoDateRangeChanged}
+                onSelectionChanged={this.handlePhotoSelectionChanged} />
+            </Grid>
+            <Grid item xs={6}>
+              <PhotoConfirmation images={ flatMap( fakePhotoSections,  (section, sectionIndex) => {
+                const sectionSelectedPhotoIndexes = selectedPhotoIndexes ? selectedPhotoIndexes[sectionIndex] : []
+                return section.images.filter( (image, imageIndex) => {
+                  return sectionSelectedPhotoIndexes.includes(imageIndex)
+                })
+              })}/>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     )
