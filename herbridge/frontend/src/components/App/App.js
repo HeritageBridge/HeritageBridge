@@ -36,6 +36,7 @@ class App extends React.Component {
       isLoggedIn: false,
       loginError: null,
       loginIsLoading: false,
+      selectedPhotoConfirmationIndex: -1,
       selectedPhotoIndexes: null,
     }
   }
@@ -80,6 +81,15 @@ class App extends React.Component {
     }
   }
   
+  getSelectedPhotos = () => {
+    const {selectedPhotoIndexes} = this.state
+    return selectedPhotoIndexes ? flatMap(fakePhotoSections, (section, sectionIndex) => {
+      return section.images.filter((image, imageIndex) => {
+        return selectedPhotoIndexes[sectionIndex].includes(imageIndex)
+      })
+    }) : []
+  }
+  
   handleResourceSearch = (query) => {
     console.log('search', query)
   }
@@ -101,8 +111,13 @@ class App extends React.Component {
     this.setState({selectedPhotoIndexes: indexes})
   }
   
+  handlePhotoConfirmationSelectionChanged = (index) => {
+    console.log('handle photo confirmation selection changed', index)
+    this.setState({selectedPhotoConfirmationIndex: index})
+  }
+  
   getLoginContent = () => {
-    const {selectedPhotoIndexes} = this.state
+    const {selectedPhotoIndexes, selectedPhotoConfirmationIndex} = this.state
     return (
       <Grid
         container
@@ -134,12 +149,10 @@ class App extends React.Component {
                 onSelectionChanged={this.handlePhotoSelectionChanged} />
             </Grid>
             <Grid item xs={6}>
-              <PhotoConfirmation images={ flatMap( fakePhotoSections,  (section, sectionIndex) => {
-                const sectionSelectedPhotoIndexes = selectedPhotoIndexes ? selectedPhotoIndexes[sectionIndex] : []
-                return section.images.filter( (image, imageIndex) => {
-                  return sectionSelectedPhotoIndexes.includes(imageIndex)
-                })
-              })}/>
+              <PhotoConfirmation
+                selectedIndex={selectedPhotoConfirmationIndex}
+                onSelectionChanged={this.handlePhotoConfirmationSelectionChanged}
+                images={this.getSelectedPhotos()}/>
             </Grid>
           </Grid>
         </Grid>
