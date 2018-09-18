@@ -120,6 +120,8 @@ class App extends React.Component {
         newSelectedPhotoConfirmationIndex = previousIndex > 0 ? previousIndex : 0
       }
     }
+    
+    // Update the state
     this.setState({
       selectedPhotoIndexes: indexes,
       selectedPhotos: newSelectedPhotos,
@@ -128,7 +130,6 @@ class App extends React.Component {
   }
   
   handlePhotoConfirmationSelectionChanged = (index) => {
-    console.log('handle photo confirmation selection changed', index)
     this.setState({selectedPhotoConfirmationIndex: index})
   }
   
