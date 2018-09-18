@@ -67,9 +67,14 @@ export default class extends React.Component {
     const {selectedIndex, images} = this.props
     const imageCount = images.length
     return (
-      <Grid container style={{width: 200, margin: '0 auto'}}>
+      <Grid
+        container
+        style={{width: 200, margin: '0 auto'}}>
         <Grid item>
-          <Button size="small" onClick={this.handlePreviousImageSelected} disabled={imageCount === 0 || selectedIndex === 0}>
+          <Button
+            size="small"
+            onClick={this.handlePreviousImageSelected}
+            disabled={imageCount === 0 || selectedIndex === 0}>
             {<KeyboardArrowLeft/>}
           </Button>
         </Grid>
@@ -78,8 +83,10 @@ export default class extends React.Component {
             style={{marginTop: 9}}>{imageCount > 0 ? `${selectedIndex + 1} of ${imageCount}` : ``}</Typography>
         </Grid>
         <Grid item>
-          <Button size="small" onClick={this.handleNextImageSelected}
-                  disabled={imageCount === 0 || selectedIndex === imageCount - 1}>
+          <Button
+            size="small"
+            onClick={this.handleNextImageSelected}
+            disabled={imageCount === 0 || selectedIndex === imageCount - 1}>
             {<KeyboardArrowRight/>}
           </Button>
         </Grid>
@@ -93,8 +100,9 @@ export default class extends React.Component {
         <GridList cellHeight={115} cols={6} style={{padding: '16px 0 32px 0'}}>
           {this.props.images.map((image, index) => (
             <GridListTile key={image.id} cols={1} style={{width: 115}}>
-              <ButtonBase style={{height: 115, width: 115}}
-                          onClick={this.handleImageSelected.bind(this, image, index)}>
+              <ButtonBase
+                style={{height: 115, width: 115}}
+                onClick={this.handleImageSelected.bind(this, image, index)}>
                 <div className="overlay" style={{
                   width: '100%',
                   height: '100%',
