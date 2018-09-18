@@ -15,7 +15,7 @@ export default class extends React.Component {
   static defaultProps = {
     images: [],
     selectedIndex: 0,
-    onSelectionChanged: (selectedIndex) => {
+    onSelectionChanged: (index) => {
     },
   }
   
