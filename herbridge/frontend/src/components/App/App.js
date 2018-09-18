@@ -143,9 +143,12 @@ class App extends React.Component {
         <Grid item>
           <Svg
             svg={LogoHerBridge}
-            style={{ display: 'block', margin: '0 auto', width: 111 }}/>
+            style={{display: 'block', margin: '0 auto', width: 111}}/>
         </Grid>
-        <Grid item>
+        <Grid
+          item
+          xs={12}
+          sm={6}>
           <TargetResource
             resources={fakeResources}
             onSearch={this.handleResourceSearch}
@@ -158,19 +161,23 @@ class App extends React.Component {
             spacing={32}>
             <Grid
               item
-              xs={6}>
+              xs={12}
+              sm={6}>
               <PhotoGridList
                 sections={fakePhotoSections}
                 selectedIndexes={selectedPhotoIndexes}
                 onDateRangeChanged={this.handlePhotoDateRangeChanged}
                 onSelectionChanged={this.handlePhotoSelectionChanged}/>
             </Grid>
-            <Grid item xs={6}>
-              <PhotoConfirmation
-                selectedIndex={selectedPhotoConfirmationIndex}
-                onSelectionChanged={this.handlePhotoConfirmationSelectionChanged}
-                images={selectedPhotos}/>
-            </Grid>
+            {selectedPhotos.length > 0 ? <Grid
+              item
+              xs={12}
+              sm={6}>
+                <PhotoConfirmation
+                  selectedIndex={selectedPhotoConfirmationIndex}
+                  onSelectionChanged={this.handlePhotoConfirmationSelectionChanged}
+                  images={selectedPhotos}/>
+            </Grid> : <div/>}
           </Grid>
         </Grid>
       </Grid>
