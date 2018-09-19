@@ -68,20 +68,18 @@ class InstanceView(generics.RetrieveAPIView):
 
 
 class LoginAuthToken(ObtainAuthToken):
-
-    @csrf_exempt
     def post(self, request, *args, **kwargs):
         body_unicode = request.body
         if not body_unicode:
             return Response({
-                'message' : 'No password specified'
+                'detail' : 'No password specified'
             }, status=422)
 
         # Extract out the password
         body = json.loads(request.body)
         if 'password' not in body:
             return Response({
-                'message': 'No password specified'
+                'detail': 'No password specified'
             }, status=422)
 
         # Check the password matches
@@ -91,7 +89,7 @@ class LoginAuthToken(ObtainAuthToken):
             })
         else:
             return Response({
-                'message': 'Password is incorrect'
+                'detail': 'Password is incorrect'
             }, status=401)
 
 

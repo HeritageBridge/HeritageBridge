@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import api from '../../lib/api'
 import cookies from '../../utils/cookies'
 import {hot} from 'react-hot-loader'
 import Grid from '@material-ui/core/Grid'
@@ -54,10 +55,21 @@ class App extends React.Component {
     } else {
       this.setState({ loginError: null, loginIsLoading: true })
       
-      // Perform the request
-      setTimeout(() => {
-        this.setState({ loginIsLoading: false })
-      }, 3000)
+      let state = {
+        loginError: null,
+        loginIsLoading: false
+      }
+      api.login(password)
+      .then(token => {
+        cookies.setToken(token)
+        state.isLoggedIn = cookies.isLoggedIn()
+        this.setState(state)
+      })
+      .catch(error => {
+        state.loginError = error.message
+        state.isLoggedIn = false
+        this.setState(state)
+      })
     }
   }
   

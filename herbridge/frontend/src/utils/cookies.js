@@ -1,20 +1,20 @@
 import Cookies from 'js-cookie'
-const SESSION_KEY = "tokenId"
+const TOKEN_KEY = "token"
 
 const isLoggedIn = () => {
-  return getSessionId() !== undefined
+  return getToken() !== undefined
 }
 
-const getSessionId = () => {
-  return Cookies.get(SESSION_KEY)
+const getToken = () => {
+  return Cookies.get(TOKEN_KEY)
 }
 
-const setSessionId = (id) => {
-  Cookies.set(SESSION_KEY, id, { expires: 7 });
+const setToken = (token) => {
+  Cookies.set(TOKEN_KEY, token, { expires: 7 });
 }
 
 module.exports = {
   isLoggedIn,
-  getSessionId,
-  setSessionId
+  getToken,
+  setToken
 }
