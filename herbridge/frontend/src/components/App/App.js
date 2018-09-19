@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import cookies from '../../utils/cookies'
 import {hot} from 'react-hot-loader'
 import Grid from '@material-ui/core/Grid'
 import PhotoGridList from '../PhotoGridList'
@@ -9,12 +10,9 @@ import LogoHerBridge from '../Svg/logo-herbridge.svg';
 import Svg from 'react-svg-inline'
 import MomentUtils from 'material-ui-pickers/utils/moment-utils'
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
-
-import { fakeResources } from '../../data/fake.resources'
-import { fakePhotoSections } from '../../data/fake.photo.sections'
-
-import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
-
+import {fakeResources} from '../../data/fake.resources'
+import {fakePhotoSections} from '../../data/fake.photo.sections'
+import {createMuiTheme, MuiThemeProvider} from '@material-ui/core/styles';
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -30,7 +28,38 @@ const theme = createMuiTheme({
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {}
+    this.state = {
+      isLoggedIn: false,
+      loginError: null,
+      loginIsLoading: false
+    }
+  }
+  
+  componentDidMount() {
+    console.log('app mounted!', cookies.getSessionId())
+    this.setState({ isLoggedIn: cookies.isLoggedIn() })
+  }
+  
+  handleLoginSubmit = (password) => {
+    console.log('login submit', password)
+    
+    //
+    let error = null
+    if (password.length === 0) {
+      error = "Field is required"
+    }
+    
+    //
+    if (error !== null) {
+      this.setState({ loginError: error, loginIsLoading: false })
+    } else {
+      this.setState({ loginError: null, loginIsLoading: true })
+      
+      // Perform the request
+      setTimeout(() => {
+        this.setState({ loginIsLoading: false })
+      }, 3000)
+    }
   }
   
   handleResourceSearch = (query) => {
@@ -53,23 +82,43 @@ class App extends React.Component {
     console.log('handle photo selection changed', indexes)
   }
   
+  getLoginContent = () => {
+    return (
+      <Grid container spacing={32} direction="column">
+        <Grid item>
+          <Svg svg={LogoHerBridge} style={{ display: 'block', margin: '0 auto', width: 111 }}/>
+        </Grid>
+        <Grid item>
+          <TargetResource resources={fakeResources} onSearch={this.handleResourceSearch} onResourceSelected={this.handleResourceSelect} onResourceDeselected={this.handleResourceDeselect}/>
+        </Grid>
+        <Grid item>
+          <PhotoGridList sections={fakePhotoSections} onDateRangeChanged={this.handlePhotoDateRangeChanged} onSelectionChanged={this.handlePhotoSelectionChanged} />
+        </Grid>
+      </Grid>
+    )
+  }
+  
+  getLoginForm = () => {
+    const {loginIsLoading, loginError} = this.state
+    return (
+      <Grid container spacing={32} direction="column">
+        <Grid item>
+          <Svg svg={LogoHerBridge} style={{ display: 'block', margin: '0 auto', width: 111 }}/>
+        </Grid>
+        <Grid item>
+          <Login error={loginError} isLoading={loginIsLoading} onSubmit={this.handleLoginSubmit}/>
+        </Grid>
+      </Grid>
+    )
+  }
+  
   render() {
+    const {isLoggedIn} = this.state
     return (
       <div style={{ margin: '64px 32px' }}>
         <MuiThemeProvider theme={theme}>
           <MuiPickersUtilsProvider utils={MomentUtils}>
-            <Grid container spacing={32} direction="column">
-              <Grid item>
-                <Svg svg={LogoHerBridge} style={{ display: 'block', margin: '0 auto', width: 111 }}/>
-              </Grid>
-              {/*<Grid item>*/}
-                {/*<TargetResource resources={fakeResources} onSearch={this.handleResourceSearch} onResourceSelected={this.handleResourceSelect} onResourceDeselected={this.handleResourceDeselect}/>*/}
-              {/*</Grid>*/}
-              {/*<Grid item>*/}
-                {/*<PhotoGridList sections={fakePhotoSections} onDateRangeChanged={this.handlePhotoDateRangeChanged} onSelectionChanged={this.handlePhotoSelectionChanged} />*/}
-              {/*</Grid>*/}
-            </Grid>
-            <Login/>
+            { isLoggedIn ? this.getLoginContent() : this.getLoginForm() }
           </MuiPickersUtilsProvider>
         </MuiThemeProvider>
       </div>
