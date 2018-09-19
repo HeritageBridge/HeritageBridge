@@ -1,7 +1,6 @@
 'use strict'
 
 import React from 'react'
-
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
@@ -82,7 +81,7 @@ export default class extends React.Component {
   }
   
   render() {
-    const {error, isLoading} = this.props
+    const {isLoading} = this.props
     return (
       <div style={{ marginRight: 32 }}>
         <Grid

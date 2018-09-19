@@ -36,7 +36,6 @@ class App extends React.Component {
   }
   
   componentDidMount() {
-    console.log('app mounted!', cookies.getSessionId())
     this.setState({ isLoggedIn: cookies.isLoggedIn() })
   }
   
