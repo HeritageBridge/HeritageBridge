@@ -139,6 +139,10 @@ ADMIN_USERNAME = 'admin'
 ADMIN_PW = 'admin'
 ADMIN_EMAIL = ''
 
+# setup default password and auth token for frontend app
+FRONTEND_AUTH_PASSWORD = 'eamena2018'
+FRONTEND_AUTH_TOKEN = 'cb9c4a76-ae93-46d8-a153-7e8525a9c2c2'
+
 # names of fixtures that are loaded with db setup --loaddata
 FIXTURES_TO_LOAD = (
     'events.json',
