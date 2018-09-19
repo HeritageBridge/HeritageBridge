@@ -12,6 +12,7 @@ import LogoHerBridge from '../Svg/logo-herbridge.svg';
 import Svg from 'react-svg-inline'
 import MomentUtils from 'material-ui-pickers/utils/moment-utils'
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
+import Paper from '@material-ui/core/Paper'
 import {fakeResources} from '../../data/fake.resources'
 import {fakePhotoSections} from '../../data/fake.photo.sections'
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
@@ -169,15 +170,15 @@ class App extends React.Component {
                 onDateRangeChanged={this.handlePhotoDateRangeChanged}
                 onSelectionChanged={this.handlePhotoSelectionChanged}/>
             </Grid>
-            {selectedPhotos.length > 0 ? <Grid
+            <Grid
               item
               xs={12}
               sm={6}>
-                <PhotoConfirmation
-                  selectedIndex={selectedPhotoConfirmationIndex}
-                  onSelectionChanged={this.handlePhotoConfirmationSelectionChanged}
-                  images={selectedPhotos}/>
-            </Grid> : <div/>}
+              <PhotoConfirmation
+                selectedIndex={selectedPhotoConfirmationIndex}
+                onSelectionChanged={this.handlePhotoConfirmationSelectionChanged}
+                images={selectedPhotos}/>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
