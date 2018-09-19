@@ -49,7 +49,6 @@ class App extends React.Component {
       error = "Field is required"
     }
     
-    //
     if (error !== null) {
       this.setState({ loginError: error, loginIsLoading: false })
     } else {
@@ -59,6 +58,7 @@ class App extends React.Component {
         loginError: null,
         loginIsLoading: false
       }
+      
       api.login(password)
       .then(token => {
         cookies.setToken(token)
