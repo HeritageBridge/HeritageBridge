@@ -4,6 +4,7 @@ import {hot} from 'react-hot-loader'
 import Grid from '@material-ui/core/Grid'
 import PhotoGridList from '../PhotoGridList'
 import TargetResource from '../TargetResource'
+import Login from '../Login'
 import LogoHerBridge from '../Svg/logo-herbridge.svg';
 import Svg from 'react-svg-inline'
 import MomentUtils from 'material-ui-pickers/utils/moment-utils'
@@ -54,20 +55,21 @@ class App extends React.Component {
   
   render() {
     return (
-      <div className="amal-app" style={{ margin: 32 }}>
+      <div style={{ margin: '64px 32px' }}>
         <MuiThemeProvider theme={theme}>
           <MuiPickersUtilsProvider utils={MomentUtils}>
             <Grid container spacing={32} direction="column">
               <Grid item>
                 <Svg svg={LogoHerBridge} style={{ display: 'block', margin: '0 auto', width: 111 }}/>
               </Grid>
-              <Grid item>
-                <TargetResource resources={fakeResources} onSearch={this.handleResourceSearch} onResourceSelected={this.handleResourceSelect} onResourceDeselected={this.handleResourceDeselect}/>
-              </Grid>
-              <Grid item>
-                <PhotoGridList sections={fakePhotoSections} onDateRangeChanged={this.handlePhotoDateRangeChanged} onSelectionChanged={this.handlePhotoSelectionChanged} />
-              </Grid>
+              {/*<Grid item>*/}
+                {/*<TargetResource resources={fakeResources} onSearch={this.handleResourceSearch} onResourceSelected={this.handleResourceSelect} onResourceDeselected={this.handleResourceDeselect}/>*/}
+              {/*</Grid>*/}
+              {/*<Grid item>*/}
+                {/*<PhotoGridList sections={fakePhotoSections} onDateRangeChanged={this.handlePhotoDateRangeChanged} onSelectionChanged={this.handlePhotoSelectionChanged} />*/}
+              {/*</Grid>*/}
             </Grid>
+            <Login/>
           </MuiPickersUtilsProvider>
         </MuiThemeProvider>
       </div>
