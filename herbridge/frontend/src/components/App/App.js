@@ -14,6 +14,7 @@ import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsPr
 import {fakeResources} from '../../data/fake.resources'
 import {fakePhotoSections} from '../../data/fake.photo.sections'
 import {createMuiTheme, MuiThemeProvider} from '@material-ui/core/styles';
+
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -32,12 +33,12 @@ class App extends React.Component {
     this.state = {
       isLoggedIn: false,
       loginError: null,
-      loginIsLoading: false
+      loginIsLoading: false,
     }
   }
   
   componentDidMount() {
-    this.setState({ isLoggedIn: cookies.isLoggedIn() })
+    this.setState({isLoggedIn: cookies.isLoggedIn()})
   }
   
   handleLoginSubmit = (password) => {
@@ -50,13 +51,19 @@ class App extends React.Component {
     }
     
     if (error !== null) {
-      this.setState({ loginError: error, loginIsLoading: false })
+      this.setState({
+        loginError: error,
+        loginIsLoading: false,
+      })
     } else {
-      this.setState({ loginError: null, loginIsLoading: true })
+      this.setState({
+        loginError: null,
+        loginIsLoading: true,
+      })
       
       let state = {
         loginError: null,
-        loginIsLoading: false
+        loginIsLoading: false,
       }
       
       api.login(password)
@@ -97,13 +104,16 @@ class App extends React.Component {
     return (
       <Grid container spacing={32} direction="column">
         <Grid item>
-          <Svg svg={LogoHerBridge} style={{ display: 'block', margin: '0 auto', width: 111 }}/>
+          <Svg svg={LogoHerBridge} style={{display: 'block', margin: '0 auto', width: 111}}/>
         </Grid>
         <Grid item>
-          <TargetResource resources={fakeResources} onSearch={this.handleResourceSearch} onResourceSelected={this.handleResourceSelect} onResourceDeselected={this.handleResourceDeselect}/>
+          <TargetResource resources={fakeResources} onSearch={this.handleResourceSearch}
+                          onResourceSelected={this.handleResourceSelect}
+                          onResourceDeselected={this.handleResourceDeselect}/>
         </Grid>
         <Grid item>
-          <PhotoGridList sections={fakePhotoSections} onDateRangeChanged={this.handlePhotoDateRangeChanged} onSelectionChanged={this.handlePhotoSelectionChanged} />
+          <PhotoGridList sections={fakePhotoSections} onDateRangeChanged={this.handlePhotoDateRangeChanged}
+                         onSelectionChanged={this.handlePhotoSelectionChanged}/>
         </Grid>
       </Grid>
     )
@@ -114,7 +124,7 @@ class App extends React.Component {
     return (
       <Grid container spacing={32} direction="column">
         <Grid item>
-          <Svg svg={LogoHerBridge} style={{ display: 'block', margin: '0 auto', width: 111 }}/>
+          <Svg svg={LogoHerBridge} style={{display: 'block', margin: '0 auto', width: 111}}/>
         </Grid>
         <Grid item>
           <Login error={loginError} isLoading={loginIsLoading} onSubmit={this.handleLoginSubmit}/>
@@ -126,10 +136,10 @@ class App extends React.Component {
   render() {
     const {isLoggedIn} = this.state
     return (
-      <div style={{ margin: '64px 32px' }}>
+      <div style={{margin: '64px 32px'}}>
         <MuiThemeProvider theme={theme}>
           <MuiPickersUtilsProvider utils={MomentUtils}>
-            { isLoggedIn ? this.getLoginContent() : this.getLoginForm() }
+            {isLoggedIn ? this.getLoginContent() : this.getLoginForm()}
           </MuiPickersUtilsProvider>
         </MuiThemeProvider>
       </div>
