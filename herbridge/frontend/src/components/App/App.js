@@ -42,9 +42,6 @@ class App extends React.Component {
   }
   
   handleLoginSubmit = (password) => {
-    console.log('login submit', password)
-    
-    //
     let error = null
     if (password.length === 0) {
       error = "Field is required"
@@ -107,12 +104,14 @@ class App extends React.Component {
           <Svg svg={LogoHerBridge} style={{display: 'block', margin: '0 auto', width: 111}}/>
         </Grid>
         <Grid item>
-          <TargetResource resources={fakeResources} onSearch={this.handleResourceSearch}
+          <TargetResource resources={fakeResources}
+                          onSearch={this.handleResourceSearch}
                           onResourceSelected={this.handleResourceSelect}
                           onResourceDeselected={this.handleResourceDeselect}/>
         </Grid>
         <Grid item>
-          <PhotoGridList sections={fakePhotoSections} onDateRangeChanged={this.handlePhotoDateRangeChanged}
+          <PhotoGridList sections={fakePhotoSections}
+                         onDateRangeChanged={this.handlePhotoDateRangeChanged}
                          onSelectionChanged={this.handlePhotoSelectionChanged}/>
         </Grid>
       </Grid>
@@ -127,7 +126,10 @@ class App extends React.Component {
           <Svg svg={LogoHerBridge} style={{display: 'block', margin: '0 auto', width: 111}}/>
         </Grid>
         <Grid item>
-          <Login error={loginError} isLoading={loginIsLoading} onSubmit={this.handleLoginSubmit}/>
+          <Login
+            error={loginError}
+            isLoading={loginIsLoading}
+            onSubmit={this.handleLoginSubmit}/>
         </Grid>
       </Grid>
     )
