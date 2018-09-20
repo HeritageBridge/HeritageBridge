@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.decorators.csrf import csrf_exempt
 from main import views
 
 urlpatterns = [
@@ -26,6 +27,7 @@ urlpatterns = [
     path('api/<str:model>/', views.ListView.as_view(), name='object-list'),
     path('api/<str:model>/<int:pk>/', views.InstanceView.as_view(), name='object-instance'),
     path('api/<str:model>/<uuid:pk>/', views.InstanceView.as_view(), name='object-instance'),
+    path('api/login', csrf_exempt(views.LoginAuthToken.as_view())),
     ## FOLLOWING 3 URLS ARE DEPRECATED JULY 17 - WERE PART OF EARLY API
     path('api-DEP/<str:model_name>/', views.api_dispatch, name='api_dispatch'),
     path('api-DEP/<str:model_name>/<int:id>/', views.api_dispatch, name='api_dispatch'),
