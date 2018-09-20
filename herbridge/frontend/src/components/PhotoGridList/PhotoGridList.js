@@ -28,19 +28,6 @@ export default class extends React.Component {
     onDateRangeChanged: (startDate, endDate) => {},
   }
   
-  componentWillReceiveProps(nextProps) {
-    let newSelectedIndexes = []
-    const {sections, selectedIndexes} = nextProps
-    if (selectedIndexes !== null) {
-      newSelectedIndexes = selectedIndexes
-    } else {
-      sections.map((s, i) => {
-        newSelectedIndexes[i] = []
-      })
-    }
-    this.setState({selectedIndexes: newSelectedIndexes})
-  }
-  
   constructor(props) {
     super(props)
     

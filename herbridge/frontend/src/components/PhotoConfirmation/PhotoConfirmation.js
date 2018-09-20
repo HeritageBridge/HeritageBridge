@@ -9,14 +9,15 @@ import CheckCircleRounded from "@material-ui/icons/CheckCircleRounded"
 import Button from '@material-ui/core/Button';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import PhotoConfirmationButtonGroup from './PhotoConfirmationButtonGroup'
 import SwipeableViews from 'react-swipeable-views';
 
 export default class extends React.Component {
   static defaultProps = {
     images: [],
     selectedIndex: 0,
-    onSelectionChanged: (index) => {
-    },
+    onClear: (index) => {},
+    onSelectionChanged: (index) => {},
   }
   
   handleImageSelected = (image, index) => {
@@ -133,6 +134,14 @@ export default class extends React.Component {
   getMainContent = () => {
     return (
       <div>
+        <PhotoConfirmationButtonGroup
+          onClear={() => { this.props.onClear(this.props.selectedIndex) }}
+          onShowInfo={() => { console.log('on show info') }}
+          onExpand={() => {
+            const image = this.props.images[this.props.selectedIndex]
+            window.open(image.url, '_blank');
+          }}
+          />
         { this.getCarousel() }
         { this.getCarouselControls() }
         { this.getGridList() }
@@ -143,6 +152,7 @@ export default class extends React.Component {
   getEmptyStateContent = () => {
     return (
       <div>
+        <PhotoConfirmationButtonGroup disabled/>
         <div style={{
           backgroundColor: '#F5F5F5',
           height: 452,
