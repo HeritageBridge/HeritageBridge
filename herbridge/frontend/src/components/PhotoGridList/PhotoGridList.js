@@ -22,8 +22,8 @@ export default class extends React.Component {
   static defaultProps = {
     sections: [],
     selectedIndexes: null,
-    startDate: moment().subtract(3, "days").toDate(),
-    endDate: moment().toDate(),
+    startDate: new Date(),
+    endDate: new Date(),
     onSelectionChanged: (selectedIndexes) => {},
     onDateRangeChanged: (startDate, endDate) => {},
   }
