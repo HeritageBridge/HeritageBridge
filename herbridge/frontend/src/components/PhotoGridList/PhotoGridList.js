@@ -92,7 +92,7 @@ export default class extends React.Component {
   render() {
     const {sections} = this.props
     return (
-      <Paper style={{margin: '0 auto'}}>
+      <Paper style={{margin: '0 auto', height: '100%'}}>
         <div style={{minHeight: 100, padding: 32}}>
           <Grid container spacing={16}>
             <Grid item xs={6}>
