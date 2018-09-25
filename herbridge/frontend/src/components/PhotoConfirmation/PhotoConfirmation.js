@@ -4,7 +4,7 @@ import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
-import Grow from '@material-ui/core/Grow'
+import Collapse from '@material-ui/core/Collapse'
 import Typography from "@material-ui/core/Typography/Typography";
 import CheckCircleRounded from "@material-ui/icons/CheckCircleRounded"
 import Button from '@material-ui/core/Button';
@@ -140,7 +140,11 @@ export default class extends React.Component {
   getInfo = () => {
     const { isShowingInfo } = this.state
     const selectedImage = this.props.images[this.props.selectedIndex]
-    return isShowingInfo ? <Grow in={isShowingInfo}><PhotoConfirmationInfo image={selectedImage}/></Grow> : <div/>
+    return (
+      <Collapse in={isShowingInfo}>
+        <PhotoConfirmationInfo image={selectedImage}/>
+      </Collapse>
+    )
   };
   
   getMainContent = () => {
