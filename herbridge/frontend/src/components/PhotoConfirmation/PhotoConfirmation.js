@@ -53,7 +53,7 @@ export default class extends React.Component {
                 key={image.id}
                 src={image.url}
                 style={{
-                  height: 452,
+                  height: 456,
                   objectFit: 'cover',
                   overflow: 'hidden',
                   width: '100%',

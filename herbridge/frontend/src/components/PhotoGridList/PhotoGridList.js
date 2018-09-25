@@ -28,39 +28,18 @@ export default class extends React.Component {
     onDateRangeChanged: (startDate, endDate) => {},
   }
   
-  constructor(props) {
-    super(props)
-    
-    let newSelectedIndexes = []
-    const {sections, selectedIndexes} = props
-    if (selectedIndexes !== null) {
-      newSelectedIndexes = selectedIndexes
-    } else {
-      sections.map((s, i) => {
-        newSelectedIndexes[i] = []
-      })
-    }
-    this.state = {
-      selectedIndexes: newSelectedIndexes,
-      startDate: props.startDate,
-      endDate: props.endDate
-    }
-  }
-  
   handleStartDateChanged = (startDate) => {
-    this.setState({ startDate })
-    this.props.onDateRangeChanged(startDate, this.state.endDate)
+    this.props.onDateRangeChanged(startDate, this.props.endDate)
   }
   
   handleEndDateChanged = (endDate) => {
-    this.setState({ endDate })
-    this.props.onDateRangeChanged(this.state.startDate, endDate)
+    this.props.onDateRangeChanged(this.props.startDate, endDate)
   }
   
   handleImageSectionToggle = (sectionIndex) => {
     const {sections} = this.props
     const section = sections[sectionIndex]
-    let {selectedIndexes} = this.state
+    let {selectedIndexes} = this.props
     if (section === undefined) {
       return
     } else if (this.isSectionAtIndexSelected(sectionIndex)) {
@@ -73,7 +52,7 @@ export default class extends React.Component {
   }
   
   handleImageToggle = (image, index, sectionIndex) => {
-    let {selectedIndexes} = this.state
+    let {selectedIndexes} = this.props
     let currentSectionIndexes = selectedIndexes[sectionIndex]
     if (currentSectionIndexes === undefined) {
       selectedIndexes[sectionIndex] = []
@@ -90,7 +69,7 @@ export default class extends React.Component {
   }
   
   isImageAtIndexSelected = (index, sectionIndex) => {
-    const {selectedIndexes} = this.state
+    const {selectedIndexes} = this.props
     const currentSectionIndexes = selectedIndexes[sectionIndex]
     if (currentSectionIndexes === undefined) {
       return false
@@ -105,7 +84,7 @@ export default class extends React.Component {
     if (section === undefined) {
       return false
     }
-    let {selectedIndexes} = this.state
+    let {selectedIndexes} = this.props
     const currentSectionIndexes = selectedIndexes[sectionIndex]
     return section.images.length === currentSectionIndexes.length
   }
@@ -130,8 +109,8 @@ export default class extends React.Component {
                 keyboard
                 format="D MMMM YYYY"
                 label="Start Date"
-                maxDate={this.state.endDate}
-                value={this.state.startDate}
+                maxDate={this.props.endDate}
+                value={this.props.startDate}
                 onChange={(md) => this.handleStartDateChanged(md.toDate())}
               />
             </Grid>
@@ -141,8 +120,8 @@ export default class extends React.Component {
                 keyboard
                 format="D MMMM YYYY"
                 label="End Date"
-                minDate={this.state.startDate}
-                value={this.state.endDate}
+                minDate={this.props.startDate}
+                value={this.props.endDate}
                 onChange={(md) => this.handleEndDateChanged(md.toDate())}
               />
             </Grid>

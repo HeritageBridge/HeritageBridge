@@ -38,12 +38,6 @@ export default class extends React.Component {
   }
   
   render() {
-    // const {disabled} = this.props
-    const disabled = false
-    const buttonBaseStyle = {
-      backgroundColor: 'white',
-      padding: 12,
-    }
     return (
       <div style={{
         position: 'relative',

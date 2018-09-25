@@ -16,6 +16,7 @@ import {fakeResources} from '../../data/fake.resources'
 import {fakePhotoSections} from '../../data/fake.photo.sections'
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import {flatMap} from '../../utils/utils'
+import moment from "moment";
 
 const theme = createMuiTheme({
   palette: {
@@ -37,14 +38,18 @@ class App extends React.Component {
       loginError: null,
       loginIsLoading: false,
       selectedPhotoConfirmationIndex: 0,
-      selectedPhotoConfirmation: null,
       selectedPhotoIndexes: null,
-      selectedPhotos: []
+      selectedPhotos: [],
+      photoEndDate: moment().toDate(),
+      photoStartDate: moment().subtract(3, "days").toDate(),
     }
   }
   
   componentDidMount() {
-    this.setState({isLoggedIn: cookies.isLoggedIn()})
+    this.setState({
+      isLoggedIn: cookies.isLoggedIn(),
+      selectedPhotoIndexes: fakePhotoSections.map(() => [])
+    })
   }
   
   handleLoginSubmit = (password) => {
@@ -97,33 +102,51 @@ class App extends React.Component {
   
   handlePhotoDateRangeChanged = (startDate, endDate) => {
     console.log('date range changed', startDate, endDate)
+    this.setState({photoStartDate: startDate, photoEndDate: endDate})
   }
   
   handlePhotoSelectionChanged = (indexes) => {
-    console.log('handle photo selection changed', indexes)
-    
     // Update the selected photos using the new indexes
-    const newSelectedPhotos = indexes ? flatMap(fakePhotoSections, (section, sectionIndex) => {
-      return section.images.filter((image, imageIndex) => {
-        return indexes[sectionIndex].includes(imageIndex)
+    const newSelectedPhotos =
+      flatMap(fakePhotoSections, (section, sectionIndex) => {
+        return section.images.filter((image, imageIndex) => {
+          return indexes[sectionIndex].includes(imageIndex)
+        })
       })
-    }) : []
     
     // Update the selected photo in the confirmation component
-    const {selectedPhotoConfirmationIndex, selectedPhotos} = this.state
-    let newSelectedPhotoConfirmationIndex = selectedPhotoConfirmationIndex
-    if (selectedPhotos.length > 0) {
-      const lastSelectedPhoto = selectedPhotos[selectedPhotoConfirmationIndex]
-      newSelectedPhotoConfirmationIndex = newSelectedPhotos.indexOf(lastSelectedPhoto)
-      const previousIndex = selectedPhotoConfirmationIndex - 1
-      if (newSelectedPhotoConfirmationIndex === -1) {
-        newSelectedPhotoConfirmationIndex = previousIndex > 0 ? previousIndex : 0
-      }
-    }
+    const newSelectedPhotoConfirmationIndex = this.nextConfirmationIndex(newSelectedPhotos)
     
     // Update the state
     this.setState({
       selectedPhotoIndexes: indexes,
+      selectedPhotos: newSelectedPhotos,
+      selectedPhotoConfirmationIndex: newSelectedPhotoConfirmationIndex
+    })
+  }
+  
+  handlePhotoConfirmationClear = (index) => {
+    // Update the selected photos using the new index
+    const {selectedPhotos} = this.state
+    const selectedPhoto = selectedPhotos[index]
+    const newSelectedPhotos = selectedPhotos.filter(p => p !== selectedPhoto)
+    
+    // Update the selected indexes
+    const newSelectedPhotoIndexes = fakePhotoSections.map(section => {
+      const images = section.images
+      let indexes = []
+      for (let i = 0; i < images.length; i++) {
+        newSelectedPhotos.indexOf(images[i]) !== -1 ? indexes.push(i) : 0
+      }
+      return indexes
+    })
+    
+    // Update the selected photo in the confirmation component
+    const newSelectedPhotoConfirmationIndex = this.nextConfirmationIndex(newSelectedPhotos)
+    
+    // Update the state
+    this.setState({
+      selectedPhotoIndexes: newSelectedPhotoIndexes,
       selectedPhotos: newSelectedPhotos,
       selectedPhotoConfirmationIndex: newSelectedPhotoConfirmationIndex
     })
@@ -134,7 +157,13 @@ class App extends React.Component {
   }
   
   getLoginContent = () => {
-    const {selectedPhotoIndexes, selectedPhotoConfirmationIndex, selectedPhotos} = this.state
+    const {
+      photoEndDate,
+      photoStartDate,
+      selectedPhotoIndexes,
+      selectedPhotoConfirmationIndex,
+      selectedPhotos
+    } = this.state
     return (
       <Grid
         container
@@ -164,6 +193,8 @@ class App extends React.Component {
               xs={12}
               sm={6}>
               <PhotoGridList
+                endDate={photoEndDate}
+                startDate={photoStartDate}
                 sections={fakePhotoSections}
                 selectedIndexes={selectedPhotoIndexes}
                 onDateRangeChanged={this.handlePhotoDateRangeChanged}
@@ -175,6 +206,7 @@ class App extends React.Component {
               sm={6}>
               <PhotoConfirmation
                 selectedIndex={selectedPhotoConfirmationIndex}
+                onClear={this.handlePhotoConfirmationClear}
                 onSelectionChanged={this.handlePhotoConfirmationSelectionChanged}
                 images={selectedPhotos}/>
             </Grid>
@@ -199,6 +231,20 @@ class App extends React.Component {
         </Grid>
       </Grid>
     )
+  }
+  
+  nextConfirmationIndex = (newSelectedPhotos) => {
+    const {selectedPhotoConfirmationIndex, selectedPhotos} = this.state
+    let newSelectedPhotoConfirmationIndex = selectedPhotoConfirmationIndex
+    if (selectedPhotos.length > 0) {
+      const lastSelectedPhoto = selectedPhotos[selectedPhotoConfirmationIndex]
+      newSelectedPhotoConfirmationIndex = newSelectedPhotos.indexOf(lastSelectedPhoto)
+      const previousIndex = selectedPhotoConfirmationIndex - 1
+      if (newSelectedPhotoConfirmationIndex === -1) {
+        newSelectedPhotoConfirmationIndex = previousIndex > 0 ? previousIndex : 0
+      }
+    }
+    return newSelectedPhotoConfirmationIndex
   }
   
   render() {
