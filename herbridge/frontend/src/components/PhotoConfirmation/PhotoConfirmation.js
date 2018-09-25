@@ -4,12 +4,14 @@ import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
+import Grow from '@material-ui/core/Grow'
 import Typography from "@material-ui/core/Typography/Typography";
 import CheckCircleRounded from "@material-ui/icons/CheckCircleRounded"
 import Button from '@material-ui/core/Button';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import PhotoConfirmationButtonGroup from './PhotoConfirmationButtonGroup'
+import PhotoConfirmationInfo from './PhotoConfirmationInfo'
 import SwipeableViews from 'react-swipeable-views';
 
 export default class extends React.Component {
@@ -18,6 +20,10 @@ export default class extends React.Component {
     selectedIndex: 0,
     onClear: (index) => {},
     onSelectionChanged: (index) => {},
+  }
+  
+  state = {
+    isShowingInfo: false
   }
   
   handleImageSelected = (image, index) => {
@@ -131,12 +137,24 @@ export default class extends React.Component {
     )
   }
   
+  getInfo = () => {
+    const { isShowingInfo } = this.state
+    const selectedImage = this.props.images[this.props.selectedIndex]
+    return isShowingInfo ? <Grow in={isShowingInfo}><PhotoConfirmationInfo image={selectedImage}/></Grow> : <div/>
+  };
+  
   getMainContent = () => {
     return (
       <div>
         <PhotoConfirmationButtonGroup
-          onClear={() => { this.props.onClear(this.props.selectedIndex) }}
-          onShowInfo={() => { console.log('on show info') }}
+          onClear={() => {
+            this.props.onClear(this.props.selectedIndex)
+          }}
+          onShowInfo={() => {
+            const shouldShowInfo = !this.state.isShowingInfo
+            this.setState({ isShowingInfo: shouldShowInfo })
+            console.log('on show info')
+          }}
           onExpand={() => {
             const image = this.props.images[this.props.selectedIndex]
             window.open(image.url, '_blank');
@@ -144,6 +162,7 @@ export default class extends React.Component {
           />
         { this.getCarousel() }
         { this.getCarouselControls() }
+        { this.getInfo() }
         { this.getGridList() }
       </div>
     )
