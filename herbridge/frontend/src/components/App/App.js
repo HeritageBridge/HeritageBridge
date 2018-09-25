@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import api from '../../lib/api'
 import cookies from '../../utils/cookies'
 import {hot} from 'react-hot-loader'
+import Grow from '@material-ui/core/Grow';
 import Grid from '@material-ui/core/Grid'
 import PhotoConfirmation from '../PhotoConfirmation'
 import PhotoGridList from '../PhotoGridList'
@@ -162,7 +163,8 @@ class App extends React.Component {
       photoStartDate,
       selectedPhotoIndexes,
       selectedPhotoConfirmationIndex,
-      selectedPhotos
+      selectedPhotos,
+      isLoggedIn
     } = this.state
     return (
       <Grid
@@ -178,11 +180,11 @@ class App extends React.Component {
           item
           xs={12}
           sm={6}>
-          <TargetResource
-            resources={fakeResources}
-            onSearch={this.handleResourceSearch}
-            onResourceSelected={this.handleResourceSelect}
-            onResourceDeselected={this.handleResourceDeselect}/>
+            <TargetResource
+              resources={fakeResources}
+              onSearch={this.handleResourceSearch}
+              onResourceSelected={this.handleResourceSelect}
+              onResourceDeselected={this.handleResourceDeselect}/>
         </Grid>
         <Grid item>
           <Grid
@@ -191,7 +193,7 @@ class App extends React.Component {
             <Grid
               item
               xs={12}
-              sm={6}>
+              sm={selectedPhotos.length > 0 ? 6 : 12}>
               <PhotoGridList
                 endDate={photoEndDate}
                 startDate={photoStartDate}
@@ -200,7 +202,8 @@ class App extends React.Component {
                 onDateRangeChanged={this.handlePhotoDateRangeChanged}
                 onSelectionChanged={this.handlePhotoSelectionChanged}/>
             </Grid>
-            <Grid
+            { selectedPhotos.length > 0 ? <Grow in={selectedPhotos.length > 0}>
+              <Grid
               item
               xs={12}
               sm={6}>
@@ -209,7 +212,8 @@ class App extends React.Component {
                 onClear={this.handlePhotoConfirmationClear}
                 onSelectionChanged={this.handlePhotoConfirmationSelectionChanged}
                 images={selectedPhotos}/>
-            </Grid>
+              </Grid>
+            </Grow> : <div/>}
           </Grid>
         </Grid>
       </Grid>
