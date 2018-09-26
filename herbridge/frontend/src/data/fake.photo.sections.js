@@ -55,7 +55,7 @@ module.exports = {
           caption: 'more stairs in hong kong (coordinates in Egypt)'
         },
         {
-          id: 'e0000000-0000-0000-0000-000000000004',
+          id: 'e0000000-0000-0000-0000-000000000009',
           url: '/media/frontend/square_placeholder.svg',
           thumbnailUrl: '/media/frontend/square_placeholder.svg',
           latitude: 30.3232,

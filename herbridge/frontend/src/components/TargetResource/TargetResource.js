@@ -50,7 +50,7 @@ export default class TargetResource extends React.Component {
   
   render() {
     return (
-      <Paper style={{maxWidth: 608, margin: '0 auto'}}>
+      <Paper style={{margin: '0 auto'}}>
         <div className="amal-target-resource" style={{minHeight: 100, padding: 32}}>
           <Grid container spacing={16}>
             <Grid item xs={6}>

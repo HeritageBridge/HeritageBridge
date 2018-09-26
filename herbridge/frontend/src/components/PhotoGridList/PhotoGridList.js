@@ -21,50 +21,25 @@ export default class extends React.Component {
   
   static defaultProps = {
     sections: [],
-    startDate: moment().subtract(3, "days").toDate(),
-    endDate: moment().toDate(),
+    selectedIndexes: null,
+    startDate: new Date(),
+    endDate: new Date(),
     onSelectionChanged: (selectedIndexes) => {},
     onDateRangeChanged: (startDate, endDate) => {},
   }
   
-  componentWillReceiveProps(nextProps) {
-    let selectedIndexes = []
-    const {sections} = nextProps
-    sections.map((s, i) => {
-      selectedIndexes[i] = []
-    })
-    this.setState({selectedIndexes})
-  }
-  
-  constructor(props) {
-    super(props)
-    
-    let selectedIndexes = []
-    const {sections} = props
-    sections.map((s, i) => {
-      selectedIndexes[i] = []
-    })
-    this.state = {
-      selectedIndexes,
-      startDate: props.startDate,
-      endDate: props.endDate
-    }
-  }
-  
   handleStartDateChanged = (startDate) => {
-    this.setState({ startDate })
-    this.props.onDateRangeChanged(startDate, this.state.endDate)
+    this.props.onDateRangeChanged(startDate, this.props.endDate)
   }
   
   handleEndDateChanged = (endDate) => {
-    this.setState({ endDate })
-    this.props.onDateRangeChanged(this.state.startDate, endDate)
+    this.props.onDateRangeChanged(this.props.startDate, endDate)
   }
   
   handleImageSectionToggle = (sectionIndex) => {
     const {sections} = this.props
     const section = sections[sectionIndex]
-    let {selectedIndexes} = this.state
+    let {selectedIndexes} = this.props
     if (section === undefined) {
       return
     } else if (this.isSectionAtIndexSelected(sectionIndex)) {
@@ -77,7 +52,7 @@ export default class extends React.Component {
   }
   
   handleImageToggle = (image, index, sectionIndex) => {
-    let {selectedIndexes} = this.state
+    let {selectedIndexes} = this.props
     let currentSectionIndexes = selectedIndexes[sectionIndex]
     if (currentSectionIndexes === undefined) {
       selectedIndexes[sectionIndex] = []
@@ -94,7 +69,7 @@ export default class extends React.Component {
   }
   
   isImageAtIndexSelected = (index, sectionIndex) => {
-    const {selectedIndexes} = this.state
+    const {selectedIndexes} = this.props
     const currentSectionIndexes = selectedIndexes[sectionIndex]
     if (currentSectionIndexes === undefined) {
       return false
@@ -109,7 +84,7 @@ export default class extends React.Component {
     if (section === undefined) {
       return false
     }
-    let {selectedIndexes} = this.state
+    let {selectedIndexes} = this.props
     const currentSectionIndexes = selectedIndexes[sectionIndex]
     return section.images.length === currentSectionIndexes.length
   }
@@ -117,8 +92,8 @@ export default class extends React.Component {
   render() {
     const {sections} = this.props
     return (
-      <Paper style={{maxWidth: 608, margin: '0 auto'}}>
-        <div className="amal-target-resource" style={{minHeight: 100, padding: 32}}>
+      <Paper style={{margin: '0 auto', height: '100%'}}>
+        <div style={{minHeight: 100, padding: 32}}>
           <Grid container spacing={16}>
             <Grid item xs={6}>
               <Typography variant="subheading">Amal in Heritage</Typography>
@@ -134,8 +109,8 @@ export default class extends React.Component {
                 keyboard
                 format="D MMMM YYYY"
                 label="Start Date"
-                maxDate={this.state.endDate}
-                value={this.state.startDate}
+                maxDate={this.props.endDate}
+                value={this.props.startDate}
                 onChange={(md) => this.handleStartDateChanged(md.toDate())}
               />
             </Grid>
@@ -145,8 +120,8 @@ export default class extends React.Component {
                 keyboard
                 format="D MMMM YYYY"
                 label="End Date"
-                minDate={this.state.startDate}
-                value={this.state.endDate}
+                minDate={this.props.startDate}
+                value={this.props.endDate}
                 onChange={(md) => this.handleEndDateChanged(md.toDate())}
               />
             </Grid>
