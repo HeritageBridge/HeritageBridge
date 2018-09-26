@@ -167,6 +167,7 @@ class App extends React.Component {
       selectedPhotoConfirmationIndex,
       selectedPhotos,
     } = this.state
+    const noPhotosSelected = selectedPhotos.length === 0
     return (
       <Grid
         container
@@ -194,7 +195,7 @@ class App extends React.Component {
             <Grid
               item
               xs={12}
-              sm={selectedPhotos.length > 0 ? 6 : 12}>
+              sm={noPhotosSelected ? 12 : 6}>
               <PhotoGridList
                 endDate={photoEndDate}
                 startDate={photoStartDate}
@@ -203,18 +204,19 @@ class App extends React.Component {
                 onDateRangeChanged={this.handlePhotoDateRangeChanged}
                 onSelectionChanged={this.handlePhotoSelectionChanged}/>
             </Grid>
-            { selectedPhotos.length > 0 ? <Grow in={selectedPhotos.length > 0}>
-              <Grid
-              item
-              xs={12}
-              sm={6}>
-              <PhotoConfirmation
-                selectedIndex={selectedPhotoConfirmationIndex}
-                onClear={this.handlePhotoConfirmationClear}
-                onSelectionChanged={this.handlePhotoConfirmationSelectionChanged}
-                images={selectedPhotos}/>
-              </Grid>
-            </Grow> : <div/>}
+            { noPhotosSelected ? <div/> :
+              <Grow in={!noPhotosSelected}>
+                <Grid
+                item
+                xs={12}
+                sm={6}>
+                <PhotoConfirmation
+                  selectedIndex={selectedPhotoConfirmationIndex}
+                  onClear={this.handlePhotoConfirmationClear}
+                  onSelectionChanged={this.handlePhotoConfirmationSelectionChanged}
+                  images={selectedPhotos}/>
+                </Grid>
+              </Grow>}
           </Grid>
         </Grid>
       </Grid>
@@ -248,6 +250,8 @@ class App extends React.Component {
       if (newSelectedPhotoConfirmationIndex === -1) {
         newSelectedPhotoConfirmationIndex = previousIndex > 0 ? previousIndex : 0
       }
+    } else {
+      newSelectedPhotoConfirmationIndex = 0
     }
     return newSelectedPhotoConfirmationIndex
   }

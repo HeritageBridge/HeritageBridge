@@ -18,8 +18,10 @@ export default class extends React.Component {
   static defaultProps = {
     images: [],
     selectedIndex: 0,
-    onClear: (index) => {},
-    onSelectionChanged: (index) => {},
+    onClear: (index) => {
+    },
+    onSelectionChanged: (index) => {
+    },
   }
   
   state = {
@@ -35,11 +37,13 @@ export default class extends React.Component {
   }
   
   handlePreviousImageSelected = () => {
-    this.props.onSelectionChanged(this.props.selectedIndex - 1)
+    const previousIndex = this.props.selectedIndex - 1
+    this.props.onSelectionChanged(previousIndex)
   }
   
   handleNextImageSelected = () => {
-    this.props.onSelectionChanged(this.props.selectedIndex + 1)
+    const nextIndex = this.props.selectedIndex + 1
+    this.props.onSelectionChanged(nextIndex)
   }
   
   isImageAtIndexSelected = (index) => {
@@ -47,25 +51,25 @@ export default class extends React.Component {
   }
   
   getCarousel = () => {
-    const { images, selectedIndex } = this.props
+    const {images, selectedIndex} = this.props
     return (
       <div>
         <SwipeableViews
-            index={selectedIndex}
-            onChangeIndex={this.handleImageIndexChanged}
-            enableMouseEvents={true}>
-            {images.map(image => {
-              return <img
-                key={image.id}
-                src={image.url}
-                style={{
-                  height: 456,
-                  objectFit: 'cover',
-                  overflow: 'hidden',
-                  width: '100%',
-                }}/>
-            })}
-          </SwipeableViews>
+          index={selectedIndex}
+          onChangeIndex={this.handleImageIndexChanged}
+          enableMouseEvents={true}>
+          {images.map(image => {
+            return <img
+              key={image.id}
+              src={image.url}
+              style={{
+                height: 456,
+                objectFit: 'cover',
+                overflow: 'hidden',
+                width: '100%',
+              }}/>
+          })}
+        </SwipeableViews>
       </div>
     )
   }
@@ -86,8 +90,9 @@ export default class extends React.Component {
           </Button>
         </Grid>
         <Grid item>
-          <Typography
-            style={{marginTop: 9}}>{imageCount > 0 ? `${selectedIndex + 1} of ${imageCount}` : ``}</Typography>
+          <Typography style={{marginTop: 9}}>
+            {imageCount > 0 ? `${selectedIndex + 1} of ${imageCount}` : ``}
+          </Typography>
         </Grid>
         <Grid item>
           <Button
@@ -104,41 +109,52 @@ export default class extends React.Component {
   getGridList = () => {
     return (
       <div>
-        <GridList cellHeight={115} cols={6} style={{padding: '16px 0 32px 0'}}>
-          {this.props.images.map((image, index) => (
-            <GridListTile key={image.id} cols={1} style={{width: 115}}>
-              <ButtonBase
-                style={{height: 115, width: 115}}
-                onClick={this.handleImageSelected.bind(this, image, index)}>
-                <div className="overlay" style={{
-                  width: '100%',
-                  height: '100%',
-                  position: 'absolute',
-                  backgroundColor: '#000'
-                }}/>
-                <span style={{
-                  position: 'absolute',
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                  backgroundImage: `url(${image.url})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center 40%',
-                  opacity: this.isImageAtIndexSelected(index) ? 0.75 : 1
-                }}/>
-                {this.isImageAtIndexSelected(index) ?
-                  <CheckCircleRounded style={{position: 'absolute', top: 16, right: 16, fill: '#fff'}}/> : <div/>}
-              </ButtonBase>
-            </GridListTile>
-          ))}
-          </GridList>
+        <GridList
+          cellHeight={115}
+          cols={6}
+          style={{padding: '16px 0 32px 0'}}>
+            {this.props.images.map((image, index) => (
+              <GridListTile
+                key={image.id}
+                cols={1}
+                style={{width: 115}}>
+                  <ButtonBase
+                    style={{height: 115, width: 115}}
+                    onClick={this.handleImageSelected.bind(this, image, index)}>
+                      <div className="overlay" style={{
+                        width: '100%',
+                        height: '100%',
+                        position: 'absolute',
+                        backgroundColor: '#000'
+                      }}/>
+                      <span style={{
+                        position: 'absolute',
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        bottom: 0,
+                        backgroundImage: `url(${image.url})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center 40%',
+                        opacity: this.isImageAtIndexSelected(index) ? 0.75 : 1
+                      }}/>
+                      {this.isImageAtIndexSelected(index) ?
+                        <CheckCircleRounded style={{
+                          position: 'absolute',
+                          top: 16,
+                          right: 16,
+                          fill: '#fff'}} /> : <div/>
+                      }
+                  </ButtonBase>
+              </GridListTile>
+            ))}
+        </GridList>
       </div>
     )
   }
   
   getInfo = () => {
-    const { isShowingInfo } = this.state
+    const {isShowingInfo} = this.state
     const selectedImage = this.props.images[this.props.selectedIndex]
     return (
       <Collapse in={isShowingInfo}>
@@ -156,18 +172,18 @@ export default class extends React.Component {
           }}
           onShowInfo={() => {
             const shouldShowInfo = !this.state.isShowingInfo
-            this.setState({ isShowingInfo: shouldShowInfo })
+            this.setState({isShowingInfo: shouldShowInfo})
             console.log('on show info')
           }}
           onExpand={() => {
             const image = this.props.images[this.props.selectedIndex]
             window.open(image.url, '_blank');
           }}
-          />
-        { this.getCarousel() }
-        { this.getCarouselControls() }
-        { this.getInfo() }
-        { this.getGridList() }
+        />
+        {this.getCarousel()}
+        {this.getCarouselControls()}
+        {this.getInfo()}
+        {this.getGridList()}
       </div>
     )
   }
@@ -183,18 +199,18 @@ export default class extends React.Component {
           overflow: 'hidden',
           width: '100%',
         }}/>
-        { this.getCarouselControls() }
+        {this.getCarouselControls()}
       </div>
     )
   }
   
   render() {
-    const { images } = this.props
+    const {images} = this.props
     return (
       <Paper style={{height: '100%', margin: '0 auto'}}>
         <div style={{minHeight: 100}}>
           <Typography variant="subheading" style={{padding: '24px'}}>Confirm</Typography>
-          { images.length > 0 ?  this.getMainContent() : this.getEmptyStateContent() }
+          {images.length > 0 ? this.getMainContent() : this.getEmptyStateContent()}
         </div>
       </Paper>
     )
