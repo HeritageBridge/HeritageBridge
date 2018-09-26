@@ -8,6 +8,7 @@ import Info from '@material-ui/icons/Info'
 export default class extends React.Component {
   static defaultProps = {
     disabled: false,
+    isShowInfoEnabled: false,
     onClear: () => {},
     onExpand: () => {},
     onShowInfo: () => {},
@@ -38,6 +39,7 @@ export default class extends React.Component {
   }
   
   render() {
+    const {isShowInfoEnabled} = this.props
     return (
       <div style={{
         position: 'relative',
@@ -54,19 +56,19 @@ export default class extends React.Component {
         }}>
           <Grid container>
             <Grid item>
-              { this.getButtonWithIcon(<ImageSearch/>, this.props.onExpand) }
+              { this.getButtonWithIcon(<ImageSearch color="action"/>, this.props.onExpand) }
             </Grid>
             <Grid item>
               { this.getDivider() }
             </Grid>
             <Grid item>
-              { this.getButtonWithIcon(<Info/>, this.props.onShowInfo) }
+              { this.getButtonWithIcon(<Info color={isShowInfoEnabled ? "primary" : "action"}/>, this.props.onShowInfo) }
             </Grid>
             <Grid item>
               { this.getDivider() }
             </Grid>
             <Grid item>
-              { this.getButtonWithIcon(<Clear/>, this.props.onClear) }
+              { this.getButtonWithIcon(<Clear color="action"/>, this.props.onClear) }
             </Grid>
           </Grid>
         </div>

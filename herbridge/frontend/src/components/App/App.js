@@ -241,6 +241,7 @@ class App extends React.Component {
   }
   
   nextConfirmationIndex = (newSelectedPhotos) => {
+    const newSelectedPhotoCount = newSelectedPhotos.length
     const {selectedPhotoConfirmationIndex, selectedPhotos} = this.state
     let newSelectedPhotoConfirmationIndex = selectedPhotoConfirmationIndex
     if (selectedPhotos.length > 0) {
@@ -252,6 +253,9 @@ class App extends React.Component {
       }
     } else {
       newSelectedPhotoConfirmationIndex = 0
+    }
+    if (newSelectedPhotoConfirmationIndex >= newSelectedPhotoCount ) {
+      newSelectedPhotoConfirmationIndex = Math.max(0, newSelectedPhotoCount  - 1)
     }
     return newSelectedPhotoConfirmationIndex
   }

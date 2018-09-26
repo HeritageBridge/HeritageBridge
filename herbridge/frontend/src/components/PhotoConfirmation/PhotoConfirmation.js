@@ -19,15 +19,13 @@ export default class extends React.Component {
   static defaultProps = {
     images: [],
     selectedIndex: 0,
-    onClear: (index) => {
-    },
-    onSelectionChanged: (index) => {
-    },
+    onClear: (index) => {},
+    onSelectionChanged: (index) => {},
   }
   
   state = {
     isShowingInfo: false,
-    isExpanded: false
+    isExpanded: false,
   }
   
   handleImageSelected = (image, index) => {
@@ -168,6 +166,7 @@ export default class extends React.Component {
   
   getLightbox = () => {
     const {isExpanded} = this.state
+    console.log('selected index', this.props.selectedIndex, this.props.images)
     const selectedImage = this.props.images[this.props.selectedIndex]
     return (
       <Lightbox
@@ -191,16 +190,15 @@ export default class extends React.Component {
   }
   
   handleExpand = () => {
-    // const {images, selectedIndex} = this.props
-    // const image = images[selectedIndex]
-    // window.open(image.url, '_blank');
     this.setState({isExpanded: true})
   }
   
   getMainContent = () => {
+    const {isShowingInfo} = this.state
     return (
       <div>
         <PhotoConfirmationButtonGroup
+          isShowInfoEnabled={isShowingInfo}
           onClear={this.handleClear}
           onShowInfo={this.handleShowInfo}
           onExpand={this.handleExpand}
