@@ -224,7 +224,7 @@ class App extends React.Component {
             </Grid>
           </Grid>
         </div>
-        <SubmissionBar/>
+        <SubmissionBar />
       </div>
     )
   }
