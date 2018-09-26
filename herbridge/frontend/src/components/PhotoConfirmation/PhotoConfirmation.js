@@ -163,22 +163,29 @@ export default class extends React.Component {
     )
   };
   
+  handleClear = () => {
+    const  {selectedIndex} = this.props
+    this.props.onClear(selectedIndex)
+  }
+  
+  handleShowInfo = () => {
+    const {isShowingInfo} = this.state
+    this.setState({ isShowingInfo: !isShowingInfo })
+  }
+  
+  handleExpand = () => {
+    const {images, selectedIndex} = this.props
+    const image = images[selectedIndex]
+    window.open(image.url, '_blank');
+  }
+  
   getMainContent = () => {
     return (
       <div>
         <PhotoConfirmationButtonGroup
-          onClear={() => {
-            this.props.onClear(this.props.selectedIndex)
-          }}
-          onShowInfo={() => {
-            const shouldShowInfo = !this.state.isShowingInfo
-            this.setState({isShowingInfo: shouldShowInfo})
-            console.log('on show info')
-          }}
-          onExpand={() => {
-            const image = this.props.images[this.props.selectedIndex]
-            window.open(image.url, '_blank');
-          }}
+          onClear={this.handleClear}
+          onShowInfo={this.handleShowInfo}
+          onExpand={this.handleExpand}
         />
         {this.getCarousel()}
         {this.getCarouselControls()}
