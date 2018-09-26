@@ -49,7 +49,7 @@ class App extends React.Component {
   componentDidMount() {
     this.setState({
       isLoggedIn: cookies.isLoggedIn(),
-      selectedPhotoIndexes: fakePhotoSections.map(() => [])
+      selectedPhotoIndexes: fakePhotoSections.map(() => []),
     })
   }
   
@@ -102,8 +102,10 @@ class App extends React.Component {
   }
   
   handlePhotoDateRangeChanged = (startDate, endDate) => {
-    console.log('date range changed', startDate, endDate)
-    this.setState({photoStartDate: startDate, photoEndDate: endDate})
+    this.setState({
+      photoStartDate: startDate,
+      photoEndDate: endDate,
+    })
   }
   
   handlePhotoSelectionChanged = (indexes) => {
@@ -122,7 +124,7 @@ class App extends React.Component {
     this.setState({
       selectedPhotoIndexes: indexes,
       selectedPhotos: newSelectedPhotos,
-      selectedPhotoConfirmationIndex: newSelectedPhotoConfirmationIndex
+      selectedPhotoConfirmationIndex: newSelectedPhotoConfirmationIndex,
     })
   }
   
@@ -149,7 +151,7 @@ class App extends React.Component {
     this.setState({
       selectedPhotoIndexes: newSelectedPhotoIndexes,
       selectedPhotos: newSelectedPhotos,
-      selectedPhotoConfirmationIndex: newSelectedPhotoConfirmationIndex
+      selectedPhotoConfirmationIndex: newSelectedPhotoConfirmationIndex,
     })
   }
   
@@ -164,7 +166,6 @@ class App extends React.Component {
       selectedPhotoIndexes,
       selectedPhotoConfirmationIndex,
       selectedPhotos,
-      isLoggedIn
     } = this.state
     return (
       <Grid
