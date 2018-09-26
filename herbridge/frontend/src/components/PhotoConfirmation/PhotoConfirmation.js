@@ -13,6 +13,7 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import PhotoConfirmationButtonGroup from './PhotoConfirmationButtonGroup'
 import PhotoConfirmationInfo from './PhotoConfirmationInfo'
 import SwipeableViews from 'react-swipeable-views';
+import Lightbox from 'react-images';
 
 export default class extends React.Component {
   static defaultProps = {
@@ -25,7 +26,8 @@ export default class extends React.Component {
   }
   
   state = {
-    isShowingInfo: false
+    isShowingInfo: false,
+    isExpanded: false
   }
   
   handleImageSelected = (image, index) => {
@@ -113,41 +115,42 @@ export default class extends React.Component {
           cellHeight={115}
           cols={6}
           style={{padding: '16px 0 32px 0'}}>
-            {this.props.images.map((image, index) => (
-              <GridListTile
-                key={image.id}
-                cols={1}
-                style={{width: 115}}>
-                  <ButtonBase
-                    style={{height: 115, width: 115}}
-                    onClick={this.handleImageSelected.bind(this, image, index)}>
-                      <div className="overlay" style={{
-                        width: '100%',
-                        height: '100%',
-                        position: 'absolute',
-                        backgroundColor: '#000'
-                      }}/>
-                      <span style={{
-                        position: 'absolute',
-                        left: 0,
-                        right: 0,
-                        top: 0,
-                        bottom: 0,
-                        backgroundImage: `url(${image.url})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center 40%',
-                        opacity: this.isImageAtIndexSelected(index) ? 0.75 : 1
-                      }}/>
-                      {this.isImageAtIndexSelected(index) ?
-                        <CheckCircleRounded style={{
-                          position: 'absolute',
-                          top: 16,
-                          right: 16,
-                          fill: '#fff'}} /> : <div/>
-                      }
-                  </ButtonBase>
-              </GridListTile>
-            ))}
+          {this.props.images.map((image, index) => (
+            <GridListTile
+              key={image.id}
+              cols={1}
+              style={{width: 115}}>
+              <ButtonBase
+                style={{height: 115, width: 115}}
+                onClick={this.handleImageSelected.bind(this, image, index)}>
+                <div className="overlay" style={{
+                  width: '100%',
+                  height: '100%',
+                  position: 'absolute',
+                  backgroundColor: '#000'
+                }}/>
+                <span style={{
+                  position: 'absolute',
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                  backgroundImage: `url(${image.url})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center 40%',
+                  opacity: this.isImageAtIndexSelected(index) ? 0.75 : 1
+                }}/>
+                {this.isImageAtIndexSelected(index) ?
+                  <CheckCircleRounded style={{
+                    position: 'absolute',
+                    top: 16,
+                    right: 16,
+                    fill: '#fff'
+                  }}/> : <div/>
+                }
+              </ButtonBase>
+            </GridListTile>
+          ))}
         </GridList>
       </div>
     )
@@ -163,20 +166,35 @@ export default class extends React.Component {
     )
   };
   
+  getLightbox = () => {
+    const {isExpanded} = this.state
+    const selectedImage = this.props.images[this.props.selectedIndex]
+    return (
+      <Lightbox
+        images={[{src: selectedImage.url}]}
+        isOpen={isExpanded}
+        showImageCount={false}
+        onClose={() => {
+          this.setState({isExpanded: false})
+        }}/>
+    )
+  }
+  
   handleClear = () => {
-    const  {selectedIndex} = this.props
+    const {selectedIndex} = this.props
     this.props.onClear(selectedIndex)
   }
   
   handleShowInfo = () => {
     const {isShowingInfo} = this.state
-    this.setState({ isShowingInfo: !isShowingInfo })
+    this.setState({isShowingInfo: !isShowingInfo})
   }
   
   handleExpand = () => {
-    const {images, selectedIndex} = this.props
-    const image = images[selectedIndex]
-    window.open(image.url, '_blank');
+    // const {images, selectedIndex} = this.props
+    // const image = images[selectedIndex]
+    // window.open(image.url, '_blank');
+    this.setState({isExpanded: true})
   }
   
   getMainContent = () => {
@@ -191,6 +209,7 @@ export default class extends React.Component {
         {this.getCarouselControls()}
         {this.getInfo()}
         {this.getGridList()}
+        {this.getLightbox()}
       </div>
     )
   }
