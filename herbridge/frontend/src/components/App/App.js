@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid'
 import PhotoConfirmation from '../PhotoConfirmation'
 import PhotoGridList from '../PhotoGridList'
 import TargetResource from '../TargetResource'
+import SubmissionBar from '../SubmissionBar'
 import Login from '../Login'
 import LogoHerBridge from '../Svg/logo-herbridge.svg';
 import Svg from 'react-svg-inline'
@@ -169,57 +170,62 @@ class App extends React.Component {
     } = this.state
     const noPhotosSelected = selectedPhotos.length === 0
     return (
-      <Grid
-        container
-        spacing={32}
-        direction="column">
-        <Grid item>
-          <Svg
-            svg={LogoHerBridge}
-            style={{display: 'block', margin: '0 auto', width: 111}}/>
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={6}>
-            <TargetResource
-              resources={fakeResources}
-              onSearch={this.handleResourceSearch}
-              onResourceSelected={this.handleResourceSelect}
-              onResourceDeselected={this.handleResourceDeselect}/>
-        </Grid>
-        <Grid item>
+      <div>
+        <div style={{margin: '64px 32px'}}>
           <Grid
             container
-            spacing={32}>
+            spacing={32}
+            direction="column">
+            <Grid item>
+              <Svg
+                svg={LogoHerBridge}
+                style={{display: 'block', margin: '0 auto', width: 111}}/>
+            </Grid>
             <Grid
               item
               xs={12}
-              sm={noPhotosSelected ? 12 : 6}>
-              <PhotoGridList
-                endDate={photoEndDate}
-                startDate={photoStartDate}
-                sections={fakePhotoSections}
-                selectedIndexes={selectedPhotoIndexes}
-                onDateRangeChanged={this.handlePhotoDateRangeChanged}
-                onSelectionChanged={this.handlePhotoSelectionChanged}/>
+              sm={6}>
+                <TargetResource
+                  resources={fakeResources}
+                  onSearch={this.handleResourceSearch}
+                  onResourceSelected={this.handleResourceSelect}
+                  onResourceDeselected={this.handleResourceDeselect}/>
             </Grid>
-            { noPhotosSelected ? <div/> :
-              <Grow in={!noPhotosSelected}>
+            <Grid item>
+              <Grid
+                container
+                spacing={32}>
                 <Grid
-                item
-                xs={12}
-                sm={6}>
-                <PhotoConfirmation
-                  selectedIndex={selectedPhotoConfirmationIndex}
-                  onClear={this.handlePhotoConfirmationClear}
-                  onSelectionChanged={this.handlePhotoConfirmationSelectionChanged}
-                  images={selectedPhotos}/>
+                  item
+                  xs={12}
+                  sm={noPhotosSelected ? 12 : 6}>
+                  <PhotoGridList
+                    endDate={photoEndDate}
+                    startDate={photoStartDate}
+                    sections={fakePhotoSections}
+                    selectedIndexes={selectedPhotoIndexes}
+                    onDateRangeChanged={this.handlePhotoDateRangeChanged}
+                    onSelectionChanged={this.handlePhotoSelectionChanged}/>
                 </Grid>
-              </Grow>}
+                { noPhotosSelected ? <div/> :
+                  <Grow in={!noPhotosSelected}>
+                    <Grid
+                    item
+                    xs={12}
+                    sm={6}>
+                    <PhotoConfirmation
+                      selectedIndex={selectedPhotoConfirmationIndex}
+                      onClear={this.handlePhotoConfirmationClear}
+                      onSelectionChanged={this.handlePhotoConfirmationSelectionChanged}
+                      images={selectedPhotos}/>
+                    </Grid>
+                  </Grow>}
+              </Grid>
+            </Grid>
           </Grid>
-        </Grid>
-      </Grid>
+        </div>
+        <SubmissionBar/>
+      </div>
     )
   }
   
@@ -263,7 +269,7 @@ class App extends React.Component {
   render() {
     const {isLoggedIn} = this.state
     return (
-      <div style={{margin: '64px 32px'}}>
+      <div>
         <MuiThemeProvider theme={theme}>
           <MuiPickersUtilsProvider utils={MomentUtils}>
             {isLoggedIn ? this.getLoginContent() : this.getLoginForm()}
