@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import api from '../../lib/api'
 import cookies from '../../utils/cookies'
+import Collapse from '@material-ui/core/Collapse'
 import {hot} from 'react-hot-loader'
 import Grow from '@material-ui/core/Grow';
 import Grid from '@material-ui/core/Grid'
@@ -36,6 +37,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      bottomMargin: 64,
       isLoggedIn: false,
       loginError: null,
       loginIsLoading: false,
@@ -45,6 +47,8 @@ class App extends React.Component {
       photoEndDate: moment().toDate(),
       photoStartDate: moment().subtract(3, "days").toDate(),
     }
+    
+    this.resizeTimer = null
   }
   
   componentDidMount() {
@@ -52,6 +56,16 @@ class App extends React.Component {
       isLoggedIn: cookies.isLoggedIn(),
       selectedPhotoIndexes: fakePhotoSections.map(() => []),
     })
+    
+    window.addEventListener("resize", this.handleWindowResize)
+  }
+  
+  componentWillUnmount() {
+    
+    window.removeEventListener("resize", this.handleWindowResize)
+    if (this.resizeTimer !== null) {
+      clearTimeout(this.resizeTimer)
+    }
   }
   
   handleLoginSubmit = (password) => {
@@ -123,6 +137,7 @@ class App extends React.Component {
     
     // Update the state
     this.setState({
+      bottomMargin: this.calculateBottomMargin(newSelectedPhotos),
       selectedPhotoIndexes: indexes,
       selectedPhotos: newSelectedPhotos,
       selectedPhotoConfirmationIndex: newSelectedPhotoConfirmationIndex,
@@ -150,6 +165,7 @@ class App extends React.Component {
     
     // Update the state
     this.setState({
+      bottomMargin: this.calculateBottomMargin(newSelectedPhotos),
       selectedPhotoIndexes: newSelectedPhotoIndexes,
       selectedPhotos: newSelectedPhotos,
       selectedPhotoConfirmationIndex: newSelectedPhotoConfirmationIndex,
@@ -158,6 +174,36 @@ class App extends React.Component {
   
   handlePhotoConfirmationSelectionChanged = (index) => {
     this.setState({selectedPhotoConfirmationIndex: index})
+  }
+  
+  handleWindowResize = () => {
+    if (this.resizeTimer !== null) {
+      clearTimeout(this.resizeTimer)
+    }
+    
+    this.resizeTimer = setTimeout(() => {
+      if (window !== undefined) {
+        const bottomMargin = this.calculateBottomMargin()
+        this.setState({bottomMargin})
+      }
+    }, 300)
+  }
+  
+  calculateBottomMargin = (photos = this.state.selectedPhotos) => {
+    let bottomMargin = 64
+    if (photos.length !== 0) {
+      if (window.innerWidth >= 600) {
+        bottomMargin = SubmissionBar.MAX_HEIGHT_SM
+      } else {
+        bottomMargin = SubmissionBar.MAX_HEIGHT_XS
+      }
+    }
+    return bottomMargin
+  }
+  
+  getParentMargin = () => {
+    const bm = Math.max(64, this.state.bottomMargin)
+    return `64px 32px ${bm}px 32px`
   }
   
   getLoginContent = () => {
@@ -171,7 +217,7 @@ class App extends React.Component {
     const noPhotosSelected = selectedPhotos.length === 0
     return (
       <div>
-        <div style={{margin: '64px 32px'}}>
+        <div style={{margin: this.getParentMargin()}}>
           <Grid
             container
             spacing={32}
@@ -185,11 +231,11 @@ class App extends React.Component {
               item
               xs={12}
               sm={6}>
-                <TargetResource
-                  resources={fakeResources}
-                  onSearch={this.handleResourceSearch}
-                  onResourceSelected={this.handleResourceSelect}
-                  onResourceDeselected={this.handleResourceDeselect}/>
+              <TargetResource
+                resources={fakeResources}
+                onSearch={this.handleResourceSearch}
+                onResourceSelected={this.handleResourceSelect}
+                onResourceDeselected={this.handleResourceDeselect}/>
             </Grid>
             <Grid item>
               <Grid
@@ -207,24 +253,26 @@ class App extends React.Component {
                     onDateRangeChanged={this.handlePhotoDateRangeChanged}
                     onSelectionChanged={this.handlePhotoSelectionChanged}/>
                 </Grid>
-                { noPhotosSelected ? <div/> :
+                {noPhotosSelected ? <div/> :
                   <Grow in={!noPhotosSelected}>
                     <Grid
-                    item
-                    xs={12}
-                    sm={6}>
-                    <PhotoConfirmation
-                      selectedIndex={selectedPhotoConfirmationIndex}
-                      onClear={this.handlePhotoConfirmationClear}
-                      onSelectionChanged={this.handlePhotoConfirmationSelectionChanged}
-                      images={selectedPhotos}/>
+                      item
+                      xs={12}
+                      sm={6}>
+                      <PhotoConfirmation
+                        selectedIndex={selectedPhotoConfirmationIndex}
+                        onClear={this.handlePhotoConfirmationClear}
+                        onSelectionChanged={this.handlePhotoConfirmationSelectionChanged}
+                        images={selectedPhotos}/>
                     </Grid>
                   </Grow>}
               </Grid>
             </Grid>
           </Grid>
         </div>
-        <SubmissionBar />
+        <Collapse in={!noPhotosSelected}>
+            <SubmissionBar imageCount={selectedPhotos.length}/>
+        </Collapse>
       </div>
     )
   }
@@ -260,8 +308,8 @@ class App extends React.Component {
     } else {
       newSelectedPhotoConfirmationIndex = 0
     }
-    if (newSelectedPhotoConfirmationIndex >= newSelectedPhotoCount ) {
-      newSelectedPhotoConfirmationIndex = Math.max(0, newSelectedPhotoCount  - 1)
+    if (newSelectedPhotoConfirmationIndex >= newSelectedPhotoCount) {
+      newSelectedPhotoConfirmationIndex = Math.max(0, newSelectedPhotoCount - 1)
     }
     return newSelectedPhotoConfirmationIndex
   }

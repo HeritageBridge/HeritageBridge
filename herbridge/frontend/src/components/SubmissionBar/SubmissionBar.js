@@ -11,10 +11,18 @@ export default class extends React.Component {
     resourceId: 0,
   }
   
+  static MAX_HEIGHT_SM = 156
+  static MAX_HEIGHT_XS = 276
+  
+  getCurrentDate = () => {
+    return moment().format("ddd[,] D MMM YYYY [at] h:mm")
+  }
+  
   render() {
     return (
       <div style={{
         backgroundColor: '#939393',
+        boxShadow: '0px -2px 2px rgba(0,0,0,0.12)',
         position: 'fixed',
         bottom: 0,
         left: 0,
@@ -23,7 +31,7 @@ export default class extends React.Component {
       }}>
         <div style={{padding: 32}}>
           <Paper style={{width: 'fit-content', display: 'block', margin: '0 auto'}}>
-            <Grid container spacing={8} direction="row" style={{padding: '8px 16px'}}>
+            <Grid container spacing={24} direction="row" style={{padding: '8px 16px'}}>
               <Grid item xs={12} sm={5}>
                 <Grid container direction="column">
                   <Grid item>
@@ -33,7 +41,7 @@ export default class extends React.Component {
                     <Typography variant="headline">{this.props.imageCount} selected</Typography>
                   </Grid>
                   <Grid item>
-                    <Typography variant="body1">{moment().format("ddd[,] D MMM YYYY [at] h:ss")}</Typography>
+                    <Typography variant="body1">{this.getCurrentDate()}</Typography>
                   </Grid>
                 </Grid>
               </Grid>
