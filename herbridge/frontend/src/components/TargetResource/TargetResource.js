@@ -15,7 +15,8 @@ export default class TargetResource extends React.Component {
     onSearch: (query) => {},
     onResourceSelected: (resource) => {},
     onResourceDeselected: (resource) => {},
-    resources: []
+    resources: [],
+    selectedResource: null,
   }
   
   constructor(props) {
@@ -81,6 +82,7 @@ export default class TargetResource extends React.Component {
                 resources={this.props.resources}
                 onSelect={this.handleResourceSelected}
                 onDeselect={this.handleResourceDeselected}
+                selectedResource={this.props.selectedResource}
               />
             </Grid>
           </Grid>

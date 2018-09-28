@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography'
 export default class extends React.Component {
   static defaultProps = {
     imageCount: 0,
-    resourceId: 0,
+    resourceId: 'XXXXXX',
   }
   
   static MAX_HEIGHT_SM = 156
@@ -20,7 +20,7 @@ export default class extends React.Component {
   
   render() {
     return (
-      <div style={{
+      <div style={Object.assign({
         backgroundColor: '#939393',
         boxShadow: '0px -2px 2px rgba(0,0,0,0.12)',
         position: 'fixed',
@@ -28,7 +28,7 @@ export default class extends React.Component {
         left: 0,
         right: 0,
         zIndex: 1
-      }}>
+      }, this.props.style)}>
         <div style={{padding: 32}}>
           <Paper style={{width: 'fit-content', display: 'block', margin: '0 auto'}}>
             <Grid container spacing={24} direction="row" style={{padding: '8px 16px'}}>

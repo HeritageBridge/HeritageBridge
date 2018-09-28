@@ -44,6 +44,7 @@ class App extends React.Component {
       selectedPhotoConfirmationIndex: 0,
       selectedPhotoIndexes: null,
       selectedPhotos: [],
+      selectedResource: null,
       photoEndDate: moment().toDate(),
       photoStartDate: moment().subtract(3, "days").toDate(),
     }
@@ -189,16 +190,20 @@ class App extends React.Component {
     }, 300)
   }
   
-  calculateBottomMargin = (photos = this.state.selectedPhotos) => {
-    let bottomMargin = 64
+  calculateSubmissionHeight = (photos = this.state.selectedPhotos) => {
+    let height = 0
     if (photos.length !== 0) {
       if (window.innerWidth >= 600) {
-        bottomMargin = SubmissionBar.MAX_HEIGHT_SM
+        height = SubmissionBar.MAX_HEIGHT_SM
       } else {
-        bottomMargin = SubmissionBar.MAX_HEIGHT_XS
+        height = SubmissionBar.MAX_HEIGHT_XS
       }
     }
-    return bottomMargin
+    return height
+  }
+  
+  calculateBottomMargin = (photos = this.state.selectedPhotos) => {
+    return 64 + this.calculateSubmissionHeight(photos)
   }
   
   getParentMargin = () => {
@@ -213,11 +218,15 @@ class App extends React.Component {
       selectedPhotoIndexes,
       selectedPhotoConfirmationIndex,
       selectedPhotos,
+      selectedResource,
     } = this.state
     const noPhotosSelected = selectedPhotos.length === 0
     return (
       <div>
-        <div style={{margin: this.getParentMargin()}}>
+        <div style={{
+          margin: this.getParentMargin(),
+          transition: 'margin-bottom 200ms'
+        }}>
           <Grid
             container
             spacing={32}
@@ -235,7 +244,9 @@ class App extends React.Component {
                 resources={fakeResources}
                 onSearch={this.handleResourceSearch}
                 onResourceSelected={this.handleResourceSelect}
-                onResourceDeselected={this.handleResourceDeselect}/>
+                onResourceDeselected={this.handleResourceDeselect}
+                selectedResource={selectedResource}
+              />
             </Grid>
             <Grid item>
               <Grid
@@ -270,9 +281,13 @@ class App extends React.Component {
             </Grid>
           </Grid>
         </div>
-        <Collapse in={!noPhotosSelected}>
-            <SubmissionBar imageCount={selectedPhotos.length}/>
-        </Collapse>
+        <SubmissionBar
+          imageCount={selectedPhotos.length}
+          style={{
+            transition: 'all 300ms',
+            height: this.calculateSubmissionHeight(),
+            opacity: noPhotosSelected ? 0 : 1,
+          }}/>
       </div>
     )
   }

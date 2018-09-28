@@ -10,7 +10,8 @@ export default class extends React.Component {
   static defaultProps = {
     resources: [],
     onDeselect: (resource) => {},
-    onSelect: (resource) => {}
+    onSelect: (resource) => {},
+    selectedResource: null,
   }
   
   constructor(props) {
