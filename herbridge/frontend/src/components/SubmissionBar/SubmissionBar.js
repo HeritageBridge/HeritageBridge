@@ -55,7 +55,7 @@ export default class extends React.Component {
             container
             direction="column">
             <Grid item>
-              <Typography variant="body2">EAMENA-{resource ? resource.id : 'XXXXXX'}</Typography>
+              <Typography variant="body2">EAMENA-{resource ? resource.id : '?'}</Typography>
             </Grid>
             <Grid item>
               <Typography variant="headline">{imageCount} selected</Typography>
