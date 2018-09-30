@@ -34,10 +34,13 @@ const theme = createMuiTheme({
 
 // Main react component for frontend application
 class App extends React.Component {
+  static MIN_BOTTOM_MARGIN = 32
+  
   constructor(props) {
     super(props);
     this.state = {
-      bottomMargin: 64,
+      bottomMargin: 32,
+      isLoading: false,
       isLoggedIn: false,
       loginError: null,
       loginIsLoading: false,
@@ -62,7 +65,6 @@ class App extends React.Component {
   }
   
   componentWillUnmount() {
-    
     window.removeEventListener("resize", this.handleWindowResize)
     if (this.resizeTimer !== null) {
       clearTimeout(this.resizeTimer)
@@ -177,6 +179,19 @@ class App extends React.Component {
     this.setState({selectedPhotoConfirmationIndex: index})
   }
   
+  handleSubmissionBarSubmit = () => {
+    console.log('submit')
+    
+    this.setState({isLoading: true})
+    setTimeout(() => {
+      this.setState({isLoading: false})
+    }, 3000)
+  }
+  
+  handleSubmissionBarArchive = () => {
+    console.log('archive')
+  }
+  
   handleWindowResize = () => {
     if (this.resizeTimer !== null) {
       clearTimeout(this.resizeTimer)
@@ -203,16 +218,17 @@ class App extends React.Component {
   }
   
   calculateBottomMargin = (photos = this.state.selectedPhotos) => {
-    return 64 + this.calculateSubmissionHeight(photos)
+    return App.MIN_BOTTOM_MARGIN + this.calculateSubmissionHeight(photos)
   }
   
   getParentMargin = () => {
-    const bm = Math.max(64, this.state.bottomMargin)
-    return `64px 32px ${bm}px 32px`
+    const bm = Math.max(App.MIN_BOTTOM_MARGIN, this.state.bottomMargin)
+    return `${App.MIN_BOTTOM_MARGIN}px ${App.MIN_BOTTOM_MARGIN}px ${bm}px ${App.MIN_BOTTOM_MARGIN}px`
   }
   
   getLoginContent = () => {
     const {
+      isLoading,
       photoEndDate,
       photoStartDate,
       selectedPhotoIndexes,
@@ -229,7 +245,7 @@ class App extends React.Component {
         }}>
           <Grid
             container
-            spacing={32}
+            spacing={16}
             direction="column">
             <Grid item>
               <Svg
@@ -283,6 +299,9 @@ class App extends React.Component {
         </div>
         <SubmissionBar
           imageCount={selectedPhotos.length}
+          isLoading={isLoading}
+          onArchive={this.handleSubmissionBarArchive}
+          onSubmit={this.handleSubmissionBarSubmit}
           style={{
             transition: 'all 300ms',
             height: this.calculateSubmissionHeight(),
