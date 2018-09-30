@@ -39,7 +39,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      bottomMargin: 32,
+      bottomMargin: App.MIN_BOTTOM_MARGIN,
       isLoading: false,
       isLoggedIn: false,
       loginError: null,
@@ -69,6 +69,21 @@ class App extends React.Component {
     if (this.resizeTimer !== null) {
       clearTimeout(this.resizeTimer)
     }
+  }
+  calculateBottomMargin = (photos = this.state.selectedPhotos) => {
+    return App.MIN_BOTTOM_MARGIN + this.calculateSubmissionBarHeight(photos)
+  }
+  
+  calculateSubmissionBarHeight = (photos = this.state.selectedPhotos) => {
+    let height = 0
+    if (photos.length !== 0) {
+      if (window.innerWidth >= 600) {
+        height = SubmissionBar.MAX_HEIGHT_SM
+      } else {
+        height = SubmissionBar.MAX_HEIGHT_XS
+      }
+    }
+    return height
   }
   
   handleLoginSubmit = (password) => {
@@ -181,11 +196,6 @@ class App extends React.Component {
   
   handleSubmissionBarSubmit = () => {
     console.log('submit')
-    
-    this.setState({isLoading: true})
-    setTimeout(() => {
-      this.setState({isLoading: false})
-    }, 3000)
   }
   
   handleSubmissionBarArchive = () => {
@@ -203,27 +213,6 @@ class App extends React.Component {
         this.setState({bottomMargin})
       }
     }, 300)
-  }
-  
-  calculateSubmissionHeight = (photos = this.state.selectedPhotos) => {
-    let height = 0
-    if (photos.length !== 0) {
-      if (window.innerWidth >= 600) {
-        height = SubmissionBar.MAX_HEIGHT_SM
-      } else {
-        height = SubmissionBar.MAX_HEIGHT_XS
-      }
-    }
-    return height
-  }
-  
-  calculateBottomMargin = (photos = this.state.selectedPhotos) => {
-    return App.MIN_BOTTOM_MARGIN + this.calculateSubmissionHeight(photos)
-  }
-  
-  getParentMargin = () => {
-    const bm = Math.max(App.MIN_BOTTOM_MARGIN, this.state.bottomMargin)
-    return `${App.MIN_BOTTOM_MARGIN}px ${App.MIN_BOTTOM_MARGIN}px ${bm}px ${App.MIN_BOTTOM_MARGIN}px`
   }
   
   getLoginContent = () => {
@@ -304,7 +293,7 @@ class App extends React.Component {
           onSubmit={this.handleSubmissionBarSubmit}
           style={{
             transition: 'all 300ms',
-            height: this.calculateSubmissionHeight(),
+            height: this.calculateSubmissionBarHeight(),
             opacity: noPhotosSelected ? 0 : 1,
           }}/>
       </div>
@@ -326,6 +315,11 @@ class App extends React.Component {
         </Grid>
       </Grid>
     )
+  }
+  
+  getParentMargin = () => {
+    const bm = Math.max(App.MIN_BOTTOM_MARGIN, this.state.bottomMargin)
+    return `${App.MIN_BOTTOM_MARGIN}px ${App.MIN_BOTTOM_MARGIN}px ${bm}px ${App.MIN_BOTTOM_MARGIN}px`
   }
   
   nextConfirmationIndex = (newSelectedPhotos) => {
