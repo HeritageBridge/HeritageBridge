@@ -291,6 +291,7 @@ class App extends React.Component {
           isLoading={isLoading}
           onArchive={this.handleSubmissionBarArchive}
           onSubmit={this.handleSubmissionBarSubmit}
+          resource={selectedResource}
           style={{
             transition: 'all 300ms',
             height: this.calculateSubmissionBarHeight(),

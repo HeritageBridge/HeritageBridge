@@ -13,7 +13,7 @@ export default class extends React.Component {
   static defaultProps = {
     imageCount: 0,
     isLoading: false,
-    resourceId: null,
+    resource: null,
     onArchive: () => {
     },
     onSubmit: () => {
@@ -30,7 +30,7 @@ export default class extends React.Component {
       isLoading,
       onArchive,
       onSubmit,
-      resourceId
+      resource
     } = this.props
     const buttonStyle = {
       pointerEvents: isLoading ? 'none' : 'auto',
@@ -55,7 +55,7 @@ export default class extends React.Component {
             container
             direction="column">
             <Grid item>
-              <Typography variant="body2">EAMENA-{resourceId ? resourceId : 'XXXXXX'}</Typography>
+              <Typography variant="body2">EAMENA-{resource ? resource.id : 'XXXXXX'}</Typography>
             </Grid>
             <Grid item>
               <Typography variant="headline">{imageCount} selected</Typography>
