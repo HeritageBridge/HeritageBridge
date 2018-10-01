@@ -7,16 +7,25 @@ import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import ListSubheader from "@material-ui/core/ListSubheader"
 import LogoAmalInHeritage from '../Svg/logo-amal-in-heritage.svg'
+import Select from '@material-ui/core/Select'
 import Svg from 'react-svg-inline'
 import Typography from "@material-ui/core/Typography/Typography";
 import CheckCircleRounded from "@material-ui/icons/CheckCircleRounded"
 import bs from 'binary-search'
 import moment from 'moment'
 
-import { InlineDatePicker } from 'material-ui-pickers/DatePicker'
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import ListItemText from '@material-ui/core/ListItemText';
+
+import PhotoGridListFilterGroup from './PhotoGridListFilterGroup'
+
+import {InlineDatePicker} from 'material-ui-pickers/DatePicker'
 
 export default class extends React.Component {
-  indexBinarySearchComparator = (a,b) => (a - b)
+  indexBinarySearchComparator = (a, b) => (a - b)
   indexSortComparator = (a, b) => (a > b)
   
   static defaultProps = {
@@ -24,16 +33,10 @@ export default class extends React.Component {
     selectedIndexes: null,
     startDate: new Date(),
     endDate: new Date(),
-    onSelectionChanged: (selectedIndexes) => {},
-    onDateRangeChanged: (startDate, endDate) => {},
-  }
-  
-  handleStartDateChanged = (startDate) => {
-    this.props.onDateRangeChanged(startDate, this.props.endDate)
-  }
-  
-  handleEndDateChanged = (endDate) => {
-    this.props.onDateRangeChanged(this.props.startDate, endDate)
+    onSelectionChanged: (selectedIndexes) => {
+    },
+    onDateRangeChanged: (startDate, endDate) => {
+    },
   }
   
   handleImageSectionToggle = (sectionIndex) => {
@@ -99,33 +102,10 @@ export default class extends React.Component {
               <Typography variant="subheading">Amal in Heritage</Typography>
             </Grid>
             <Grid item xs={6} style={{display: 'table-cell', verticalAlign: 'middle'}}>
-              <Svg svg={LogoAmalInHeritage} style={{ display: 'block', margin: '6px 0 0 auto', width: 48 }}/>
+              <Svg svg={LogoAmalInHeritage} style={{display: 'block', margin: '6px 0 0 auto', width: 48}}/>
             </Grid>
           </Grid>
-          <Grid container spacing={16}>
-            <Grid item>
-              <InlineDatePicker
-                onlyCalendar
-                keyboard
-                format="D MMMM YYYY"
-                label="Start Date"
-                maxDate={this.props.endDate}
-                value={this.props.startDate}
-                onChange={(md) => this.handleStartDateChanged(md.toDate())}
-              />
-            </Grid>
-            <Grid item>
-              <InlineDatePicker
-                onlyCalendar
-                keyboard
-                format="D MMMM YYYY"
-                label="End Date"
-                minDate={this.props.startDate}
-                value={this.props.endDate}
-                onChange={(md) => this.handleEndDateChanged(md.toDate())}
-              />
-            </Grid>
-          </Grid>
+          <PhotoGridListFilterGroup {...this.props} />
           {sections.map((section, sectionIndex) => (
             <GridList key={section.date} cellHeight={115} cols={6}>
               <GridListTile cols={6} style={{height: 'auto'}}>
