@@ -2,12 +2,14 @@ import React from "react";
 import ReactDOM from "react-dom";
 import api from '../../lib/api'
 import cookies from '../../utils/cookies'
+import Collapse from '@material-ui/core/Collapse'
 import {hot} from 'react-hot-loader'
 import Grow from '@material-ui/core/Grow';
 import Grid from '@material-ui/core/Grid'
 import PhotoConfirmation from '../PhotoConfirmation'
 import PhotoGridList from '../PhotoGridList'
 import TargetResource from '../TargetResource'
+import SubmissionBar from '../SubmissionBar'
 import Login from '../Login'
 import LogoHerBridge from '../Svg/logo-herbridge.svg';
 import Svg from 'react-svg-inline'
@@ -32,18 +34,25 @@ const theme = createMuiTheme({
 
 // Main react component for frontend application
 class App extends React.Component {
+  static MIN_BOTTOM_MARGIN = 32
+  
   constructor(props) {
     super(props);
     this.state = {
+      bottomMargin: App.MIN_BOTTOM_MARGIN,
+      isLoading: false,
       isLoggedIn: false,
       loginError: null,
       loginIsLoading: false,
       selectedPhotoConfirmationIndex: 0,
       selectedPhotoIndexes: null,
       selectedPhotos: [],
+      selectedResource: null,
       photoEndDate: moment().toDate(),
       photoStartDate: moment().subtract(3, "days").toDate(),
     }
+    
+    this.resizeTimer = null
   }
   
   componentDidMount() {
@@ -51,6 +60,30 @@ class App extends React.Component {
       isLoggedIn: cookies.isLoggedIn(),
       selectedPhotoIndexes: fakePhotoSections.map(() => []),
     })
+    
+    window.addEventListener("resize", this.handleWindowResize)
+  }
+  
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.handleWindowResize)
+    if (this.resizeTimer !== null) {
+      clearTimeout(this.resizeTimer)
+    }
+  }
+  calculateBottomMargin = (photos = this.state.selectedPhotos) => {
+    return App.MIN_BOTTOM_MARGIN + this.calculateSubmissionBarHeight(photos)
+  }
+  
+  calculateSubmissionBarHeight = (photos = this.state.selectedPhotos) => {
+    let height = 0
+    if (photos.length !== 0) {
+      if (window.innerWidth >= 600) {
+        height = SubmissionBar.MAX_HEIGHT_SM
+      } else {
+        height = SubmissionBar.MAX_HEIGHT_XS
+      }
+    }
+    return height
   }
   
   handleLoginSubmit = (password) => {
@@ -122,6 +155,7 @@ class App extends React.Component {
     
     // Update the state
     this.setState({
+      bottomMargin: this.calculateBottomMargin(newSelectedPhotos),
       selectedPhotoIndexes: indexes,
       selectedPhotos: newSelectedPhotos,
       selectedPhotoConfirmationIndex: newSelectedPhotoConfirmationIndex,
@@ -149,6 +183,7 @@ class App extends React.Component {
     
     // Update the state
     this.setState({
+      bottomMargin: this.calculateBottomMargin(newSelectedPhotos),
       selectedPhotoIndexes: newSelectedPhotoIndexes,
       selectedPhotos: newSelectedPhotos,
       selectedPhotoConfirmationIndex: newSelectedPhotoConfirmationIndex,
@@ -159,67 +194,114 @@ class App extends React.Component {
     this.setState({selectedPhotoConfirmationIndex: index})
   }
   
+  handleSubmissionBarSubmit = () => {
+    console.log('submit')
+  }
+  
+  handleSubmissionBarArchive = () => {
+    console.log('archive')
+  }
+  
+  handleWindowResize = () => {
+    if (this.resizeTimer !== null) {
+      clearTimeout(this.resizeTimer)
+    }
+    
+    this.resizeTimer = setTimeout(() => {
+      if (window !== undefined) {
+        const bottomMargin = this.calculateBottomMargin()
+        this.setState({bottomMargin})
+      }
+    }, 300)
+  }
+  
   getLoginContent = () => {
     const {
+      isLoading,
       photoEndDate,
       photoStartDate,
       selectedPhotoIndexes,
       selectedPhotoConfirmationIndex,
       selectedPhotos,
+      selectedResource,
     } = this.state
     const noPhotosSelected = selectedPhotos.length === 0
     return (
-      <Grid
-        container
-        spacing={32}
-        direction="column">
-        <Grid item>
-          <Svg
-            svg={LogoHerBridge}
-            style={{display: 'block', margin: '0 auto', width: 111}}/>
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={6}>
-            <TargetResource
-              resources={fakeResources}
-              onSearch={this.handleResourceSearch}
-              onResourceSelected={this.handleResourceSelect}
-              onResourceDeselected={this.handleResourceDeselect}/>
-        </Grid>
-        <Grid item>
+      <div>
+        <div style={{
+          margin: this.getParentMargin(),
+          transition: 'margin-bottom 200ms'
+        }}>
           <Grid
             container
-            spacing={32}>
+            spacing={16}
+            direction="column">
+            <Grid item>
+              <Svg
+                svg={LogoHerBridge}
+                style={{
+                  display: 'block',
+                  margin: '0 auto',
+                  width: 111,
+                }}/>
+            </Grid>
             <Grid
               item
               xs={12}
-              sm={noPhotosSelected ? 12 : 6}>
-              <PhotoGridList
-                endDate={photoEndDate}
-                startDate={photoStartDate}
-                sections={fakePhotoSections}
-                selectedIndexes={selectedPhotoIndexes}
-                onDateRangeChanged={this.handlePhotoDateRangeChanged}
-                onSelectionChanged={this.handlePhotoSelectionChanged}/>
+              sm={6}>
+              <TargetResource
+                resources={fakeResources}
+                onSearch={this.handleResourceSearch}
+                onResourceSelected={this.handleResourceSelect}
+                onResourceDeselected={this.handleResourceDeselect}
+                selectedResource={selectedResource}
+              />
             </Grid>
-            { noPhotosSelected ? <div/> :
-              <Grow in={!noPhotosSelected}>
+            <Grid item>
+              <Grid
+                container
+                spacing={32}>
                 <Grid
-                item
-                xs={12}
-                sm={6}>
-                <PhotoConfirmation
-                  selectedIndex={selectedPhotoConfirmationIndex}
-                  onClear={this.handlePhotoConfirmationClear}
-                  onSelectionChanged={this.handlePhotoConfirmationSelectionChanged}
-                  images={selectedPhotos}/>
+                  item
+                  xs={12}
+                  sm={noPhotosSelected ? 12 : 6}>
+                  <PhotoGridList
+                    endDate={photoEndDate}
+                    startDate={photoStartDate}
+                    sections={fakePhotoSections}
+                    selectedIndexes={selectedPhotoIndexes}
+                    onDateRangeChanged={this.handlePhotoDateRangeChanged}
+                    onSelectionChanged={this.handlePhotoSelectionChanged}/>
                 </Grid>
-              </Grow>}
+                {noPhotosSelected ? <div/> :
+                  <Grow in={!noPhotosSelected}>
+                    <Grid
+                      item
+                      xs={12}
+                      sm={6}>
+                      <PhotoConfirmation
+                        selectedIndex={selectedPhotoConfirmationIndex}
+                        onClear={this.handlePhotoConfirmationClear}
+                        onSelectionChanged={this.handlePhotoConfirmationSelectionChanged}
+                        images={selectedPhotos}/>
+                    </Grid>
+                  </Grow>}
+              </Grid>
+            </Grid>
           </Grid>
-        </Grid>
-      </Grid>
+        </div>
+        <SubmissionBar
+          imageCount={selectedPhotos.length}
+          isLoading={isLoading}
+          onArchive={this.handleSubmissionBarArchive}
+          onSubmit={this.handleSubmissionBarSubmit}
+          resource={selectedResource}
+          style={{
+            transition: 'all 300ms',
+            height: this.calculateSubmissionBarHeight(),
+            opacity: noPhotosSelected ? 0 : 1,
+          }}/>
+      </div>
     )
   }
   
@@ -240,6 +322,11 @@ class App extends React.Component {
     )
   }
   
+  getParentMargin = () => {
+    const bm = Math.max(App.MIN_BOTTOM_MARGIN, this.state.bottomMargin)
+    return `${App.MIN_BOTTOM_MARGIN}px ${App.MIN_BOTTOM_MARGIN}px ${bm}px ${App.MIN_BOTTOM_MARGIN}px`
+  }
+  
   nextConfirmationIndex = (newSelectedPhotos) => {
     const newSelectedPhotoCount = newSelectedPhotos.length
     const {selectedPhotoConfirmationIndex, selectedPhotos} = this.state
@@ -254,8 +341,8 @@ class App extends React.Component {
     } else {
       newSelectedPhotoConfirmationIndex = 0
     }
-    if (newSelectedPhotoConfirmationIndex >= newSelectedPhotoCount ) {
-      newSelectedPhotoConfirmationIndex = Math.max(0, newSelectedPhotoCount  - 1)
+    if (newSelectedPhotoConfirmationIndex >= newSelectedPhotoCount) {
+      newSelectedPhotoConfirmationIndex = Math.max(0, newSelectedPhotoCount - 1)
     }
     return newSelectedPhotoConfirmationIndex
   }
@@ -263,7 +350,7 @@ class App extends React.Component {
   render() {
     const {isLoggedIn} = this.state
     return (
-      <div style={{margin: '64px 32px'}}>
+      <div>
         <MuiThemeProvider theme={theme}>
           <MuiPickersUtilsProvider utils={MomentUtils}>
             {isLoggedIn ? this.getLoginContent() : this.getLoginForm()}

@@ -166,7 +166,6 @@ export default class extends React.Component {
   
   getLightbox = () => {
     const {isExpanded} = this.state
-    console.log('selected index', this.props.selectedIndex, this.props.images)
     const selectedImage = this.props.images[this.props.selectedIndex]
     return (
       <Lightbox
