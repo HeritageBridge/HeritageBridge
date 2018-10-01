@@ -30,7 +30,7 @@ export default class extends React.Component {
       isLoading,
       onArchive,
       onSubmit,
-      resource
+      resource,
     } = this.props
     const buttonStyle = {
       pointerEvents: isLoading ? 'none' : 'auto',

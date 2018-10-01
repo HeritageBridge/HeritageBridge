@@ -239,7 +239,11 @@ class App extends React.Component {
             <Grid item>
               <Svg
                 svg={LogoHerBridge}
-                style={{display: 'block', margin: '0 auto', width: 111}}/>
+                style={{
+                  display: 'block',
+                  margin: '0 auto',
+                  width: 111,
+                }}/>
             </Grid>
             <Grid
               item
