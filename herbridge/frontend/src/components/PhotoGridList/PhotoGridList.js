@@ -85,33 +85,65 @@ export default class extends React.Component {
   render() {
     const {sections} = this.props
     return (
-      <Paper style={{margin: '0 auto', height: '100%'}}>
-        <div style={{minHeight: 100, padding: 32}}>
-          <Grid container spacing={16}>
-            <Grid item xs={6}>
+      <Paper style={{
+        margin: '0 auto',
+        height: '100%'
+      }}>
+        <div style={{
+          minHeight: 100,
+          padding: 32
+        }}>
+          <Grid
+            container
+            spacing={16}>
+            <Grid
+              item
+              xs={6}>
               <Typography variant="subheading">Amal in Heritage</Typography>
             </Grid>
-            <Grid item xs={6} style={{display: 'table-cell', verticalAlign: 'middle'}}>
-              <Svg svg={LogoAmalInHeritage} style={{display: 'block', margin: '6px 0 0 auto', width: 48}}/>
+            <Grid
+              item
+              xs={6}
+              style={{
+                display: 'table-cell',
+                verticalAlign: 'middle'
+              }}>
+              <Svg
+                svg={LogoAmalInHeritage}
+                style={{
+                  display: 'block',
+                  margin: '6px 0 0 auto',
+                  width: 48
+                }}/>
             </Grid>
           </Grid>
           <PhotoGridListFilterGroup {...this.props} />
           {sections.map((section, sectionIndex) => (
-            <GridList key={section.date} cellHeight={115} cols={6}>
-              <GridListTile cols={6} style={{height: 'auto'}}>
-                <ListSubheader component="div" style={{padding: 0}}>
+            <GridList
+              key={section.date}
+              cellHeight={115}
+              cols={6}>
+              <GridListTile
+                cols={6}
+                style={{height: 'auto'}}>
+                <ListSubheader
+                  component="div"
+                  style={{padding: 0}}>
                   <Checkbox
                     color="primary"
                     onChange={this.handleImageSectionToggle.bind(this, sectionIndex)}
-                    checked={this.isSectionAtIndexSelected(sectionIndex)}
-                  />
+                    checked={this.isSectionAtIndexSelected(sectionIndex)}/>
                   {moment(section.date).format('D MMMM YYYY')}
                 </ListSubheader>
               </GridListTile>
               {section.images.map((image, index) => (
                 <GridListTile key={image.id} cols={1} style={{width: 115}}>
-                  <ButtonBase style={{height: 115, width: 115}}
-                              onClick={this.handleImageToggle.bind(this, image, index, sectionIndex)}>
+                  <ButtonBase
+                    onClick={this.handleImageToggle.bind(this, image, index, sectionIndex)}
+                    style={{
+                      height: 115,
+                      width: 115
+                    }}>
                     <div className="overlay" style={{
                       width: '100%',
                       height: '100%',
@@ -130,7 +162,12 @@ export default class extends React.Component {
                       opacity: this.isImageAtIndexSelected(index, sectionIndex) ? 0.75 : 1
                     }}/>
                     {this.isImageAtIndexSelected(index, sectionIndex) ?
-                      <CheckCircleRounded style={{position: 'absolute', top: 16, right: 16, fill: '#fff'}}/> : <div/>}
+                      <CheckCircleRounded style={{
+                        position: 'absolute',
+                        top: 16,
+                        right: 16,
+                        fill: '#fff'
+                      }}/> : <div/>}
                   </ButtonBase>
                 </GridListTile>
               ))}
