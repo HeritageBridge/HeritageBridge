@@ -7,16 +7,15 @@ import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import ListSubheader from "@material-ui/core/ListSubheader"
 import LogoAmalInHeritage from '../Svg/logo-amal-in-heritage.svg'
+import PhotoGridListFilterGroup from './PhotoGridListFilterGroup'
 import Svg from 'react-svg-inline'
 import Typography from "@material-ui/core/Typography/Typography";
 import CheckCircleRounded from "@material-ui/icons/CheckCircleRounded"
 import bs from 'binary-search'
 import moment from 'moment'
 
-import { InlineDatePicker } from 'material-ui-pickers/DatePicker'
-
 export default class extends React.Component {
-  indexBinarySearchComparator = (a,b) => (a - b)
+  indexBinarySearchComparator = (a, b) => (a - b)
   indexSortComparator = (a, b) => (a > b)
   
   static defaultProps = {
@@ -26,14 +25,6 @@ export default class extends React.Component {
     endDate: new Date(),
     onSelectionChanged: (selectedIndexes) => {},
     onDateRangeChanged: (startDate, endDate) => {},
-  }
-  
-  handleStartDateChanged = (startDate) => {
-    this.props.onDateRangeChanged(startDate, this.props.endDate)
-  }
-  
-  handleEndDateChanged = (endDate) => {
-    this.props.onDateRangeChanged(this.props.startDate, endDate)
   }
   
   handleImageSectionToggle = (sectionIndex) => {
@@ -92,56 +83,65 @@ export default class extends React.Component {
   render() {
     const {sections} = this.props
     return (
-      <Paper style={{margin: '0 auto', height: '100%'}}>
-        <div style={{minHeight: 100, padding: 32}}>
-          <Grid container spacing={16}>
-            <Grid item xs={6}>
+      <Paper style={{
+        margin: '0 auto',
+        height: '100%'
+      }}>
+        <div style={{
+          minHeight: 100,
+          padding: 32
+        }}>
+          <Grid
+            container
+            spacing={16}>
+            <Grid
+              item
+              xs={6}>
               <Typography variant="subheading">Amal in Heritage</Typography>
             </Grid>
-            <Grid item xs={6} style={{display: 'table-cell', verticalAlign: 'middle'}}>
-              <Svg svg={LogoAmalInHeritage} style={{ display: 'block', margin: '6px 0 0 auto', width: 48 }}/>
+            <Grid
+              item
+              xs={6}
+              style={{
+                display: 'table-cell',
+                verticalAlign: 'middle'
+              }}>
+              <Svg
+                svg={LogoAmalInHeritage}
+                style={{
+                  display: 'block',
+                  margin: '6px 0 0 auto',
+                  width: 48
+                }}/>
             </Grid>
           </Grid>
-          <Grid container spacing={16}>
-            <Grid item>
-              <InlineDatePicker
-                onlyCalendar
-                keyboard
-                format="D MMMM YYYY"
-                label="Start Date"
-                maxDate={this.props.endDate}
-                value={this.props.startDate}
-                onChange={(md) => this.handleStartDateChanged(md.toDate())}
-              />
-            </Grid>
-            <Grid item>
-              <InlineDatePicker
-                onlyCalendar
-                keyboard
-                format="D MMMM YYYY"
-                label="End Date"
-                minDate={this.props.startDate}
-                value={this.props.endDate}
-                onChange={(md) => this.handleEndDateChanged(md.toDate())}
-              />
-            </Grid>
-          </Grid>
+          <PhotoGridListFilterGroup {...this.props} />
           {sections.map((section, sectionIndex) => (
-            <GridList key={section.date} cellHeight={115} cols={6}>
-              <GridListTile cols={6} style={{height: 'auto'}}>
-                <ListSubheader component="div" style={{padding: 0}}>
+            <GridList
+              key={section.date}
+              cellHeight={115}
+              cols={6}>
+              <GridListTile
+                cols={6}
+                style={{height: 'auto'}}>
+                <ListSubheader
+                  component="div"
+                  style={{padding: 0}}>
                   <Checkbox
                     color="primary"
                     onChange={this.handleImageSectionToggle.bind(this, sectionIndex)}
-                    checked={this.isSectionAtIndexSelected(sectionIndex)}
-                  />
+                    checked={this.isSectionAtIndexSelected(sectionIndex)}/>
                   {moment(section.date).format('D MMMM YYYY')}
                 </ListSubheader>
               </GridListTile>
               {section.images.map((image, index) => (
                 <GridListTile key={image.id} cols={1} style={{width: 115}}>
-                  <ButtonBase style={{height: 115, width: 115}}
-                              onClick={this.handleImageToggle.bind(this, image, index, sectionIndex)}>
+                  <ButtonBase
+                    onClick={this.handleImageToggle.bind(this, image, index, sectionIndex)}
+                    style={{
+                      height: 115,
+                      width: 115
+                    }}>
                     <div className="overlay" style={{
                       width: '100%',
                       height: '100%',
@@ -160,7 +160,12 @@ export default class extends React.Component {
                       opacity: this.isImageAtIndexSelected(index, sectionIndex) ? 0.75 : 1
                     }}/>
                     {this.isImageAtIndexSelected(index, sectionIndex) ?
-                      <CheckCircleRounded style={{position: 'absolute', top: 16, right: 16, fill: '#fff'}}/> : <div/>}
+                      <CheckCircleRounded style={{
+                        position: 'absolute',
+                        top: 16,
+                        right: 16,
+                        fill: '#fff'
+                      }}/> : <div/>}
                   </ButtonBase>
                 </GridListTile>
               ))}
