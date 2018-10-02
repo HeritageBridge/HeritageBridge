@@ -19,10 +19,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import ListItemText from '@material-ui/core/ListItemText';
+import AppBar from '@material-ui/core/AppBar'
 
 import PhotoGridListFilterGroup from './PhotoGridListFilterGroup'
-
-import {InlineDatePicker} from 'material-ui-pickers/DatePicker'
 
 export default class extends React.Component {
   indexBinarySearchComparator = (a, b) => (a - b)
