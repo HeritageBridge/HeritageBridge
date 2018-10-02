@@ -23,10 +23,8 @@ export default class extends React.Component {
     selectedIndexes: null,
     startDate: new Date(),
     endDate: new Date(),
-    onSelectionChanged: (selectedIndexes) => {
-    },
-    onDateRangeChanged: (startDate, endDate) => {
-    },
+    onSelectionChanged: (selectedIndexes) => {},
+    onDateRangeChanged: (startDate, endDate) => {},
   }
   
   handleImageSectionToggle = (sectionIndex) => {
