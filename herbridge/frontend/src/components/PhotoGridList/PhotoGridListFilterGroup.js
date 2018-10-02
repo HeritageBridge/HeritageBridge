@@ -84,23 +84,23 @@ export default class extends React.Component {
               onChange={(md) => this.handleEndDateChanged(md.toDate())}
             />
           </Grid>
-          {/*<Grid item>*/}
-            {/*<FormControl>*/}
-              {/*<InputLabel htmlFor="select-multiple-checkbox">Filter</InputLabel>*/}
-              {/*<Select*/}
-                {/*multiple*/}
-                {/*value={this.state.selectedValues}*/}
-                {/*onChange={this.handleFilterChange}*/}
-                {/*input={<Input id="select-multiple-checkbox"/>}*/}
-                {/*renderValue={selected => selected.join(', ')}*/}
-                {/*MenuProps={MenuProps}>*/}
-                {/*<MenuItem value={"archived"}>*/}
-                  {/*<Checkbox checked={this.state.isArchiveEnabled}/>*/}
-                  {/*<ListItemText primary={"Show Archived"}/>*/}
-                {/*</MenuItem>*/}
-              {/*</Select>*/}
-            {/*</FormControl>*/}
-          {/*</Grid>*/}
+          <Grid item>
+            <FormControl>
+              <InputLabel htmlFor="select-multiple-checkbox">Filter</InputLabel>
+              <Select
+                multiple
+                value={this.state.selectedValues}
+                onChange={this.handleFilterChange}
+                input={<Input id="select-multiple-checkbox"/>}
+                renderValue={selected => selected.join(', ')}
+                MenuProps={MenuProps}>
+                <MenuItem value={"archived"}>
+                  <Checkbox checked={this.state.isArchiveEnabled}/>
+                  <ListItemText primary={"Show Archived"}/>
+                </MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
         </Grid>
       </div>
     )
