@@ -7,21 +7,12 @@ import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import ListSubheader from "@material-ui/core/ListSubheader"
 import LogoAmalInHeritage from '../Svg/logo-amal-in-heritage.svg'
-import Select from '@material-ui/core/Select'
+import PhotoGridListFilterGroup from './PhotoGridListFilterGroup'
 import Svg from 'react-svg-inline'
 import Typography from "@material-ui/core/Typography/Typography";
 import CheckCircleRounded from "@material-ui/icons/CheckCircleRounded"
 import bs from 'binary-search'
 import moment from 'moment'
-
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import ListItemText from '@material-ui/core/ListItemText';
-import AppBar from '@material-ui/core/AppBar'
-
-import PhotoGridListFilterGroup from './PhotoGridListFilterGroup'
 
 export default class extends React.Component {
   indexBinarySearchComparator = (a, b) => (a - b)
