@@ -5,7 +5,6 @@ import Geocoder from 'react-map-gl-geocoder'
 import ReactMapGL, {NavigationControl, LinearInterpolator, TRANSITION_EVENTS} from "react-map-gl";
 import Paper from '@material-ui/core/Paper'
 import 'mapbox-gl/dist/mapbox-gl.css'
-import {debounce} from '../../utils/utils'
 
 export default class extends React.Component {
   interpolator = new LinearInterpolator()
@@ -15,8 +14,7 @@ export default class extends React.Component {
   viewportTimer = null
   
   static defaultProps = {
-    onViewportChanged: (viewport) => {
-    }
+    onViewportChanged: (viewport) => {}
   }
   
   state = {
@@ -26,8 +24,7 @@ export default class extends React.Component {
       latitude: 30.2807022,
       longitude: -97.9108343,
       zoom: 11,
-    },
-    query: ""
+    }
   };
   
   componentDidMount() {
@@ -37,14 +34,6 @@ export default class extends React.Component {
   
   componentWillUnmount() {
     window.removeEventListener("resize", this._resize);
-  }
-  
-  handleSearchRequest = () => {
-    console.log('handle search', this.state.query)
-  }
-  
-  handleSearchQueryChange = (query) => {
-    this.setState({query})
   }
   
   handleViewportChangeForNavigationControl = (viewport) => {
