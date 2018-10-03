@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import api from '../../lib/api'
 import cookies from '../../utils/cookies'
-import Collapse from '@material-ui/core/Collapse'
 import {hot} from 'react-hot-loader'
 import Grow from '@material-ui/core/Grow';
 import Grid from '@material-ui/core/Grid'
@@ -35,7 +34,12 @@ const theme = createMuiTheme({
 
 // Main react component for frontend application
 class App extends React.Component {
+  /* Static variables */
   static MIN_BOTTOM_MARGIN = 32
+  
+  /* Instance variables */
+  resizeTimer = null
+  
   
   constructor(props) {
     super(props);
@@ -51,9 +55,12 @@ class App extends React.Component {
       selectedResource: null,
       photoEndDate: moment().toDate(),
       photoStartDate: moment().subtract(3, "days").toDate(),
+      viewport: {
+        latitude: 40.7268129,
+        longitude: -74.0041812,
+        zoom: 11,
+      }
     }
-    
-    this.resizeTimer = null
   }
   
   componentDidMount() {
@@ -204,6 +211,11 @@ class App extends React.Component {
     console.log('archive')
   }
   
+  handleViewportChange = (viewport) => {
+    console.log('viewport', viewport)
+    this.setState({viewport})
+  }
+  
   handleWindowResize = () => {
     if (this.resizeTimer !== null) {
       clearTimeout(this.resizeTimer)
@@ -226,6 +238,7 @@ class App extends React.Component {
       selectedPhotoConfirmationIndex,
       selectedPhotos,
       selectedResource,
+      viewport,
     } = this.state
     const noPhotosSelected = selectedPhotos.length === 0
     return (
@@ -256,7 +269,9 @@ class App extends React.Component {
                   xs={12}
                   sm={7}
                   style={{zIndex: 0}}>
-                  <Map onViewportChanged={(viewport) => console.log('map viewport changed', viewport)}/>
+                  <Map
+                    viewport={viewport}
+                    onViewportChanged={this.handleViewportChange}/>
                 </Grid>
                 <Grid
                   item

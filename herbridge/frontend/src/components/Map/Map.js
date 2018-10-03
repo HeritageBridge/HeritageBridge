@@ -14,18 +14,22 @@ export default class extends React.Component {
   viewportTimer = null
   
   static defaultProps = {
-    onViewportChanged: (viewport) => {}
+    onViewportChanged: (viewport) => {
+    }
   }
   
-  state = {
-    viewport: {
-      width: 100,
-      height: 100,
-      latitude: 30.2807022,
-      longitude: -97.9108343,
-      zoom: 11,
+  constructor(props) {
+    super(props)
+    this.state = {
+      viewport: props.viewport || {
+        width: 100,
+        height: 100,
+        latitude: 30.2807022,
+        longitude: -97.9108343,
+        zoom: 11,
+      }
     }
-  };
+  }
   
   componentDidMount() {
     window.addEventListener("resize", this._resize);
