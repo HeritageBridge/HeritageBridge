@@ -254,8 +254,9 @@ class App extends React.Component {
                 <Grid
                   item
                   xs={12}
-                  sm={7}>
-                  <Map/>
+                  sm={7}
+                  style={{zIndex: 0}}>
+                  <Map onViewportChanged={(viewport) => console.log('map viewport changed', viewport)}/>
                 </Grid>
                 <Grid
                   item

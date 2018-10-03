@@ -1,15 +1,23 @@
 "use strict";
 
 import React from "react";
-import ReactMapGL, {NavigationControl} from "react-map-gl";
+import Geocoder from 'react-map-gl-geocoder'
+import ReactMapGL, {NavigationControl, LinearInterpolator, TRANSITION_EVENTS} from "react-map-gl";
 import Paper from '@material-ui/core/Paper'
-import SearchBar from 'material-ui-search-bar'
 import 'mapbox-gl/dist/mapbox-gl.css'
-import 'mapbox-gl/dist/mapbox-gl.js'
+import {debounce} from '../../utils/utils'
 
 export default class extends React.Component {
+  interpolator = new LinearInterpolator()
   mapboxAccessToken = "pk.eyJ1IjoiaGFyaXNhbWFsIiwiYSI6ImNqazl2ODA0MTBlY2szcW1pcWhvemhzMG8ifQ.P_vJ5xocOJXPDkFp2xsyvg"
   mapboxUri = "mapbox://styles/mapbox/satellite-streets-v10"
+  mapRef = React.createRef()
+  viewportTimer = null
+  
+  static defaultProps = {
+    onViewportChanged: (viewport) => {
+    }
+  }
   
   state = {
     viewport: {
@@ -17,7 +25,7 @@ export default class extends React.Component {
       height: 100,
       latitude: 30.2807022,
       longitude: -97.9108343,
-      zoom: 11
+      zoom: 11,
     },
     query: ""
   };
@@ -31,27 +39,61 @@ export default class extends React.Component {
     window.removeEventListener("resize", this._resize);
   }
   
-  handleNavigationControlViewportChange = (viewport) => {
-    this.setState({viewport})
-  }
-  
   handleSearchRequest = () => {
     console.log('handle search', this.state.query)
   }
   
   handleSearchQueryChange = (query) => {
-    this.setState({ query })
+    this.setState({query})
+  }
+  
+  handleViewportChangeForNavigationControl = (viewport) => {
+    const newViewport = viewport
+    this.setState({viewport: newViewport})
+    this.queueViewportChangeEvent()
+  }
+  
+  handleViewportChangeForGeocoder = (viewport) => {
+    const newViewport = Object.assign(this.state.viewport, viewport)
+    this.setState({
+      viewport: Object.assign(newViewport, {
+        transitionDuration: 0,
+        transitionInterruption: TRANSITION_EVENTS.BREAK,
+      })
+    })
+    this.queueViewportChangeEvent()
+  }
+  
+  handleViewportChangeForMap = (viewport) => {
+    const newViewport = viewport
+    this.setState({viewport: newViewport})
+    this.queueViewportChangeEvent()
+  }
+  
+  setNewViewport = (viewport) => {
+    this.setState({
+      viewport: Object.assign(viewport, {
+        transitionDuration: 0,
+        transitionInterruption: TRANSITION_EVENTS.BREAK,
+      })
+    })
+  }
+  
+  queueViewportChangeEvent = () => {
+    if (this.viewportTimer !== undefined) {
+      clearTimeout(this.viewportTimer)
+    }
+    this.viewportTimer = setTimeout(() => {
+      const {viewport} = this.state
+      this.props.onViewportChanged(viewport)
+      this.viewportTimer = null
+    }, 300)
   }
   
   _resize = () => {
-    let newWidth = this.containerDiv.getBoundingClientRect().width
-    let newHeight = this.containerDiv.getBoundingClientRect().height
-    this.setState({
-      viewport: Object.assign(this.state.viewport, {
-        height: newHeight,
-        width: newWidth,
-      })
-    });
+    const {height, width} = this.containerDiv.getBoundingClientRect()
+    const viewport = Object.assign(this.state.viewport, {height, width})
+    this.setState({viewport});
   };
   
   render() {
@@ -65,31 +107,25 @@ export default class extends React.Component {
             height: '100%',
             width: '100%',
           }}>
-          <div style={{position: 'relative'}}>
-            <div style={{
-              position: 'absolute',
-              top: 16,
-              left: 16,
-              zIndex: 1,
-            }}>
-              <SearchBar
-                placeholder="Search"
-                value={this.state.query}
-                onChange={this.handleSearchQueryChange}
-                onRequestSearch={this.handleSearchRequest}/>
-            </div>
-          </div>
           <ReactMapGL
             {...this.state.viewport}
             mapboxApiAccessToken={this.mapboxAccessToken}
             mapStyle={this.mapboxUri}
-            onViewportChange={viewport => this.setState({viewport})}>
+            ref={this.mapRef}
+            scrollZoom={false}
+            touchZoom={false}
+            onViewportChange={this.handleViewportChangeForMap}>
+            <Geocoder
+              mapboxApiAccessToken={this.mapboxAccessToken}
+              mapRef={this.mapRef}
+              onViewportChange={this.handleViewportChangeForGeocoder}
+            />
             <div style={{
               position: 'absolute',
-              right: 16,
-              top: 16
+              right: 10,
+              bottom: 10
             }}>
-              <NavigationControl onViewportChange={this.handleNavigationControlViewportChange}/>
+              <NavigationControl onViewportChange={this.handleViewportChangeForNavigationControl}/>
             </div>
           </ReactMapGL>
         </div>
