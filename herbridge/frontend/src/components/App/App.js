@@ -6,6 +6,7 @@ import Collapse from '@material-ui/core/Collapse'
 import {hot} from 'react-hot-loader'
 import Grow from '@material-ui/core/Grow';
 import Grid from '@material-ui/core/Grid'
+import Map from '../Map'
 import PhotoConfirmation from '../PhotoConfirmation'
 import PhotoGridList from '../PhotoGridList'
 import TargetResource from '../TargetResource'
@@ -70,6 +71,7 @@ class App extends React.Component {
       clearTimeout(this.resizeTimer)
     }
   }
+  
   calculateBottomMargin = (photos = this.state.selectedPhotos) => {
     return App.MIN_BOTTOM_MARGIN + this.calculateSubmissionBarHeight(photos)
   }
@@ -234,7 +236,7 @@ class App extends React.Component {
         }}>
           <Grid
             container
-            spacing={16}
+            spacing={App.MIN_BOTTOM_MARGIN}
             direction="column">
             <Grid item>
               <Svg
@@ -245,22 +247,34 @@ class App extends React.Component {
                   width: 111,
                 }}/>
             </Grid>
-            <Grid
-              item
-              xs={12}
-              sm={6}>
-              <TargetResource
-                resources={fakeResources}
-                onSearch={this.handleResourceSearch}
-                onResourceSelected={this.handleResourceSelect}
-                onResourceDeselected={this.handleResourceDeselect}
-                selectedResource={selectedResource}
-              />
+            <Grid item>
+              <Grid
+                container
+                spacing={App.MIN_BOTTOM_MARGIN}>
+                <Grid
+                  item
+                  xs={12}
+                  sm={7}>
+                  <Map/>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  sm={5}>
+                  <TargetResource
+                    resources={fakeResources}
+                    onSearch={this.handleResourceSearch}
+                    onResourceSelected={this.handleResourceSelect}
+                    onResourceDeselected={this.handleResourceDeselect}
+                    selectedResource={selectedResource}
+                  />
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item>
               <Grid
                 container
-                spacing={32}>
+                spacing={App.MIN_BOTTOM_MARGIN}>
                 <Grid
                   item
                   xs={12}
@@ -308,8 +322,10 @@ class App extends React.Component {
   getLoginForm = () => {
     const {loginIsLoading, loginError} = this.state
     return (
-      <Grid container spacing={32} direction="column">
-        <Grid item>
+      <Grid container spacing={App.MIN_BOTTOM_MARGIN} direction="column">
+        <Grid item style={{
+          marginTop: App.MIN_BOTTOM_MARGIN
+        }}>
           <Svg svg={LogoHerBridge} style={{display: 'block', margin: '0 auto', width: 111}}/>
         </Grid>
         <Grid item>
