@@ -7,7 +7,7 @@ import Paper from '@material-ui/core/Paper'
 import 'mapbox-gl/dist/mapbox-gl.css'
 
 export default class extends React.Component {
-  interpolator = new LinearInterpolator()
+  containerRef = React.createRef()
   mapboxAccessToken = "pk.eyJ1IjoiaGFyaXNhbWFsIiwiYSI6ImNqazl2ODA0MTBlY2szcW1pcWhvemhzMG8ifQ.P_vJ5xocOJXPDkFp2xsyvg"
   mapboxUri = "mapbox://styles/mapbox/satellite-streets-v10"
   mapRef = React.createRef()
@@ -59,15 +59,6 @@ export default class extends React.Component {
     this.queueViewportChangeEvent()
   }
   
-  setNewViewport = (viewport) => {
-    this.setState({
-      viewport: Object.assign(viewport, {
-        transitionDuration: 0,
-        transitionInterruption: TRANSITION_EVENTS.BREAK,
-      })
-    })
-  }
-  
   queueViewportChangeEvent = () => {
     if (this.viewportTimer !== undefined) {
       clearTimeout(this.viewportTimer)
@@ -80,7 +71,7 @@ export default class extends React.Component {
   }
   
   _resize = () => {
-    const {height, width} = this.containerDiv.getBoundingClientRect()
+    const {height, width} = this.containerRef.getBoundingClientRect()
     const viewport = Object.assign(this.state.viewport, {height, width})
     this.setState({viewport});
   };
@@ -89,9 +80,7 @@ export default class extends React.Component {
     return (
       <Paper style={{height: '100%'}}>
         <div
-          ref={containerDiv => {
-            this.containerDiv = containerDiv
-          }}
+          ref={ref => this.containerRef = ref}
           style={{
             height: '100%',
             width: '100%',
