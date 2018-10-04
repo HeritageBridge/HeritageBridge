@@ -212,7 +212,6 @@ class App extends React.Component {
   }
   
   handleViewportChange = (viewport) => {
-    console.log('viewport', viewport)
     this.setState({viewport})
   }
   
