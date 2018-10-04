@@ -2,10 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom";
 import api from '../../lib/api'
 import cookies from '../../utils/cookies'
-import Collapse from '@material-ui/core/Collapse'
 import {hot} from 'react-hot-loader'
 import Grow from '@material-ui/core/Grow';
 import Grid from '@material-ui/core/Grid'
+import Map from '../Map'
 import PhotoConfirmation from '../PhotoConfirmation'
 import PhotoGridList from '../PhotoGridList'
 import TargetResource from '../TargetResource'
@@ -34,7 +34,12 @@ const theme = createMuiTheme({
 
 // Main react component for frontend application
 class App extends React.Component {
+  /* Static variables */
   static MIN_BOTTOM_MARGIN = 32
+  
+  /* Instance variables */
+  resizeTimer = null
+  
   
   constructor(props) {
     super(props);
@@ -50,9 +55,12 @@ class App extends React.Component {
       selectedResource: null,
       photoEndDate: moment().toDate(),
       photoStartDate: moment().subtract(3, "days").toDate(),
+      viewport: {
+        latitude: 40.7268129,
+        longitude: -74.0041812,
+        zoom: 11,
+      }
     }
-    
-    this.resizeTimer = null
   }
   
   componentDidMount() {
@@ -70,6 +78,7 @@ class App extends React.Component {
       clearTimeout(this.resizeTimer)
     }
   }
+  
   calculateBottomMargin = (photos = this.state.selectedPhotos) => {
     return App.MIN_BOTTOM_MARGIN + this.calculateSubmissionBarHeight(photos)
   }
@@ -202,6 +211,10 @@ class App extends React.Component {
     console.log('archive')
   }
   
+  handleViewportChange = (viewport) => {
+    this.setState({viewport})
+  }
+  
   handleWindowResize = () => {
     if (this.resizeTimer !== null) {
       clearTimeout(this.resizeTimer)
@@ -224,6 +237,7 @@ class App extends React.Component {
       selectedPhotoConfirmationIndex,
       selectedPhotos,
       selectedResource,
+      viewport,
     } = this.state
     const noPhotosSelected = selectedPhotos.length === 0
     return (
@@ -234,7 +248,7 @@ class App extends React.Component {
         }}>
           <Grid
             container
-            spacing={16}
+            spacing={App.MIN_BOTTOM_MARGIN}
             direction="column">
             <Grid item>
               <Svg
@@ -245,22 +259,37 @@ class App extends React.Component {
                   width: 111,
                 }}/>
             </Grid>
-            <Grid
-              item
-              xs={12}
-              sm={6}>
-              <TargetResource
-                resources={fakeResources}
-                onSearch={this.handleResourceSearch}
-                onResourceSelected={this.handleResourceSelect}
-                onResourceDeselected={this.handleResourceDeselect}
-                selectedResource={selectedResource}
-              />
+            <Grid item>
+              <Grid
+                container
+                spacing={App.MIN_BOTTOM_MARGIN}>
+                <Grid
+                  item
+                  xs={12}
+                  sm={7}
+                  style={{zIndex: 0}}>
+                  <Map
+                    viewport={viewport}
+                    onViewportChanged={this.handleViewportChange}/>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  sm={5}>
+                  <TargetResource
+                    resources={fakeResources}
+                    onSearch={this.handleResourceSearch}
+                    onResourceSelected={this.handleResourceSelect}
+                    onResourceDeselected={this.handleResourceDeselect}
+                    selectedResource={selectedResource}
+                  />
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item>
               <Grid
                 container
-                spacing={32}>
+                spacing={App.MIN_BOTTOM_MARGIN}>
                 <Grid
                   item
                   xs={12}
@@ -308,8 +337,10 @@ class App extends React.Component {
   getLoginForm = () => {
     const {loginIsLoading, loginError} = this.state
     return (
-      <Grid container spacing={32} direction="column">
-        <Grid item>
+      <Grid container spacing={App.MIN_BOTTOM_MARGIN} direction="column">
+        <Grid item style={{
+          marginTop: App.MIN_BOTTOM_MARGIN
+        }}>
           <Svg svg={LogoHerBridge} style={{display: 'block', margin: '0 auto', width: 111}}/>
         </Grid>
         <Grid item>

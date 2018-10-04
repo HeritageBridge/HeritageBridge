@@ -12,5 +12,5 @@ const flatMap = (array, comparator) =>
 module.exports = {
   capitalize,
   concat,
-  flatMap
+  flatMap,
 }
