@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npm run clean && webpack --mode production ./src/index.js --output ./static/frontend/frontend.js",
+    "build": "npm run clean && webpack -p --progress --mode production ./src/index.js --output ./static/frontend/frontend.js",
     "dev": "npm run clean && webpack --mode development --watch ./src/index.js --output ./static/frontend/frontend.js",
     "clean": "rm -f static/frontend/*.hot-update.json && rm -f static/frontend/*.hot-update.js",
     "postinstall": "npm run build"
@@ -36,6 +36,7 @@
     "react-swipeable-views": "^0.12.17",
     "style-loader": "^0.23.0",
     "webpack": "^4.12.1",
+    "webpack-bundle-analyzer": "^3.0.2",
     "webpack-cli": "^3.0.8"
   },
   "dependencies": {
