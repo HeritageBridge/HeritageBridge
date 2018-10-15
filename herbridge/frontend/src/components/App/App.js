@@ -119,6 +119,7 @@ class App extends React.Component {
       
       api.login(password)
       .then(token => {
+        console.log('got token', token)
         cookies.setToken(token)
         state.isLoggedIn = cookies.isLoggedIn()
         this.setState(state)

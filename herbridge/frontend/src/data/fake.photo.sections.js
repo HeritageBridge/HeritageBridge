@@ -4,8 +4,8 @@ module.exports = {
       date: "1989-08-24T05:00:00.000Z",
       images: [{
         id: 'e0000000-0000-0000-0000-000000000001',
-        url: '/media/sample/geotagged-photo-hongkong.jpg',
-        thumbnailUrl: '/media/CACHE/images/sample/geotagged-photo-hongkong/64e937a5a56f0b2ba489a82a55aeb691.jpg',
+        url: 'https://cdn.crtkl.com/wp-content/uploads/sites/1/2015/07/hongkong-office.jpg',
+        thumbnailUrl: 'https://cdn.crtkl.com/wp-content/uploads/sites/1/2015/07/hongkong-office.jpg',
         latitude: 29.963477,
         longitude: 31.255325,
         captureDate: 1291044716,
@@ -16,8 +16,8 @@ module.exports = {
       date: "2004-02-04T06:00:00.000Z",
       images: [{
         id: 'e0000000-0000-0000-0000-000000000004',
-        url: '/media/sample/2017-02-27-StairTypes-296.jpg',
-        thumbnailUrl: '/media/CACHE/images/sample/2017-02-27-StairTypes-296/a43a9bf69ef0b61c9064b04ffad4c4fb.jpg',
+        url: 'https://pixfeeds.com/images/home-decor/1280-472294630-stairs-in-a-building.jpg',
+        thumbnailUrl: 'https://pixfeeds.com/images/home-decor/1280-472294630-stairs-in-a-building.jpg',
         latitude: 29.965,
         longitude: 31.125325,
         captureDate: 1291391156,
@@ -25,8 +25,8 @@ module.exports = {
       },
         {
           id: 'e0000000-0000-0000-0000-000000000005',
-          url: '/media/sample/2017-02-27-StairTypes-337.jpg',
-          thumbnailUrl: '/media/CACHE/images/sample/2017-02-27-StairTypes-337/737e52ea2bb33db522c6658ab0da05cc.jpg',
+          url: 'https://diy.sndimg.com/content/dam/images/diy/fullset/2016/9/12/Original_Flynnside-Out-timber-steps-final-1.jpg.rend.hgtvcom.1280.960.suffix/1473712246267.jpeg',
+          thumbnailUrl: 'https://diy.sndimg.com/content/dam/images/diy/fullset/2016/9/12/Original_Flynnside-Out-timber-steps-final-1.jpg.rend.hgtvcom.1280.960.suffix/1473712246267.jpeg',
           latitude: 29.913477,
           longitude: 31.325325,
           captureDate: 1270553456,
@@ -38,8 +38,8 @@ module.exports = {
       images: [
         {
           id: 'e0000000-0000-0000-0000-000000000002',
-          url: '/media/sample/_DSC1014.JPG',
-          thumbnailUrl: '/media/CACHE/images/sample/_DSC1014/e92a02cb73693ab1ee20a75e8f67f00b.JPG',
+          url: 'https://www.hawaiimagazine.com/sites/default/files/styles/slideshow__1503x847_/public/field/image/Maui_Makena_PL-Photography_ThinkstockPhotos-499204317.jpg?itok=ov65N7y0',
+          thumbnailUrl: 'https://www.hawaiimagazine.com/sites/default/files/styles/slideshow__1503x847_/public/field/image/Maui_Makena_PL-Photography_ThinkstockPhotos-499204317.jpg?itok=ov65N7y0',
           latitude: 30.3232,
           longitude: 32.1,
           captureDate: 1267371056,
@@ -47,8 +47,8 @@ module.exports = {
         },
         {
           id: 'e0000000-0000-0000-0000-000000000003',
-          url: '/media/sample/_DSC1029.JPG',
-          thumbnailUrl: '/media/CACHE/images/sample/_DSC1029/b029cbb1b40c510afb0f1564d2182895.JPG',
+          url: 'https://i.ytimg.com/vi/uXLbQrK6cXw/maxresdefault.jpg',
+          thumbnailUrl: 'https://i.ytimg.com/vi/uXLbQrK6cXw/maxresdefault.jpg',
           latitude: 29.53477,
           longitude: 31.34325,
           captureDate: 1322579576,
@@ -56,8 +56,8 @@ module.exports = {
         },
         {
           id: 'e0000000-0000-0000-0000-000000000009',
-          url: '/media/frontend/square_placeholder.svg',
-          thumbnailUrl: '/media/frontend/square_placeholder.svg',
+          url: 'https://3c1703fe8d.site.internapcdn.net/newman/gfx/news/hires/2017/ocean.jpg',
+          thumbnailUrl: 'https://3c1703fe8d.site.internapcdn.net/newman/gfx/news/hires/2017/ocean.jpg',
           latitude: 30.3232,
           longitude: 32.1,
           captureDate: 1267371056,
