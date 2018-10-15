@@ -4,7 +4,6 @@ import React from "react";
 import Geocoder from 'react-map-gl-geocoder'
 import ReactMapGL, {NavigationControl, TRANSITION_EVENTS} from "react-map-gl";
 import Paper from '@material-ui/core/Paper'
-import 'mapbox-gl/dist/mapbox-gl.css'
 
 export default class extends React.Component {
   containerRef = React.createRef()

@@ -1,6 +1,5 @@
 const path = require('path')
 const webpack = require('webpack')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   devServer: {
@@ -29,13 +28,13 @@ module.exports = {
     ],
   },
   plugins: [
-    new BundleAnalyzerPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
+    // new webpack.HotModuleReplacementPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify('production'),
       },
     }),
+    // new BundleAnalyzerPlugin(),
   ],
   optimization: {
     minimize: true,
