@@ -18,7 +18,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -121,3 +120,6 @@ venv.bak/
 node_modules
 *.hot-update.json
 *.hot-update.js
+
+# Ignore the dev generated build file
+herbridge/frontend/static/frontend/frontend_dev.js
