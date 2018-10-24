@@ -53,8 +53,8 @@ class App extends React.Component {
       selectedPhotoIndexes: null,
       selectedPhotos: [],
       selectedResource: null,
-      photoEndDate: new Date(),
-      photoStartDate: new Date(),
+      photoEndDate: moment().toDate(),
+      photoStartDate: moment().subtract(3, "days").toDate(),
       viewport: {
         latitude: 40.7268129,
         longitude: -74.0041812,
