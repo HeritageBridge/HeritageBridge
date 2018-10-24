@@ -12,6 +12,7 @@ export default class extends React.Component {
   mapboxUri = "mapbox://styles/mapbox/satellite-streets-v10"
   mapRef = React.createRef()
   viewportTimer = null
+  viewportTimerDelay = 650
   
   static defaultProps = {
     onBoundsChanged: (bounds) => {},
@@ -80,7 +81,7 @@ export default class extends React.Component {
       ], (latLng) => [[latLng.lng, latLng.lat]])
       this.props.onBoundsChanged({ polygon: [bounds] })
       this.viewportTimer = null
-    }, 300)
+    }, this.viewportTimerDelay)
   }
   
   _resize = () => {

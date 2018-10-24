@@ -46,6 +46,7 @@ class App extends React.Component {
     this.state = {
       bottomMargin: App.MIN_BOTTOM_MARGIN,
       isLoading: false,
+      isLoadingResources: false,
       isLoggedIn: false,
       loginError: null,
       loginIsLoading: false,
@@ -56,6 +57,8 @@ class App extends React.Component {
       photoEndDate: moment().toDate(),
       photoStartDate: moment().subtract(3, "days").toDate(),
       resources: [],
+      resourcesFiltered: [],
+      resourcesFilterQuery: '',
       viewport: {
         latitude: 24.647467,
         longitude: 45.232580,
@@ -132,16 +135,25 @@ class App extends React.Component {
     }
   }
   
-  handleResourceSearch = (query) => {
-    console.log('search', query)
+  handleResourceFilter = (filter) => {
+    let resourcesFiltered = []
+    const resources = this.state.resources
+    if (resources.length > 0) {
+      resourcesFiltered = resources.filter(resource => {
+        return resource.resource_name
+          .toLowerCase()
+          .includes(filter.toLowerCase())
+      })
+    }
+    this.setState({ resourcesFiltered, resourcesFilterQuery: filter })
   }
   
   handleResourceSelect = (resource) => {
-    console.log('select', resource.resource_name)
+    this.setState({ selectedResource: resource })
   }
   
   handleResourceDeselect = (resource) => {
-    console.log('deselect', resource.resource_name)
+    this.setState({ selectedResource: null })
   }
   
   handlePhotoDateRangeChanged = (startDate, endDate) => {
@@ -215,15 +227,28 @@ class App extends React.Component {
   handleMapBoundsChange = (bounds) => {
     const polygon = GeoJSON.parse(bounds, { 'Polygon': 'polygon' })
 
+    // Make sure we don't have a resource currently selected
+    const {selectedResource} = this.state
+    console.log('selected resource', selectedResource)
+    if (selectedResource !== null) {
+      return
+    }
+
+    // Start loading
+    this.setState({
+      isLoadingResources: true,
+      resources: [],
+      resourcesFiltered: [],
+      resourcesFilterQuery: '',
+    })
+
     // Call EAMENA API using GeoJSON polygon
-    console.log('map bounds changed', polygon)
     api.getResources(polygon.geometry)
       .then(resources => {
-        this.setState({ resources })
-        console.log('get resources', resources)
+        this.setState({ isLoadingResources: false, resources })
       })
       .catch(error => {
-        console.log('get resources error', error)
+        this.setState({ isLoadingResources: false })
       })
   }
 
@@ -247,9 +272,12 @@ class App extends React.Component {
   getLoginContent = () => {
     const {
       isLoading,
+      isLoadingResources,
       photoEndDate,
       photoStartDate,
       resources,
+      resourcesFiltered,
+      resourcesFilterQuery,
       selectedPhotoIndexes,
       selectedPhotoConfirmationIndex,
       selectedPhotos,
@@ -296,8 +324,10 @@ class App extends React.Component {
                   xs={12}
                   sm={5}>
                   <TargetResource
-                    resources={resources}
-                    onSearch={this.handleResourceSearch}
+                    filter={resourcesFilterQuery}
+                    isLoading={isLoadingResources}
+                    resources={resourcesFiltered.length > 0 ? resourcesFiltered : resources}
+                    onFilter={this.handleResourceFilter}
                     onResourceSelected={this.handleResourceSelect}
                     onResourceDeselected={this.handleResourceDeselect}
                     selectedResource={selectedResource}
