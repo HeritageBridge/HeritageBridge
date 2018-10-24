@@ -75,9 +75,10 @@ export default class extends React.Component {
         mapBounds.getSouthWest(),
         mapBounds.getNorthWest(),
         mapBounds.getNorthEast(),
-        mapBounds.getSouthEast()
-      ], (latLng) => [[latLng.lat, latLng.lng]])
-      this.props.onBoundsChanged({ polygon: bounds })
+        mapBounds.getSouthEast(),
+        mapBounds.getSouthWest(),
+      ], (latLng) => [[latLng.lng, latLng.lat]])
+      this.props.onBoundsChanged({ polygon: [bounds] })
       this.viewportTimer = null
     }, 300)
   }

@@ -10,8 +10,8 @@ const login = (password) => {
 
 const getResources = (polygon) => {
   return new Promise((resolve, reject) => {
-    axios.post('http://34.248.167.252/api/herbridge/get', polygon)
-      .then(response => resolve(response))
+    axios.post('/api/eamena/resources', polygon)
+      .then(response => resolve(response.data))
       .catch(error => reject(error))
   })
 }

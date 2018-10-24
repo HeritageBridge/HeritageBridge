@@ -96,7 +96,6 @@ class LoginAuthToken(ObtainAuthToken):
 
 
 def get_eamena_resource_for_polygon(request):
-    url = 'http://34.248.167.252/api/herbridge/get'
     if request.method != "POST":
         raise Http404()
     else:
@@ -104,7 +103,7 @@ def get_eamena_resource_for_polygon(request):
         if body:
             body_unicode = body.decode('utf-8')
             polygon = json.loads(body_unicode)
-            result = requests.post(url, json=polygon)
+            result = requests.post('http://34.248.167.252/api/herbridge/get', json=polygon)
             if result.status_code == 200:
                 return JsonResponse(result.json(), safe=False)
             else:

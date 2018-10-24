@@ -16,7 +16,6 @@ import LogoHerBridge from '../Svg/logo-herbridge.svg';
 import Svg from 'react-svg-inline'
 import MomentUtils from 'material-ui-pickers/utils/moment-utils'
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
-import {fakeResources} from '../../data/fake.resources'
 import {fakePhotoSections} from '../../data/fake.photo.sections'
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import {flatMap} from '../../utils/utils'
@@ -56,10 +55,11 @@ class App extends React.Component {
       selectedResource: null,
       photoEndDate: moment().toDate(),
       photoStartDate: moment().subtract(3, "days").toDate(),
+      resources: [],
       viewport: {
-        latitude: 40.7268129,
-        longitude: -74.0041812,
-        zoom: 11,
+        latitude: 24.647467,
+        longitude: 45.232580,
+        zoom: 4,
       }
     }
   }
@@ -137,11 +137,11 @@ class App extends React.Component {
   }
   
   handleResourceSelect = (resource) => {
-    console.log('select', resource.name)
+    console.log('select', resource.resource_name)
   }
   
   handleResourceDeselect = (resource) => {
-    console.log('deselect', resource.name)
+    console.log('deselect', resource.resource_name)
   }
   
   handlePhotoDateRangeChanged = (startDate, endDate) => {
@@ -217,9 +217,10 @@ class App extends React.Component {
 
     // Call EAMENA API using GeoJSON polygon
     console.log('map bounds changed', polygon)
-    api.getResources(polygon)
-      .then(response => {
-        console.log('get resources', response)
+    api.getResources(polygon.geometry)
+      .then(resources => {
+        this.setState({ resources })
+        console.log('get resources', resources)
       })
       .catch(error => {
         console.log('get resources error', error)
@@ -248,6 +249,7 @@ class App extends React.Component {
       isLoading,
       photoEndDate,
       photoStartDate,
+      resources,
       selectedPhotoIndexes,
       selectedPhotoConfirmationIndex,
       selectedPhotos,
@@ -294,7 +296,7 @@ class App extends React.Component {
                   xs={12}
                   sm={5}>
                   <TargetResource
-                    resources={fakeResources}
+                    resources={resources}
                     onSearch={this.handleResourceSearch}
                     onResourceSelected={this.handleResourceSelect}
                     onResourceDeselected={this.handleResourceDeselect}
