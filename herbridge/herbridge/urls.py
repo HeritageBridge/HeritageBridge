@@ -28,6 +28,7 @@ urlpatterns = [
     path('api/<str:model>/<int:pk>/', views.InstanceView.as_view(), name='object-instance'),
     path('api/<str:model>/<uuid:pk>/', views.InstanceView.as_view(), name='object-instance'),
     path('api/login', csrf_exempt(views.LoginAuthToken.as_view())),
+    path('api/eamena/resources', csrf_exempt(views.get_eamena_resource_for_polygon), name='eamena-resource'),
     ## FOLLOWING 3 URLS ARE DEPRECATED JULY 17 - WERE PART OF EARLY API
     path('api-DEP/<str:model_name>/', views.api_dispatch, name='api_dispatch'),
     path('api-DEP/<str:model_name>/<int:id>/', views.api_dispatch, name='api_dispatch'),

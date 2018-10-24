@@ -216,6 +216,14 @@ class App extends React.Component {
     const polygon = GeoJSON.parse(bounds, { 'Polygon': 'polygon' })
 
     // Call EAMENA API using GeoJSON polygon
+    console.log('map bounds changed', polygon)
+    api.getResources(polygon)
+      .then(response => {
+        console.log('get resources', response)
+      })
+      .catch(error => {
+        console.log('get resources error', error)
+      })
   }
 
   handleMapViewportChange = (viewport) => {
