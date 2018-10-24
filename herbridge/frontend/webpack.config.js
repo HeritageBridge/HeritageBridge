@@ -38,8 +38,8 @@ module.exports = {
   ],
   optimization: {
     minimize: true,
-      splitChunks: {
-        chunks: 'all'
-    }
+    //   splitChunks: {
+    //     chunks: 'all'
+    // }
   },
 }

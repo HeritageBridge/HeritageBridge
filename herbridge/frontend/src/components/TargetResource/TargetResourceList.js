@@ -37,7 +37,7 @@ export default class extends React.Component {
     return (
       <List>
         {this.props.resources.map((resource, index) => (
-          <ListItem key={resource.id} style={{ paddingLeft: 12 }}>
+          <ListItem key={resource.resource_id} style={{ paddingLeft: 12 }}>
             <span style={{
               background: '#FFFFFF',
               border: '3px solid #008DF0',
@@ -47,7 +47,7 @@ export default class extends React.Component {
               fontWeight: 'bold',
               padding: '8px 12px'
             }}>{index + 1}</span>
-            <ListItemText primary={resource.name} secondary={capitalize(resource.type)}/>
+            <ListItemText primary={resource.resource_name} secondary={capitalize(resource.resource_type)}/>
             <ListItemSecondaryAction>
               <Checkbox
                 color="primary"
