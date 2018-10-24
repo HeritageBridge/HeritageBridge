@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import api from '../../lib/api'
 import cookies from '../../utils/cookies'
 import {hot} from 'react-hot-loader'
+import GeoJSON from 'geojson'
 import Grow from '@material-ui/core/Grow';
 import Grid from '@material-ui/core/Grid'
 import Map from '../Map'
@@ -210,8 +211,14 @@ class App extends React.Component {
   handleSubmissionBarArchive = () => {
     console.log('archive')
   }
-  
-  handleViewportChange = (viewport) => {
+
+  handleMapBoundsChange = (bounds) => {
+    const polygon = GeoJSON.parse(bounds, { 'Polygon': 'polygon' })
+
+    // Call EAMENA API using GeoJSON polygon
+  }
+
+  handleMapViewportChange = (viewport) => {
     this.setState({viewport})
   }
   
@@ -270,7 +277,9 @@ class App extends React.Component {
                   style={{zIndex: 0}}>
                   <Map
                     viewport={viewport}
-                    onViewportChanged={this.handleViewportChange}/>
+                    onBoundsChanged={this.handleMapBoundsChange}
+                    onViewportChanged={this.handleMapViewportChange}
+                  />
                 </Grid>
                 <Grid
                   item

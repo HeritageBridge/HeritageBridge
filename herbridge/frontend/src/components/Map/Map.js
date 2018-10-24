@@ -4,6 +4,7 @@ import React from "react";
 import Geocoder from 'react-map-gl-geocoder'
 import ReactMapGL, {NavigationControl, TRANSITION_EVENTS} from "react-map-gl";
 import Paper from '@material-ui/core/Paper'
+import {flatMap} from '../../utils/utils'
 
 export default class extends React.Component {
   containerRef = React.createRef()
@@ -13,8 +14,8 @@ export default class extends React.Component {
   viewportTimer = null
   
   static defaultProps = {
-    onViewportChanged: (viewport) => {
-    }
+    onBoundsChanged: (bounds) => {},
+    onViewportChanged: (viewport) => {},
   }
   
   constructor(props) {
@@ -69,6 +70,14 @@ export default class extends React.Component {
     this.viewportTimer = setTimeout(() => {
       const {viewport} = this.state
       this.props.onViewportChanged(viewport)
+      const mapBounds = this.mapRef.current.getMap().getBounds()
+      const bounds = flatMap([
+        mapBounds.getSouthWest(),
+        mapBounds.getNorthWest(),
+        mapBounds.getNorthEast(),
+        mapBounds.getSouthEast()
+      ], (latLng) => [[latLng.lat, latLng.lng]])
+      this.props.onBoundsChanged({ polygon: bounds })
       this.viewportTimer = null
     }, 300)
   }
