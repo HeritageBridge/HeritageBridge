@@ -4,7 +4,7 @@ const login = (password) => {
     return new Promise((resolve, reject) => {
         axios.post('/api/login', { password })
             .then(response => resolve(response.data.token))
-            .catch(error => resolve(error))
+            .catch(error => reject(error))
     })
 }
 
