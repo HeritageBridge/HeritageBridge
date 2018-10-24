@@ -120,3 +120,6 @@ venv.bak/
 node_modules
 *.hot-update.json
 *.hot-update.js
+
+# Ignore the dev generated build file
+herbridge/frontend/static/frontend/frontend_dev.js
