@@ -36,11 +36,11 @@ const theme = createMuiTheme({
 class App extends React.Component {
   /* Static variables */
   static MIN_BOTTOM_MARGIN = 32
-  
+
   /* Instance variables */
   resizeTimer = null
-  
-  
+
+
   constructor(props) {
     super(props);
     this.state = {
@@ -66,27 +66,27 @@ class App extends React.Component {
       }
     }
   }
-  
+
   componentDidMount() {
     this.setState({
       isLoggedIn: cookies.isLoggedIn(),
       selectedPhotoIndexes: fakePhotoSections.map(() => []),
     })
-    
+
     window.addEventListener("resize", this.handleWindowResize)
   }
-  
+
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleWindowResize)
     if (this.resizeTimer !== null) {
       clearTimeout(this.resizeTimer)
     }
   }
-  
+
   calculateBottomMargin = (photos = this.state.selectedPhotos) => {
     return App.MIN_BOTTOM_MARGIN + this.calculateSubmissionBarHeight(photos)
   }
-  
+
   calculateSubmissionBarHeight = (photos = this.state.selectedPhotos) => {
     let height = 0
     if (photos.length !== 0) {
@@ -98,13 +98,13 @@ class App extends React.Component {
     }
     return height
   }
-  
+
   handleLoginSubmit = (password) => {
     let error = null
     if (password.length === 0) {
       error = "Field is required"
     }
-    
+
     if (error !== null) {
       this.setState({
         loginError: error,
@@ -115,26 +115,26 @@ class App extends React.Component {
         loginError: null,
         loginIsLoading: true,
       })
-      
+
       let state = {
         loginError: null,
         loginIsLoading: false,
       }
-      
+
       api.login(password)
-      .then(token => {
-        cookies.setToken(token)
-        state.isLoggedIn = cookies.isLoggedIn()
-        this.setState(state)
-      })
-      .catch(error => {
-        state.loginError = error.message
-        state.isLoggedIn = false
-        this.setState(state)
-      })
+        .then(token => {
+          cookies.setToken(token)
+          state.isLoggedIn = cookies.isLoggedIn()
+          this.setState(state)
+        })
+        .catch(error => {
+          state.loginError = error.message
+          state.isLoggedIn = false
+          this.setState(state)
+        })
     }
   }
-  
+
   handleResourceFilter = (filter) => {
     let resourcesFiltered = []
     const resources = this.state.resources
@@ -145,24 +145,24 @@ class App extends React.Component {
           .includes(filter.toLowerCase())
       })
     }
-    this.setState({ resourcesFiltered, resourcesFilterQuery: filter })
+    this.setState({resourcesFiltered, resourcesFilterQuery: filter})
   }
-  
+
   handleResourceSelect = (resource) => {
-    this.setState({ selectedResource: resource })
+    this.setState({selectedResource: resource})
   }
-  
+
   handleResourceDeselect = (resource) => {
-    this.setState({ selectedResource: null })
+    this.setState({selectedResource: null})
   }
-  
+
   handlePhotoDateRangeChanged = (startDate, endDate) => {
     this.setState({
       photoStartDate: startDate,
       photoEndDate: endDate,
     })
   }
-  
+
   handlePhotoSelectionChanged = (indexes) => {
     // Update the selected photos using the new indexes
     const newSelectedPhotos =
@@ -171,10 +171,10 @@ class App extends React.Component {
           return indexes[sectionIndex].includes(imageIndex)
         })
       })
-    
+
     // Update the selected photo in the confirmation component
     const newSelectedPhotoConfirmationIndex = this.nextConfirmationIndex(newSelectedPhotos)
-    
+
     // Update the state
     this.setState({
       bottomMargin: this.calculateBottomMargin(newSelectedPhotos),
@@ -183,13 +183,13 @@ class App extends React.Component {
       selectedPhotoConfirmationIndex: newSelectedPhotoConfirmationIndex,
     })
   }
-  
+
   handlePhotoConfirmationClear = (index) => {
     // Update the selected photos using the new index
     const {selectedPhotos} = this.state
     const selectedPhoto = selectedPhotos[index]
     const newSelectedPhotos = selectedPhotos.filter(p => p !== selectedPhoto)
-    
+
     // Update the selected indexes
     const newSelectedPhotoIndexes = fakePhotoSections.map(section => {
       const images = section.images
@@ -199,10 +199,10 @@ class App extends React.Component {
       }
       return indexes
     })
-    
+
     // Update the selected photo in the confirmation component
     const newSelectedPhotoConfirmationIndex = this.nextConfirmationIndex(newSelectedPhotos)
-    
+
     // Update the state
     this.setState({
       bottomMargin: this.calculateBottomMargin(newSelectedPhotos),
@@ -211,21 +211,21 @@ class App extends React.Component {
       selectedPhotoConfirmationIndex: newSelectedPhotoConfirmationIndex,
     })
   }
-  
+
   handlePhotoConfirmationSelectionChanged = (index) => {
     this.setState({selectedPhotoConfirmationIndex: index})
   }
-  
+
   handleSubmissionBarSubmit = () => {
     console.log('submit')
   }
-  
+
   handleSubmissionBarArchive = () => {
     console.log('archive')
   }
 
   handleMapBoundsChange = (bounds) => {
-    const polygon = GeoJSON.parse(bounds, { 'Polygon': 'polygon' })
+    const polygon = GeoJSON.parse(bounds, {'Polygon': 'polygon'})
 
     // Make sure we don't have a resource currently selected
     const {selectedResource} = this.state
@@ -243,22 +243,22 @@ class App extends React.Component {
     // Call EAMENA API using GeoJSON polygon
     api.getResources(polygon.geometry)
       .then(resources => {
-        this.setState({ isLoadingResources: false, resources })
+        this.setState({isLoadingResources: false, resources})
       })
       .catch(error => {
-        this.setState({ isLoadingResources: false })
+        this.setState({isLoadingResources: false})
       })
   }
 
   handleMapViewportChange = (viewport) => {
     this.setState({viewport})
   }
-  
+
   handleWindowResize = () => {
     if (this.resizeTimer !== null) {
       clearTimeout(this.resizeTimer)
     }
-    
+
     this.resizeTimer = setTimeout(() => {
       if (window !== undefined) {
         const bottomMargin = this.calculateBottomMargin()
@@ -266,7 +266,7 @@ class App extends React.Component {
       }
     }, 300)
   }
-  
+
   getLoginContent = () => {
     const {
       isLoading,
@@ -382,7 +382,7 @@ class App extends React.Component {
       </div>
     )
   }
-  
+
   getLoginForm = () => {
     const {loginIsLoading, loginError} = this.state
     return (
@@ -401,12 +401,12 @@ class App extends React.Component {
       </Grid>
     )
   }
-  
+
   getParentMargin = () => {
     const bm = Math.max(App.MIN_BOTTOM_MARGIN, this.state.bottomMargin)
     return `${App.MIN_BOTTOM_MARGIN}px ${App.MIN_BOTTOM_MARGIN}px ${bm}px ${App.MIN_BOTTOM_MARGIN}px`
   }
-  
+
   nextConfirmationIndex = (newSelectedPhotos) => {
     const newSelectedPhotoCount = newSelectedPhotos.length
     const {selectedPhotoConfirmationIndex, selectedPhotos} = this.state
@@ -426,7 +426,7 @@ class App extends React.Component {
     }
     return newSelectedPhotoConfirmationIndex
   }
-  
+
   render() {
     const {isLoggedIn} = this.state
     return (
