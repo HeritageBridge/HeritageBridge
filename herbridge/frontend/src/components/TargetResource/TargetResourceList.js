@@ -14,26 +14,17 @@ export default class extends React.Component {
     selectedResource: null,
   }
   
-  constructor(props) {
-    super(props)
-    this.state = {
-      selected: null
+  handleToggle = (resource) => {
+    const {selectedResource} = this.props
+    if (selectedResource === resource) {
+      this.props.onDeselect(selectedResource)
+    } else {
+      this.props.onSelect(resource)
     }
   }
   
-  handleToggle = (resource) => {
-    const {selected} = this.state
-    if (selected === resource) {
-      this.props.onDeselect(selected)
-      this.setState({selected: null})
-    } else {
-      this.setState({selected: resource})
-      this.props.onSelect(resource)
-    }
-  };
-  
   render() {
-    const {selected} = this.state
+    const {selectedResource} = this.props
     return (
       <List>
         {this.props.resources.map((resource, index) => (
@@ -45,14 +36,14 @@ export default class extends React.Component {
               color: '#008DF0',
               fontFamily: 'Helvetica',
               fontWeight: 'bold',
-              padding: '8px 12px'
+              padding: '8px 12px',
             }}>{index + 1}</span>
             <ListItemText primary={resource.resource_name} secondary={capitalize(resource.resource_type)}/>
             <ListItemSecondaryAction>
               <Checkbox
                 color="primary"
                 onChange={this.handleToggle.bind(this, resource)}
-                checked={selected === resource}
+                checked={selectedResource === resource}
               />
             </ListItemSecondaryAction>
           </ListItem>

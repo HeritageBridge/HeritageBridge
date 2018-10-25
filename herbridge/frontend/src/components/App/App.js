@@ -229,7 +229,6 @@ class App extends React.Component {
 
     // Make sure we don't have a resource currently selected
     const {selectedResource} = this.state
-    console.log('selected resource', selectedResource)
     if (selectedResource !== null) {
       return
     }
@@ -237,7 +236,6 @@ class App extends React.Component {
     // Start loading
     this.setState({
       isLoadingResources: true,
-      resources: [],
       resourcesFiltered: [],
       resourcesFilterQuery: '',
     })
@@ -314,6 +312,8 @@ class App extends React.Component {
                   sm={7}
                   style={{zIndex: 0}}>
                   <Map
+                    resources={resourcesFiltered.length > 0 ? resourcesFiltered : resources}
+                    selectedResource={selectedResource}
                     viewport={viewport}
                     onBoundsChanged={this.handleMapBoundsChange}
                     onViewportChanged={this.handleMapViewportChange}
