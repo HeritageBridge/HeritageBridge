@@ -98,18 +98,14 @@ class LoginAuthToken(ObtainAuthToken):
 def get_eamena_resource_for_polygon(request):
     if request.method != "POST":
         raise Http404()
-    else:
-        body = request.body
-        if body:
-            body_unicode = body.decode('utf-8')
-            polygon = json.loads(body_unicode)
-            result = requests.post('http://34.248.167.252/api/herbridge/get', json=polygon)
-            if result.status_code == 200:
-                return JsonResponse(result.json(), safe=False)
-            else:
-                return JsonResponse(status=400, data={"message": "Eamena failed to provide resources, check polygon"})
+    elif request.body:
+        response = requests.post('http://34.248.167.252/api/herbridge/get', data=request.body)
+        if response.status_code == 200:
+            return JsonResponse(response.json(), safe=False)
         else:
-            return JsonResponse(status=400, data={"message": "Missing request body"})
+            return JsonResponse(status=400, data={"message": "Eamena failed to provide resources, check polygon"})
+    else:
+        return JsonResponse(status=400, data={"message": "Missing request body"})
 
 
 # DEPRECATED JULY 17 - WAS PART OF EARLY API
