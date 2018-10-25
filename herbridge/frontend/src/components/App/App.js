@@ -242,12 +242,8 @@ class App extends React.Component {
 
     // Call EAMENA API using GeoJSON polygon
     api.getResources(polygon.geometry)
-      .then(resources => {
-        this.setState({isLoadingResources: false, resources})
-      })
-      .catch(error => {
-        this.setState({isLoadingResources: false})
-      })
+      .then(resources => this.setState({isLoadingResources: false, resources}))
+      .catch(error => this.setState({isLoadingResources: false}))
   }
 
   handleMapViewportChange = (viewport) => {
