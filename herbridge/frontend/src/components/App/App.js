@@ -60,9 +60,9 @@ class App extends React.Component {
       resourcesFiltered: [],
       resourcesFilterQuery: '',
       viewport: {
-        latitude: 24.647467,
-        longitude: 45.232580,
-        zoom: 4,
+        latitude: 26.669568563483807,
+        longitude: 37.48028071919893,
+        zoom: 8,
       }
     }
   }

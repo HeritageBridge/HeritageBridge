@@ -100,17 +100,20 @@ export default class extends React.Component {
     const {resources, selectedResource} = this.props
     return (
       <div>
-        {resources.map((resource, index) => (
-          <Marker
-          longitude={resource.centroid.coordinates[0]}
-          latitude={resource.centroid.coordinates[1]}>
-            <Pin
-              opacity={!selectedResource ? 1 : (resource !== selectedResource ? 0 : 1)}
-              index={index}
-              selected={resource === selectedResource}
-            />
-          </Marker>
-        ))}
+        {resources.map((resource, index) => {
+          const coordinates = resource.centroid.coordinates
+          return (
+            <Marker
+              longitude={coordinates[0]}
+              latitude={coordinates[1]}>
+              <Pin
+                index={index}
+                opacity={!selectedResource ? 1 : (resource !== selectedResource ? 0 : 1)}
+                selected={resource === selectedResource}
+              />
+            </Marker>
+          )
+        })}
       </div>
     )
   }
@@ -132,7 +135,7 @@ export default class extends React.Component {
             scrollZoom={false}
             touchZoom={false}
             onViewportChange={this.handleViewportChangeForMap}>
-            { this.getOverlays() }
+            {this.getOverlays()}
             <Geocoder
               mapboxApiAccessToken={this.mapboxAccessToken}
               mapRef={this.mapRef}
