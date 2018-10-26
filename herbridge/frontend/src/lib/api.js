@@ -2,19 +2,23 @@ import axios from 'axios'
 import {httpErrorFromAPIError} from '../utils/error'
 
 const login = (password) => {
-  return new Promise((resolve, reject) => {
+  return (
     axios.post('/api/login', {password})
-      .then(response => resolve(response.data.token))
-      .catch(error => reject(httpErrorFromAPIError(error)))
-  })
+      .then(response => response.data.token)
+      .catch(error => {
+        throw httpErrorFromAPIError(error)
+      })
+  )
 }
 
 const getResources = (polygon) => {
-  return new Promise((resolve, reject) => {
+  return (
     axios.post('/api/eamena/resources', polygon)
-      .then(response => resolve(response.data))
-      .catch(error => reject(httpErrorFromAPIError(error)))
-  })
+      .then(response => response.data)
+      .catch(error => {
+        throw httpErrorFromAPIError(error)
+      })
+  )
 }
 
 module.exports = {
