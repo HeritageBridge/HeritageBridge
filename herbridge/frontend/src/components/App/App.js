@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import api from '../../lib/api'
 import cookies from '../../utils/cookies'
 import {hot} from 'react-hot-loader'
+import GeoJSON from 'geojson'
 import Grow from '@material-ui/core/Grow';
 import Grid from '@material-ui/core/Grid'
 import Map from '../Map'
@@ -15,7 +16,6 @@ import LogoHerBridge from '../Svg/logo-herbridge.svg';
 import Svg from 'react-svg-inline'
 import MomentUtils from 'material-ui-pickers/utils/moment-utils'
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
-import {fakeResources} from '../../data/fake.resources'
 import {fakePhotoSections} from '../../data/fake.photo.sections'
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import {flatMap} from '../../utils/utils'
@@ -36,16 +36,17 @@ const theme = createMuiTheme({
 class App extends React.Component {
   /* Static variables */
   static MIN_BOTTOM_MARGIN = 32
-  
+
   /* Instance variables */
   resizeTimer = null
-  
-  
+
+
   constructor(props) {
     super(props);
     this.state = {
       bottomMargin: App.MIN_BOTTOM_MARGIN,
       isLoading: false,
+      isLoadingResources: false,
       isLoggedIn: false,
       loginError: null,
       loginIsLoading: false,
@@ -55,34 +56,37 @@ class App extends React.Component {
       selectedResource: null,
       photoEndDate: moment().toDate(),
       photoStartDate: moment().subtract(3, "days").toDate(),
+      resources: [],
+      resourcesFiltered: [],
+      resourcesFilterQuery: '',
       viewport: {
-        latitude: 40.7268129,
-        longitude: -74.0041812,
-        zoom: 11,
+        latitude: 26.669568563483807,
+        longitude: 37.48028071919893,
+        zoom: 8,
       }
     }
   }
-  
+
   componentDidMount() {
     this.setState({
       isLoggedIn: cookies.isLoggedIn(),
       selectedPhotoIndexes: fakePhotoSections.map(() => []),
     })
-    
+
     window.addEventListener("resize", this.handleWindowResize)
   }
-  
+
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleWindowResize)
     if (this.resizeTimer !== null) {
       clearTimeout(this.resizeTimer)
     }
   }
-  
+
   calculateBottomMargin = (photos = this.state.selectedPhotos) => {
     return App.MIN_BOTTOM_MARGIN + this.calculateSubmissionBarHeight(photos)
   }
-  
+
   calculateSubmissionBarHeight = (photos = this.state.selectedPhotos) => {
     let height = 0
     if (photos.length !== 0) {
@@ -94,13 +98,13 @@ class App extends React.Component {
     }
     return height
   }
-  
+
   handleLoginSubmit = (password) => {
     let error = null
     if (password.length === 0) {
       error = "Field is required"
     }
-    
+
     if (error !== null) {
       this.setState({
         loginError: error,
@@ -111,45 +115,54 @@ class App extends React.Component {
         loginError: null,
         loginIsLoading: true,
       })
-      
+
       let state = {
         loginError: null,
         loginIsLoading: false,
       }
-      
+
       api.login(password)
-      .then(token => {
-        cookies.setToken(token)
-        state.isLoggedIn = cookies.isLoggedIn()
-        this.setState(state)
-      })
-      .catch(error => {
-        state.loginError = error.message
-        state.isLoggedIn = false
-        this.setState(state)
-      })
+        .then(token => {
+          cookies.setToken(token)
+          state.isLoggedIn = cookies.isLoggedIn()
+          this.setState(state)
+        })
+        .catch(error => {
+          state.loginError = error.message
+          state.isLoggedIn = false
+          this.setState(state)
+        })
     }
   }
-  
-  handleResourceSearch = (query) => {
-    console.log('search', query)
+
+  handleResourceFilter = (filter) => {
+    let resourcesFiltered = []
+    const resources = this.state.resources
+    if (resources.length > 0) {
+      resourcesFiltered = resources.filter(resource => {
+        return resource.resource_name
+          .toLowerCase()
+          .includes(filter.toLowerCase())
+      })
+    }
+    this.setState({resourcesFiltered, resourcesFilterQuery: filter})
   }
-  
+
   handleResourceSelect = (resource) => {
-    console.log('select', resource.name)
+    this.setState({selectedResource: resource})
   }
-  
+
   handleResourceDeselect = (resource) => {
-    console.log('deselect', resource.name)
+    this.setState({selectedResource: null})
   }
-  
+
   handlePhotoDateRangeChanged = (startDate, endDate) => {
     this.setState({
       photoStartDate: startDate,
       photoEndDate: endDate,
     })
   }
-  
+
   handlePhotoSelectionChanged = (indexes) => {
     // Update the selected photos using the new indexes
     const newSelectedPhotos =
@@ -158,10 +171,10 @@ class App extends React.Component {
           return indexes[sectionIndex].includes(imageIndex)
         })
       })
-    
+
     // Update the selected photo in the confirmation component
     const newSelectedPhotoConfirmationIndex = this.nextConfirmationIndex(newSelectedPhotos)
-    
+
     // Update the state
     this.setState({
       bottomMargin: this.calculateBottomMargin(newSelectedPhotos),
@@ -170,13 +183,13 @@ class App extends React.Component {
       selectedPhotoConfirmationIndex: newSelectedPhotoConfirmationIndex,
     })
   }
-  
+
   handlePhotoConfirmationClear = (index) => {
     // Update the selected photos using the new index
     const {selectedPhotos} = this.state
     const selectedPhoto = selectedPhotos[index]
     const newSelectedPhotos = selectedPhotos.filter(p => p !== selectedPhoto)
-    
+
     // Update the selected indexes
     const newSelectedPhotoIndexes = fakePhotoSections.map(section => {
       const images = section.images
@@ -186,10 +199,10 @@ class App extends React.Component {
       }
       return indexes
     })
-    
+
     // Update the selected photo in the confirmation component
     const newSelectedPhotoConfirmationIndex = this.nextConfirmationIndex(newSelectedPhotos)
-    
+
     // Update the state
     this.setState({
       bottomMargin: this.calculateBottomMargin(newSelectedPhotos),
@@ -198,28 +211,50 @@ class App extends React.Component {
       selectedPhotoConfirmationIndex: newSelectedPhotoConfirmationIndex,
     })
   }
-  
+
   handlePhotoConfirmationSelectionChanged = (index) => {
     this.setState({selectedPhotoConfirmationIndex: index})
   }
-  
+
   handleSubmissionBarSubmit = () => {
     console.log('submit')
   }
-  
+
   handleSubmissionBarArchive = () => {
     console.log('archive')
   }
-  
-  handleViewportChange = (viewport) => {
+
+  handleMapBoundsChange = (bounds) => {
+    const polygon = GeoJSON.parse(bounds, {'Polygon': 'polygon'})
+
+    // Make sure we don't have a resource currently selected
+    const {selectedResource} = this.state
+    if (selectedResource !== null) {
+      return
+    }
+
+    // Start loading
+    this.setState({
+      isLoadingResources: true,
+      resourcesFiltered: [],
+      resourcesFilterQuery: '',
+    })
+
+    // Call EAMENA API using GeoJSON polygon
+    api.getResources(polygon.geometry)
+      .then(resources => this.setState({isLoadingResources: false, resources}))
+      .catch(error => this.setState({isLoadingResources: false}))
+  }
+
+  handleMapViewportChange = (viewport) => {
     this.setState({viewport})
   }
-  
+
   handleWindowResize = () => {
     if (this.resizeTimer !== null) {
       clearTimeout(this.resizeTimer)
     }
-    
+
     this.resizeTimer = setTimeout(() => {
       if (window !== undefined) {
         const bottomMargin = this.calculateBottomMargin()
@@ -227,12 +262,16 @@ class App extends React.Component {
       }
     }, 300)
   }
-  
+
   getLoginContent = () => {
     const {
       isLoading,
+      isLoadingResources,
       photoEndDate,
       photoStartDate,
+      resources,
+      resourcesFiltered,
+      resourcesFilterQuery,
       selectedPhotoIndexes,
       selectedPhotoConfirmationIndex,
       selectedPhotos,
@@ -269,16 +308,22 @@ class App extends React.Component {
                   sm={7}
                   style={{zIndex: 0}}>
                   <Map
+                    resources={resourcesFiltered.length > 0 ? resourcesFiltered : resources}
+                    selectedResource={selectedResource}
                     viewport={viewport}
-                    onViewportChanged={this.handleViewportChange}/>
+                    onBoundsChanged={this.handleMapBoundsChange}
+                    onViewportChanged={this.handleMapViewportChange}
+                  />
                 </Grid>
                 <Grid
                   item
                   xs={12}
                   sm={5}>
                   <TargetResource
-                    resources={fakeResources}
-                    onSearch={this.handleResourceSearch}
+                    filter={resourcesFilterQuery}
+                    isLoading={isLoadingResources}
+                    resources={resourcesFiltered.length > 0 ? resourcesFiltered : resources}
+                    onFilter={this.handleResourceFilter}
                     onResourceSelected={this.handleResourceSelect}
                     onResourceDeselected={this.handleResourceDeselect}
                     selectedResource={selectedResource}
@@ -333,7 +378,7 @@ class App extends React.Component {
       </div>
     )
   }
-  
+
   getLoginForm = () => {
     const {loginIsLoading, loginError} = this.state
     return (
@@ -352,12 +397,12 @@ class App extends React.Component {
       </Grid>
     )
   }
-  
+
   getParentMargin = () => {
     const bm = Math.max(App.MIN_BOTTOM_MARGIN, this.state.bottomMargin)
     return `${App.MIN_BOTTOM_MARGIN}px ${App.MIN_BOTTOM_MARGIN}px ${bm}px ${App.MIN_BOTTOM_MARGIN}px`
   }
-  
+
   nextConfirmationIndex = (newSelectedPhotos) => {
     const newSelectedPhotoCount = newSelectedPhotos.length
     const {selectedPhotoConfirmationIndex, selectedPhotos} = this.state
@@ -377,7 +422,7 @@ class App extends React.Component {
     }
     return newSelectedPhotoConfirmationIndex
   }
-  
+
   render() {
     const {isLoggedIn} = this.state
     return (

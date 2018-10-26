@@ -2,8 +2,10 @@
 
 import React from "react";
 import Geocoder from 'react-map-gl-geocoder'
-import ReactMapGL, {NavigationControl, TRANSITION_EVENTS} from "react-map-gl";
+import ReactMapGL, {NavigationControl, Marker, TRANSITION_EVENTS} from "react-map-gl";
 import Paper from '@material-ui/core/Paper'
+import Pin from './pin'
+import {flatMap} from '../../utils/utils'
 
 export default class extends React.Component {
   containerRef = React.createRef()
@@ -11,12 +13,17 @@ export default class extends React.Component {
   mapboxUri = "mapbox://styles/mapbox/satellite-streets-v10"
   mapRef = React.createRef()
   viewportTimer = null
-  
+  viewportTimerDelay = 650
+
   static defaultProps = {
+    onBoundsChanged: (bounds) => {
+    },
     onViewportChanged: (viewport) => {
-    }
+    },
+    resources: [],
+    selectedResource: null,
   }
-  
+
   constructor(props) {
     super(props)
     this.state = {
@@ -29,22 +36,22 @@ export default class extends React.Component {
       }
     }
   }
-  
+
   componentDidMount() {
     window.addEventListener("resize", this._resize);
     this._resize();
   }
-  
+
   componentWillUnmount() {
     window.removeEventListener("resize", this._resize);
   }
-  
+
   handleViewportChangeForNavigationControl = (viewport) => {
     const newViewport = viewport
     this.setState({viewport: newViewport})
     this.queueViewportChangeEvent()
   }
-  
+
   handleViewportChangeForGeocoder = (viewport) => {
     const newViewport = Object.assign(this.state.viewport, viewport)
     this.setState({
@@ -55,13 +62,13 @@ export default class extends React.Component {
     })
     this.queueViewportChangeEvent()
   }
-  
+
   handleViewportChangeForMap = (viewport) => {
     const newViewport = viewport
     this.setState({viewport: newViewport})
     this.queueViewportChangeEvent()
   }
-  
+
   queueViewportChangeEvent = () => {
     if (this.viewportTimer !== undefined) {
       clearTimeout(this.viewportTimer)
@@ -69,16 +76,48 @@ export default class extends React.Component {
     this.viewportTimer = setTimeout(() => {
       const {viewport} = this.state
       this.props.onViewportChanged(viewport)
+      const mapBounds = this.mapRef.current.getMap().getBounds()
+      const bounds = flatMap([
+        mapBounds.getSouthWest(),
+        mapBounds.getNorthWest(),
+        mapBounds.getNorthEast(),
+        mapBounds.getSouthEast(),
+        mapBounds.getSouthWest(),
+      ], (latLng) => [[latLng.lng, latLng.lat]])
+      this.props.onBoundsChanged({polygon: [bounds]})
       this.viewportTimer = null
-    }, 300)
+    }, this.viewportTimerDelay)
   }
-  
+
   _resize = () => {
     const {height, width} = this.containerRef.getBoundingClientRect()
     const viewport = Object.assign(this.state.viewport, {height, width})
     this.setState({viewport});
   };
-  
+
+
+  getOverlays = () => {
+    const {resources, selectedResource} = this.props
+    return (
+      <div>
+        {resources.map((resource, index) => {
+          const coordinates = resource.centroid.coordinates
+          return (
+            <Marker
+              longitude={coordinates[0]}
+              latitude={coordinates[1]}>
+              <Pin
+                index={index}
+                opacity={!selectedResource ? 1 : (resource !== selectedResource ? 0 : 1)}
+                selected={resource === selectedResource}
+              />
+            </Marker>
+          )
+        })}
+      </div>
+    )
+  }
+
   render() {
     return (
       <Paper style={{height: '100%'}}>
@@ -96,6 +135,7 @@ export default class extends React.Component {
             scrollZoom={false}
             touchZoom={false}
             onViewportChange={this.handleViewportChangeForMap}>
+            {this.getOverlays()}
             <Geocoder
               mapboxApiAccessToken={this.mapboxAccessToken}
               mapRef={this.mapRef}

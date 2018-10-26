@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse, Http404
+from django.http import JsonResponse, Http404, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import generics
 from rest_framework.parsers import MultiPartParser, JSONParser
@@ -10,13 +10,14 @@ from rest_framework.response import Response
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 import json
+import requests
+
 
 def home(request):
     return render(request, 'index.html')
 
 
 def api_ref(request):
-
     model_list = [
         'assessors',
         'events',
@@ -24,22 +25,23 @@ def api_ref(request):
         'reports',
         'resources',
     ]
-    
+
     ref_links = []
     for name in model_list:
         model = get_model(name)
-        ref_links.append((f"/api/{name}/","list all"))
+        ref_links.append((f"/api/{name}/", "list all"))
         ob = model.objects.all()[0]
-        ref_links.append((f"/api/{name}/{ob.pk}/","get by id"))
+        ref_links.append((f"/api/{name}/{ob.pk}/", "get by id"))
 
-    return render(request, 'api_ref.html', {'ref_links':ref_links})
+    return render(request, 'api_ref.html', {'ref_links': ref_links})
 
 
 class ListView(generics.ListCreateAPIView):
     """
     Returns a list of all instances as specified by the model name in the url.
     """
-    parser_classes = (MultiPartParser,JSONParser)
+    parser_classes = (MultiPartParser, JSONParser)
+
     @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
         return super(ListView, self).dispatch(request, *args, **kwargs)
@@ -57,11 +59,11 @@ class InstanceView(generics.RetrieveAPIView):
     """
     Returns a single instance as specified by the model name and pk in the url.
     """
-    
+
     def get_queryset(self):
         model = get_model(self.kwargs.get('model'))
         return model.objects.filter(pk=self.kwargs.get('pk'))
-        
+
     def get_serializer_class(self):
         model = get_model(self.kwargs.get('model'))
         return model.serializer
@@ -72,7 +74,7 @@ class LoginAuthToken(ObtainAuthToken):
         body_unicode = request.body
         if not body_unicode:
             return Response({
-                'detail' : 'No password specified'
+                'detail': 'No password specified'
             }, status=422)
 
         # Extract out the password
@@ -93,17 +95,31 @@ class LoginAuthToken(ObtainAuthToken):
             }, status=401)
 
 
+def get_eamena_resource_for_polygon(request):
+    if request.method != "POST":
+        raise Http404()
+    elif request.body:
+        response = requests.post('http://34.248.167.252/api/herbridge/get', data=request.body)
+        if response.status_code == 200:
+            return JsonResponse(response.json(), safe=False)
+        else:
+            return JsonResponse(status=400, data={"message": "Eamena failed to provide resources, check polygon"})
+    else:
+        return JsonResponse(status=400, data={"message": "Missing request body"})
+
+
 # DEPRECATED JULY 17 - WAS PART OF EARLY API
 from main.utils.serializers import HBSerializer
 from main.models import Assessor, Event, Image, Report, Resource
-def api_dispatch(request,model_name=None,id=None):
 
+
+def api_dispatch(request, model_name=None, id=None):
     lookup = {
-        'assessors':Assessor,
-        'events':Event,
-        'images':Image,
-        'reports':Report,
-        'resources':Resource,
+        'assessors': Assessor,
+        'events': Event,
+        'images': Image,
+        'reports': Report,
+        'resources': Resource,
     }
 
     if not model_name or not model_name in lookup:
@@ -119,6 +135,5 @@ def api_dispatch(request,model_name=None,id=None):
     else:
         i = model.objects.all()
         data = HBSerializer().serialize(i)
-        
-    return JsonResponse(data, safe=False)
 
+    return JsonResponse(data, safe=False)

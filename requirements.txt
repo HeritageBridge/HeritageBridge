@@ -5,6 +5,7 @@ djangorestframework==3.8.2
 django-imagekit==4.0.2
 boto3==1.7
 django-storages==1.6
+requests==2.20.0
 
 ## it's likely this requirement can go away, once we are sure that we won't be
 ## reading exif tags for photo location or date or orientation.
