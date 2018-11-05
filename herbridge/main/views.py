@@ -1,16 +1,18 @@
-from django.core.exceptions import ValidationError
-from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse, Http404, HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework import generics
-from rest_framework.parsers import MultiPartParser, JSONParser
-from main.models import get_model
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.response import Response
-from django.views.decorators.csrf import csrf_exempt
-from django.conf import settings
 import json
+
 import requests
+from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.http import JsonResponse, Http404
+from django.shortcuts import render, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.gis.db.models.functions import Distance
+from django.contrib.gis.geos import GEOSGeometry
+from main.models import get_model
+from rest_framework import generics
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.parsers import MultiPartParser, JSONParser
+from rest_framework.response import Response
 
 
 def home(request):
@@ -107,6 +109,19 @@ def get_eamena_resource_for_polygon(request):
     else:
         return JsonResponse(status=400, data={"message": "Missing request body"})
 
+
+def get_images_for_polygon(request):
+    if request.method != "POST":
+        raise Http404()
+    elif request.body:
+        try:
+            polygon = GEOSGeometry(request.body)
+            qs = Image.objects.filter(geom__intersects=polygon)
+            return JsonResponse(status=200, data=HBSerializer().serialize(qs), safe=False)
+        except:
+            return JsonResponse(status=400, data={"message": "Invalid geopolygon"})
+    else:
+        return JsonResponse(status=400, data={"message": "Missing request body"})
 
 # DEPRECATED JULY 17 - WAS PART OF EARLY API
 from main.utils.serializers import HBSerializer
