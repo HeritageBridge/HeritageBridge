@@ -77,6 +77,9 @@ export default class extends React.Component {
     }
     let {selectedIndexes} = this.props
     const currentSectionIndexes = selectedIndexes[sectionIndex]
+    if (currentSectionIndexes === undefined || section.images === undefined) {
+      return false
+    }
     return section.images.length === currentSectionIndexes.length
   }
   

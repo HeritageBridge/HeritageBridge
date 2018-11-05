@@ -16,8 +16,8 @@ import LogoHerBridge from '../Svg/logo-herbridge.svg';
 import Svg from 'react-svg-inline'
 import MomentUtils from 'material-ui-pickers/utils/moment-utils'
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
-import {fakePhotoSections} from '../../data/fake.photo.sections'
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
+import {imageSectionsFromImages} from '../../lib/image'
 import {flatMap} from '../../utils/utils'
 import moment from "moment";
 
@@ -45,13 +45,14 @@ class App extends React.Component {
     super(props);
     this.state = {
       bottomMargin: App.MIN_BOTTOM_MARGIN,
+      images: [],
       isLoading: false,
       isLoadingResources: false,
       isLoggedIn: false,
       loginError: null,
       loginIsLoading: false,
       selectedPhotoConfirmationIndex: 0,
-      selectedPhotoIndexes: null,
+      selectedPhotoIndexes: [],
       selectedPhotos: [],
       selectedResource: null,
       photoEndDate: moment().toDate(),
@@ -69,8 +70,7 @@ class App extends React.Component {
 
   componentDidMount() {
     this.setState({
-      isLoggedIn: cookies.isLoggedIn(),
-      selectedPhotoIndexes: fakePhotoSections.map(() => []),
+      isLoggedIn: cookies.isLoggedIn()
     })
 
     window.addEventListener("resize", this.handleWindowResize)
@@ -165,8 +165,10 @@ class App extends React.Component {
 
   handlePhotoSelectionChanged = (indexes) => {
     // Update the selected photos using the new indexes
+    const {imageSections} = this.state
+
     const newSelectedPhotos =
-      flatMap(fakePhotoSections, (section, sectionIndex) => {
+      flatMap(imageSections, (section, sectionIndex) => {
         return section.images.filter((image, imageIndex) => {
           return indexes[sectionIndex].includes(imageIndex)
         })
@@ -186,12 +188,12 @@ class App extends React.Component {
 
   handlePhotoConfirmationClear = (index) => {
     // Update the selected photos using the new index
-    const {selectedPhotos} = this.state
+    const {imageSections, selectedPhotos} = this.state
     const selectedPhoto = selectedPhotos[index]
     const newSelectedPhotos = selectedPhotos.filter(p => p !== selectedPhoto)
 
     // Update the selected indexes
-    const newSelectedPhotoIndexes = fakePhotoSections.map(section => {
+    const newSelectedPhotoIndexes = imageSections.map(section => {
       const images = section.images
       let indexes = []
       for (let i = 0; i < images.length; i++) {
@@ -241,9 +243,20 @@ class App extends React.Component {
     })
 
     // Call EAMENA API using GeoJSON polygon
-    api.getResources(polygon.geometry)
-      .then(resources => this.setState({isLoadingResources: false, resources}))
-      .catch(error => this.setState({isLoadingResources: false}))
+    Promise.all([
+      api.getResources(polygon.geometry),
+      api.getImages(polygon.geometry)
+    ]).then(responses => {
+      const resources = responses[0]
+      const images = responses[1]
+      const imageSections = imageSectionsFromImages(images)
+      this.setState({
+        isLoadingResources: false,
+        resources,
+        imageSections
+      })
+    })
+    .catch(error => this.setState({isLoadingResources: false}))
   }
 
   handleMapViewportChange = (viewport) => {
@@ -265,6 +278,7 @@ class App extends React.Component {
 
   getLoginContent = () => {
     const {
+      imageSections,
       isLoading,
       isLoadingResources,
       photoEndDate,
@@ -342,7 +356,7 @@ class App extends React.Component {
                   <PhotoGridList
                     endDate={photoEndDate}
                     startDate={photoStartDate}
-                    sections={fakePhotoSections}
+                    sections={imageSections}
                     selectedIndexes={selectedPhotoIndexes}
                     onDateRangeChanged={this.handlePhotoDateRangeChanged}
                     onSelectionChanged={this.handlePhotoSelectionChanged}/>
