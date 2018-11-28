@@ -38,7 +38,6 @@ export default class extends React.Component {
     } else {
       selectedIndexes[sectionIndex] = section.images.map((image, index) => index)
     }
-    this.setState({selectedIndexes})
     this.props.onSelectionChanged(selectedIndexes)
   }
   
@@ -52,10 +51,9 @@ export default class extends React.Component {
       selectedIndexes[sectionIndex] = currentSectionIndexes.filter(i => i !== index)
     } else {
       currentSectionIndexes.push(index)
-      currentSectionIndexes.sort(this.indexSortComparator)
+      currentSectionIndexes.sort()
       selectedIndexes[sectionIndex] = currentSectionIndexes
     }
-    this.setState({selectedIndexes})
     this.props.onSelectionChanged(selectedIndexes)
   }
   
