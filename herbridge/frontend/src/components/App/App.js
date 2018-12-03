@@ -63,7 +63,7 @@ class App extends React.Component {
       viewport: {
         latitude: 26.669568563483807,
         longitude: 37.48028071919893,
-        zoom: 8,
+        zoom: 5,
       }
     }
   }
