@@ -47,6 +47,7 @@ class App extends React.Component {
       bottomMargin: App.MIN_BOTTOM_MARGIN,
       images: [],
       isLoading: false,
+      isLoadingImages: false,
       isLoadingResources: false,
       isLoggedIn: false,
       loginError: null,
@@ -231,30 +232,46 @@ class App extends React.Component {
 
     // Make sure we don't have a resource currently selected
     const {selectedResource} = this.state
-    if (selectedResource !== null) {
-      return
-    }
+    let isLoadingImages = true
+    let isLoadingResources = selectedResource === null
 
     // Start loading
     this.setState({
-      isLoadingResources: true,
+      isLoadingImages,
+      isLoadingResources,
       resourcesFiltered: [],
       resourcesFilterQuery: '',
     })
 
+    // Get promises
+    let promises = []
+    promises.push(api.getImages(polygon.geometry))
+    if (isLoadingResources) {
+      promises.push(api.getResources(polygon.geometry))
+    }
+
     // Call EAMENA API using GeoJSON polygon
-    Promise.all([
-      api.getResources(polygon.geometry),
-      api.getImages(polygon.geometry)
-    ]).then(responses => {
-      const resources = responses[0]
-      const images = responses[1]
-      const imageSections = imageSectionsFromImages(images)
-      this.setState({
-        isLoadingResources: false,
-        resources,
-        imageSections
-      })
+    Promise.all(promises).then(responses => {
+      // Loaded images and resources
+      if (responses.length === 2) {
+        const images = responses[0]
+        const imageSections = imageSectionsFromImages(images)
+        const resources = responses[1]
+        this.setState({
+          isLoadingImages: false,
+          isLoadingResources: false,
+          resources,
+          imageSections
+        })
+        // Only loaded images
+      } else if (responses.length === 1) {
+        const images = responses[0]
+        const imageSections = imageSectionsFromImages(images)
+        this.setState({
+          isLoadingImages: false,
+          imageSections
+        })
+      }
     })
     .catch(error => this.setState({isLoadingResources: false}))
   }
@@ -280,6 +297,7 @@ class App extends React.Component {
     const {
       imageSections,
       isLoading,
+      isLoadingImages,
       isLoadingResources,
       photoEndDate,
       photoStartDate,
@@ -354,6 +372,7 @@ class App extends React.Component {
                   xs={12}
                   sm={noPhotosSelected ? 12 : 6}>
                   <PhotoGridList
+                    isLoading={isLoadingImages}
                     endDate={photoEndDate}
                     startDate={photoStartDate}
                     sections={imageSections}

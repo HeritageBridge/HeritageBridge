@@ -1,6 +1,7 @@
 import React from 'react';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Checkbox from '@material-ui/core/Checkbox';
+import CircularProgress from "@material-ui/core/CircularProgress"
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import GridList from "@material-ui/core/GridList";
@@ -19,6 +20,7 @@ export default class extends React.Component {
   indexSortComparator = (a, b) => (a > b)
   
   static defaultProps = {
+    isLoading: false,
     sections: [],
     selectedIndexes: null,
     startDate: new Date(),
@@ -40,84 +42,36 @@ export default class extends React.Component {
     }
     this.props.onSelectionChanged(selectedIndexes)
   }
-  
-  handleImageToggle = (image, index, sectionIndex) => {
-    let {selectedIndexes} = this.props
-    let currentSectionIndexes = selectedIndexes[sectionIndex]
-    if (currentSectionIndexes === undefined) {
-      selectedIndexes[sectionIndex] = []
-      selectedIndexes[sectionIndex].push(index)
-    } else if (bs(currentSectionIndexes, index, this.indexBinarySearchComparator) >= 0) {
-      selectedIndexes[sectionIndex] = currentSectionIndexes.filter(i => i !== index)
-    } else {
-      currentSectionIndexes.push(index)
-      currentSectionIndexes.sort()
-      selectedIndexes[sectionIndex] = currentSectionIndexes
-    }
-    this.props.onSelectionChanged(selectedIndexes)
+
+    getLoading = () => {
+    return (
+      <CircularProgress style={{
+        display: 'block',
+        margin: '32px auto'
+      }}/>
+    )
   }
-  
-  isImageAtIndexSelected = (index, sectionIndex) => {
-    const {selectedIndexes} = this.props
-    const currentSectionIndexes = selectedIndexes[sectionIndex]
-    if (currentSectionIndexes === undefined) {
-      return false
-    } else {
-      return bs(currentSectionIndexes, index, this.indexBinarySearchComparator) >= 0
-    }
+
+  getEmptyState = () => {
+    return (
+      <div>
+        <span style={{
+          fontFamily: 'Roboto, Helvetica',
+          display: 'block',
+          margin: 32,
+          textAlign: 'center',
+          color: 'rgba(0,0,0,0.5)',
+        }}>No images found</span>
+      </div>
+    )
   }
-  
-  isSectionAtIndexSelected = (sectionIndex) => {
-    const {sections} = this.props
-    const section = sections[sectionIndex]
-    if (section === undefined) {
-      return false
-    }
-    let {selectedIndexes} = this.props
-    const currentSectionIndexes = selectedIndexes[sectionIndex]
-    if (currentSectionIndexes === undefined || section.images === undefined) {
-      return false
-    }
-    return section.images.length === currentSectionIndexes.length
-  }
-  
-  render() {
+
+  getMainContent = () => {
     const {sections} = this.props
     return (
-      <Paper style={{
-        margin: '0 auto',
-        height: '100%'
-      }}>
-        <div style={{
-          minHeight: 100,
-          padding: 32
-        }}>
-          <Grid
-            container
-            spacing={16}>
-            <Grid
-              item
-              xs={6}>
-              <Typography variant="subheading">Amal in Heritage</Typography>
-            </Grid>
-            <Grid
-              item
-              xs={6}
-              style={{
-                display: 'table-cell',
-                verticalAlign: 'middle'
-              }}>
-              <Svg
-                svg={LogoAmalInHeritage}
-                style={{
-                  display: 'block',
-                  margin: '6px 0 0 auto',
-                  width: 48
-                }}/>
-            </Grid>
-          </Grid>
-          <PhotoGridListFilterGroup {...this.props} />
-          {sections.map((section, sectionIndex) => (
+      <div>
+        <PhotoGridListFilterGroup {...this.props} />
+          { (sections.length > 0) ? sections.map((section, sectionIndex) => (
             <GridList
               key={section.date}
               cellHeight={115}
@@ -171,7 +125,88 @@ export default class extends React.Component {
                 </GridListTile>
               ))}
             </GridList>
-          ))}
+          )) : this.getEmptyState()}
+      </div>
+
+    )
+  }
+
+  handleImageToggle = (image, index, sectionIndex) => {
+    let {selectedIndexes} = this.props
+    let currentSectionIndexes = selectedIndexes[sectionIndex]
+    if (currentSectionIndexes === undefined) {
+      selectedIndexes[sectionIndex] = []
+      selectedIndexes[sectionIndex].push(index)
+    } else if (bs(currentSectionIndexes, index, this.indexBinarySearchComparator) >= 0) {
+      selectedIndexes[sectionIndex] = currentSectionIndexes.filter(i => i !== index)
+    } else {
+      currentSectionIndexes.push(index)
+      currentSectionIndexes.sort()
+      selectedIndexes[sectionIndex] = currentSectionIndexes
+    }
+    this.props.onSelectionChanged(selectedIndexes)
+  }
+  
+  isImageAtIndexSelected = (index, sectionIndex) => {
+    const {selectedIndexes} = this.props
+    const currentSectionIndexes = selectedIndexes[sectionIndex]
+    if (currentSectionIndexes === undefined) {
+      return false
+    } else {
+      return bs(currentSectionIndexes, index, this.indexBinarySearchComparator) >= 0
+    }
+  }
+  
+  isSectionAtIndexSelected = (sectionIndex) => {
+    const {sections} = this.props
+    const section = sections[sectionIndex]
+    if (section === undefined) {
+      return false
+    }
+    let {selectedIndexes} = this.props
+    const currentSectionIndexes = selectedIndexes[sectionIndex]
+    if (currentSectionIndexes === undefined || section.images === undefined) {
+      return false
+    }
+    return section.images.length === currentSectionIndexes.length
+  }
+  
+  render() {
+    const {isLoading} = this.props
+    return (
+      <Paper style={{
+        margin: '0 auto',
+        height: '100%'
+      }}>
+        <div style={{
+          minHeight: 100,
+          padding: 32
+        }}>
+          <Grid
+            container
+            spacing={16}>
+            <Grid
+              item
+              xs={6}>
+              <Typography variant="subheading">Amal in Heritage</Typography>
+            </Grid>
+            <Grid
+              item
+              xs={6}
+              style={{
+                display: 'table-cell',
+                verticalAlign: 'middle'
+              }}>
+              <Svg
+                svg={LogoAmalInHeritage}
+                style={{
+                  display: 'block',
+                  margin: '6px 0 0 auto',
+                  width: 48
+                }}/>
+            </Grid>
+          </Grid>
+          { isLoading ? this.getLoading() : this.getMainContent() }
         </div>
       </Paper>
     )

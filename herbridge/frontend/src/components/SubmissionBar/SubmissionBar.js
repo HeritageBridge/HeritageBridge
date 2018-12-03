@@ -37,6 +37,7 @@ export default class extends React.Component {
       margin: 'auto 0',
       width: '100%',
     }
+    console.log('render using', resource)
     return (
       <Grid
         container
@@ -55,7 +56,7 @@ export default class extends React.Component {
             container
             direction="column">
             <Grid item>
-              <Typography variant="body2">EAMENA-{resource ? resource.id : '?'}</Typography>
+              <Typography variant="body2">{resource ? resource.resource_name : 'EAMENA-?'}</Typography>
             </Grid>
             <Grid item>
               <Typography variant="headline">{imageCount} selected</Typography>
