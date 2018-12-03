@@ -2,9 +2,10 @@
 
 import React from "react";
 import Geocoder from 'react-map-gl-geocoder'
+import ImagePin from './ImagePin'
 import ReactMapGL, {NavigationControl, Marker, TRANSITION_EVENTS} from "react-map-gl";
 import Paper from '@material-ui/core/Paper'
-import Pin from './pin'
+import Pin from './Pin'
 import {flatMap} from '../../utils/utils'
 
 export default class extends React.Component {
@@ -20,6 +21,7 @@ export default class extends React.Component {
     },
     onViewportChanged: (viewport) => {
     },
+    images: [],
     resources: [],
     selectedResource: null,
   }
@@ -97,7 +99,7 @@ export default class extends React.Component {
 
 
   getOverlays = () => {
-    const {resources, selectedResource} = this.props
+    const {images,resources, selectedResource} = this.props
     return (
       <div>
         {resources.map((resource, index) => {
@@ -111,6 +113,15 @@ export default class extends React.Component {
                 opacity={!selectedResource ? 1 : (resource !== selectedResource ? 0 : 1)}
                 selected={resource === selectedResource}
               />
+            </Marker>
+          )
+        })}
+        {images.map((image, index) => {
+          return (
+            <Marker
+              longitude={image.longitude}
+              latitude={image.latitude}>
+              <ImagePin index={index} url={image.url} />
             </Marker>
           )
         })}

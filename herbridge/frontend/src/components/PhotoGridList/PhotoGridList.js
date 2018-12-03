@@ -70,7 +70,7 @@ export default class extends React.Component {
     const {sections} = this.props
     return (
       <div>
-        <PhotoGridListFilterGroup {...this.props} />
+        {/*<PhotoGridListFilterGroup {...this.props} />*/}
           { (sections.length > 0) ? sections.map((section, sectionIndex) => (
             <GridList
               key={section.date}

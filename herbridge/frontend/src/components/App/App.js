@@ -340,6 +340,7 @@ class App extends React.Component {
                   sm={7}
                   style={{zIndex: 0}}>
                   <Map
+                    images={this.getImages()}
                     resources={resourcesFiltered.length > 0 ? resourcesFiltered : resources}
                     selectedResource={selectedResource}
                     viewport={viewport}
@@ -429,6 +430,15 @@ class App extends React.Component {
         </Grid>
       </Grid>
     )
+  }
+
+  getImages = () => {
+    const {imageSections} = this.state
+    if (imageSections !== undefined) {
+      return flatMap(imageSections, (section) => section.images)
+    } else {
+      return []
+    }
   }
 
   getParentMargin = () => {
