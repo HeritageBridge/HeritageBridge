@@ -116,12 +116,12 @@ export default class extends React.Component {
             </Marker>
           )
         })}
-        {images.map((image, index) => {
+        {images.map(image => {
           return (
             <Marker
               longitude={image.longitude}
               latitude={image.latitude}>
-              <ImagePin index={index} url={image.url} />
+              <ImagePin/>
             </Marker>
           )
         })}

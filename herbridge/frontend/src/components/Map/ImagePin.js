@@ -1,12 +1,6 @@
 import React, {PureComponent} from 'react';
 
 export default class Pin extends PureComponent {
-  static defaultProps = {
-    index: -1,
-    opacity: 1,
-    url: '',
-  }
-
   render() {
     return (
       <svg width="10px" height="10px" viewBox="0 0 10 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
