@@ -43,7 +43,7 @@ export default class extends React.Component {
     this.props.onSelectionChanged(selectedIndexes)
   }
 
-    getLoading = () => {
+  getLoadingContent = () => {
     return (
       <CircularProgress style={{
         display: 'block',
@@ -52,7 +52,7 @@ export default class extends React.Component {
     )
   }
 
-  getEmptyState = () => {
+  getEmptyContent = () => {
     return (
       <div>
         <span style={{
@@ -125,7 +125,7 @@ export default class extends React.Component {
                 </GridListTile>
               ))}
             </GridList>
-          )) : this.getEmptyState()}
+          )) : this.getEmptyContent()}
       </div>
 
     )
@@ -206,7 +206,7 @@ export default class extends React.Component {
                 }}/>
             </Grid>
           </Grid>
-          { isLoading ? this.getLoading() : this.getMainContent() }
+          { isLoading ? this.getLoadingContent() : this.getMainContent() }
         </div>
       </Paper>
     )
