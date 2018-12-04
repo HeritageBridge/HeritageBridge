@@ -37,7 +37,6 @@ export default class extends React.Component {
       margin: 'auto 0',
       width: '100%',
     }
-    console.log('render using', resource)
     return (
       <Grid
         container
