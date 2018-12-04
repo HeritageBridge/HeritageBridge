@@ -252,26 +252,17 @@ class App extends React.Component {
 
     // Call EAMENA API using GeoJSON polygon
     Promise.all(promises).then(responses => {
-      // Loaded images and resources
-      if (responses.length === 2) {
-        const images = responses[0]
-        const imageSections = imageSectionsFromImages(images)
-        const resources = responses[1]
-        this.setState({
-          isLoadingImages: false,
-          isLoadingResources: false,
-          resources,
-          imageSections
-        })
-        // Only loaded images
-      } else if (responses.length === 1) {
-        const images = responses[0]
-        const imageSections = imageSectionsFromImages(images)
-        this.setState({
-          isLoadingImages: false,
-          imageSections
-        })
+      const images = responses[0]
+      const imageSections = imageSectionsFromImages(images)
+      let state = {
+        isLoadingImages: false,
+        isLoadingResources: false,
+        imageSections
       }
+      if (isLoadingResources) {
+        state['resources'] = responses[1]
+      }
+      this.setState(state)
     })
     .catch(error => this.setState({isLoadingResources: false}))
   }
