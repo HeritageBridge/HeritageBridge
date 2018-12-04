@@ -1,5 +1,5 @@
 module.exports = {
-  fakePhotoSections: [
+  fakeImageSections: [
     {
       date: "1989-08-24T05:00:00.000Z",
       images: [{

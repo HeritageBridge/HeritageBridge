@@ -61,6 +61,20 @@ export default class TargetResource extends React.Component {
     )
   }
 
+  getEmptyState = () => {
+    return (
+      <div>
+        <span style={{
+          fontFamily: 'Roboto, Helvetica',
+          display: 'block',
+          margin: 32,
+          textAlign: 'center',
+          color: 'rgba(0,0,0,0.5)',
+        }}>No resources found</span>
+      </div>
+    )
+  }
+
   getResourceList = () => {
     return (
       <TargetResourceList
@@ -70,6 +84,11 @@ export default class TargetResource extends React.Component {
         selectedResource={this.props.selectedResource}
       />
     )
+  }
+
+  getMainContent = () => {
+    const {resources} = this.props
+    return (resources !== undefined && resources.length > 0) ? this.getResourceList() : this.getEmptyState()
   }
 
   render() {
@@ -103,7 +122,7 @@ export default class TargetResource extends React.Component {
               />
             </Grid>
             <Grid item xs={12}>
-              {isLoading ? this.getLoading() : this.getResourceList()}
+              {isLoading ? this.getLoading() : this.getMainContent()}
             </Grid>
           </Grid>
         </div>

@@ -11,6 +11,16 @@ const login = (password) => {
   )
 }
 
+const getImages = (polygon) => {
+  return (
+    axios.post('/api/images/search', polygon)
+      .then(response => response.data)
+      .catch(error => {
+        throw httpErrorFromAPIError(error)
+      })
+  )
+}
+
 const getResources = (polygon) => {
   return (
     axios.post('/api/eamena/resources', polygon)
@@ -23,5 +33,6 @@ const getResources = (polygon) => {
 
 module.exports = {
   login,
+  getImages,
   getResources
 }
