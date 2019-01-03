@@ -30,6 +30,7 @@ urlpatterns = [
     path('api/login', csrf_exempt(views.LoginAuthToken.as_view())),
     path('api/eamena/resources', csrf_exempt(views.get_eamena_resource_for_polygon), name='eamena-resource'),
     path('api/images/search', csrf_exempt(views.get_images_for_polygon), name='image-search'),
+    path('api/eamena/submit', csrf_exempt(views.submit_image_for_resource), name='eamena-resource-image'),
     ## FOLLOWING 3 URLS ARE DEPRECATED JULY 17 - WERE PART OF EARLY API
     path('api-DEP/<str:model_name>/', views.api_dispatch, name='api_dispatch'),
     path('api-DEP/<str:model_name>/<int:id>/', views.api_dispatch, name='api_dispatch'),

@@ -171,7 +171,12 @@ class App extends React.Component {
     const newSelectedPhotos =
       flatMap(imageSections, (section, sectionIndex) => {
         return section.images.filter((image, imageIndex) => {
-          return indexes[sectionIndex].includes(imageIndex)
+          const indexesForSection = indexes[sectionIndex]
+          if (indexesForSection !== undefined) {
+            return indexesForSection.includes(imageIndex)
+          } else {
+            return false
+          }
         })
       })
 
@@ -220,7 +225,27 @@ class App extends React.Component {
   }
 
   handleSubmissionBarSubmit = () => {
-    console.log('submit')
+    const { selectedPhotos, selectedResource } = this.state
+    if (selectedResource === undefined ||
+        selectedResource === null) {
+      return
+    }
+    if (selectedPhotos === undefined ||
+        selectedPhotos === null ||
+        selectedPhotos.length === 0) {
+      return
+    }
+
+    const id = selectedResource.resource_id
+    const submissions = selectedPhotos.map(image => {
+      let s =  Object.assign(image, {related_to: [id]})
+      s.caption = s.caption === null ? "Submitted by eamena" : s.caption
+      delete s.thumbnailURL
+      return s
+    })
+    api.submit(submissions)
+      .then(response => console.log('response', response))
+      .catch(error => console.log('error', error))
   }
 
   handleSubmissionBarArchive = () => {

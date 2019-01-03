@@ -12,7 +12,7 @@ export default class extends React.Component {
   
   static defaultProps = {
     imageCount: 0,
-    isLoading: false,
+    isLoading: true,
     resource: null,
     onArchive: () => {
     },
@@ -45,12 +45,12 @@ export default class extends React.Component {
         style={{
           opacity: isLoading ? 0.4 : 1,
           padding: '8px 16px',
-          transition: 'opacity 300ms',
+          transition: 'opacity 300ms'
         }}>
         <Grid
           item
           xs={12}
-          sm={5}>
+          sm={7}>
           <Grid
             container
             direction="column">
@@ -65,16 +65,16 @@ export default class extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={2}
-          style={{display: 'flex'}}>
-          <Button
-            color="default"
-            onClick={onArchive}
-            style={buttonStyle}>Archive</Button>
-        </Grid>
+        {/*<Grid*/}
+          {/*item*/}
+          {/*xs={12}*/}
+          {/*sm={2}*/}
+          {/*style={{display: 'flex'}}>*/}
+          {/*<Button*/}
+            {/*color="default"*/}
+            {/*onClick={onArchive}*/}
+            {/*style={buttonStyle}>Archive</Button>*/}
+        {/*</Grid>*/}
         <Grid
           item
           xs={12}
@@ -114,6 +114,7 @@ export default class extends React.Component {
           <Paper
             style={{
               width: 'fit-content',
+              maxWidth: 500,
               display: 'block',
               margin: '0 auto',
               position: 'relative'

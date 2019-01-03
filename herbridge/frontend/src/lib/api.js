@@ -31,8 +31,24 @@ const getResources = (polygon) => {
   )
 }
 
+const submitSingle = (submission) => {
+  return (
+    axios.post('/api/eamena/submit', submission)
+      .then(response => response.data)
+      .catch(error => {
+        throw httpErrorFromAPIError(error)
+      })
+  )
+}
+
+const submit = (submissions) => {
+  const promises = submissions.map(submission => submitSingle(submission))
+  return axios.all(promises)
+}
+
 module.exports = {
   login,
   getImages,
-  getResources
+  getResources,
+  submit
 }

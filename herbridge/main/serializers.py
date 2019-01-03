@@ -81,7 +81,8 @@ class EventSerializer(serializers.ModelSerializer):
         )
 
 class ImageSerializer(serializers.ModelSerializer):
-    
+
+    id = serializers.UUIDField()
     image = serializers.ImageField()
     latitude = serializers.FloatField()
     longitude = serializers.FloatField()
@@ -106,7 +107,7 @@ class ImageSerializer(serializers.ModelSerializer):
         return Image.objects.create(**data)
 
     def to_representation(self,obj):
-        
+
         if obj.geom:
             lat = obj.geom.coords[1]
             lon = obj.geom.coords[0]
@@ -131,6 +132,7 @@ class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
         fields = (
+            'id',
             'image',
             'url',
             'latitude',

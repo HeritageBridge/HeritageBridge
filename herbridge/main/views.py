@@ -14,7 +14,6 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.response import Response
 
-
 def home(request):
     return render(request, 'index.html')
 
@@ -123,10 +122,22 @@ def get_images_for_polygon(request):
     else:
         return JsonResponse(status=400, data={"message": "Missing request body"})
 
+def submit_image_for_resource(request):
+    if request.method != "POST":
+        raise Http404()
+    elif request.body:
+        response = requests.post('http://34.248.167.252/api/herbridge/put', data=request.body)
+        if response.status_code == 201:
+            return JsonResponse(response.json(), safe=False)
+        else:
+            return response
+    else:
+        return JsonResponse(status=400, data={"message": "Missing request body"})
+
 # DEPRECATED JULY 17 - WAS PART OF EARLY API
 from main.utils.serializers import HBSerializer
 from main.models import Assessor, Event, Image, Report, Resource
-
+from main.serializers import ImageSerializer
 
 def api_dispatch(request, model_name=None, id=None):
     lookup = {
