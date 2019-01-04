@@ -20,6 +20,7 @@ import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import {imageSectionsFromImages} from '../../lib/image'
 import {flatMap} from '../../utils/utils'
 import moment from "moment";
+import SubmissionSnackbar from "../SubmissionSnackbar/SubmissionSnackbar"
 
 const theme = createMuiTheme({
   palette: {
@@ -56,6 +57,8 @@ class App extends React.Component {
       selectedPhotoIndexes: [],
       selectedPhotos: [],
       selectedResource: null,
+      submitError: null,
+      submitted: false,
       photoEndDate: moment().toDate(),
       photoStartDate: moment().subtract(3, "days").toDate(),
       resources: [],
@@ -225,27 +228,41 @@ class App extends React.Component {
   }
 
   handleSubmissionBarSubmit = () => {
-    const { selectedPhotos, selectedResource } = this.state
+    const {selectedPhotos, selectedResource} = this.state
     if (selectedResource === undefined ||
-        selectedResource === null) {
+      selectedResource === null) {
       return
     }
     if (selectedPhotos === undefined ||
-        selectedPhotos === null ||
-        selectedPhotos.length === 0) {
+      selectedPhotos === null ||
+      selectedPhotos.length === 0) {
       return
     }
 
     const id = selectedResource.resource_id
     const submissions = selectedPhotos.map(image => {
-      let s =  Object.assign(image, {related_to: [id]})
+      let s = Object.assign(image, {related_to: [id]})
       s.caption = s.caption === null ? "Submitted by eamena" : s.caption
       delete s.thumbnailURL
       return s
     })
+
+    this.setState({isLoading: true})
     api.submit(submissions)
-      .then(response => console.log('response', response))
-      .catch(error => console.log('error', error))
+      .then(response => {
+        this.setState({
+          isLoading: false,
+          submitError: null,
+          submitted: true,
+        })
+      })
+      .catch(error => {
+        this.setState({
+          isLoading: false,
+          submitError: error,
+          submitted: true,
+        })
+      })
   }
 
   handleSubmissionBarArchive = () => {
@@ -289,7 +306,7 @@ class App extends React.Component {
       }
       this.setState(state)
     })
-    .catch(error => this.setState({isLoadingResources: false}))
+      .catch(error => this.setState({isLoadingResources: false}))
   }
 
   handleMapViewportChange = (viewport) => {
@@ -425,6 +442,7 @@ class App extends React.Component {
             height: this.calculateSubmissionBarHeight(),
             opacity: noPhotosSelected ? 0 : 1,
           }}/>
+        {this.getSubmissionSnackbar()}
       </div>
     )
   }
@@ -460,6 +478,27 @@ class App extends React.Component {
   getParentMargin = () => {
     const bm = Math.max(App.MIN_BOTTOM_MARGIN, this.state.bottomMargin)
     return `${App.MIN_BOTTOM_MARGIN}px ${App.MIN_BOTTOM_MARGIN}px ${bm}px ${App.MIN_BOTTOM_MARGIN}px`
+  }
+
+  handleSubmissionSnackbarClosed = () => {
+    this.setState({ submitted: false, submitError: null })
+  }
+
+  getSubmissionSnackbar = () => {
+    const { selectedPhotos, submitted, submitError } = this.state
+    console.log('submit error', submitError)
+    if (submitted) {
+      const selectedPhotoCount = selectedPhotos.length
+      return (
+        <SubmissionSnackbar
+          onClose={this.handleSubmissionSnackbarClosed}
+          variant={submitError === null ? "success" : "error"}
+          message={submitError === null ? `Successfully submitted ${selectedPhotoCount} images` : `Failed to submit ${selectedPhotoCount} images (${submitError.message}).`}
+        />
+      )
+    } else {
+      return <div/>
+    }
   }
 
   nextConfirmationIndex = (newSelectedPhotos) => {

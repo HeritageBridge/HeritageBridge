@@ -82,6 +82,7 @@ export default class extends React.Component {
           style={{display: 'flex'}}>
           <Button
             color="primary"
+            disabled={isLoading}
             variant="raised"
             onClick={onSubmit}
             style={buttonStyle}>Submit & Archive</Button>

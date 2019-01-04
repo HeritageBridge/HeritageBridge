@@ -21,8 +21,7 @@ module.exports = {
         latitude: 29.965,
         longitude: 31.125325,
         captureDate: 1291391156,
-        caption: null\
-I
+        caption: null
       },
         {
           id: 'e0000000-0000-0000-0000-000000000005',
