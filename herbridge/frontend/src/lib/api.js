@@ -42,7 +42,7 @@ const submitSingle = (submission) => {
 }
 
 const submit = (submissions) => {
-  const promises = submissions.map(submission => submitSingle(submission))
+  const promises = submissions.map(submitSingle)
   return axios.all(promises)
 }
 

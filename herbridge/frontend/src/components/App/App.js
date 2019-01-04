@@ -175,11 +175,7 @@ class App extends React.Component {
       flatMap(imageSections, (section, sectionIndex) => {
         return section.images.filter((image, imageIndex) => {
           const indexesForSection = indexes[sectionIndex]
-          if (indexesForSection !== undefined) {
-            return indexesForSection.includes(imageIndex)
-          } else {
-            return false
-          }
+          return indexesForSection !== undefined && indexesForSection.includes(imageIndex)
         })
       })
 
@@ -242,7 +238,7 @@ class App extends React.Component {
     const id = selectedResource.resource_id
     const submissions = selectedPhotos.map(image => {
       let s = Object.assign(image, {related_to: [id]})
-      s.caption = s.caption === null ? "Submitted by eamena" : s.caption
+      s.caption = s.caption === null ? "Submitted via HerBridge" : s.caption
       delete s.thumbnailURL
       return s
     })
@@ -306,7 +302,7 @@ class App extends React.Component {
       }
       this.setState(state)
     })
-      .catch(error => this.setState({isLoadingResources: false}))
+    .catch(error => this.setState({isLoadingResources: false}))
   }
 
   handleMapViewportChange = (viewport) => {
