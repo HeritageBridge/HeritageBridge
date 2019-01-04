@@ -492,11 +492,12 @@ class App extends React.Component {
     console.log('submit error', submitError)
     if (submitted) {
       const selectedPhotoCount = selectedPhotos.length
+      const imageDescriptor = selectedPhotoCount > 1 ? "images" : "image"
       return (
         <SubmissionSnackbar
           onClose={this.handleSubmissionSnackbarClosed}
           variant={submitError === null ? "success" : "error"}
-          message={submitError === null ? `Successfully submitted ${selectedPhotoCount} images` : `Failed to submit ${selectedPhotoCount} images (${submitError.message}).`}
+          message={submitError === null ? `Successfully submitted ${selectedPhotoCount} ${imageDescriptor}` : `Failed to submit ${selectedPhotoCount} ${imageDescriptor} (${submitError.message}).`}
         />
       )
     } else {
