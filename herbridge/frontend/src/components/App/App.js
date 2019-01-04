@@ -481,14 +481,26 @@ class App extends React.Component {
   }
 
   handleSubmissionSnackbarClosed = () => {
-    this.setState({
-      submitted: false,
-      submitError: null
-    })
+    const {submitError} = this.state
+    if (submitError === null) {
+      this.setState({
+        submitted: false,
+        submitError: null,
+        selectedPhotoConfirmationIndex: 0,
+        selectedPhotoIndexes: [],
+        selectedPhotos: [],
+
+      })
+    } else {
+      this.setState({
+        submitted: false,
+        submitError: null
+      })
+    }
   }
 
   getSubmissionSnackbar = () => {
-    const { selectedPhotos, submitted, submitError } = this.state
+    const {selectedPhotos, submitted, submitError} = this.state
     if (submitted) {
       const selectedPhotoCount = selectedPhotos.length
       const imageDescriptor = selectedPhotoCount > 1 ? "images" : "image"
