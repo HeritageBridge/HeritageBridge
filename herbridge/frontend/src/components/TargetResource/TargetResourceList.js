@@ -26,7 +26,7 @@ export default class extends React.Component {
   render() {
     const {selectedResource} = this.props
     return (
-      <List>
+      <List style={{ maxHeight: 350, overflowY: 'scroll' }}>
         {this.props.resources.map((resource, index) => (
           <ListItem key={resource.resource_id} style={{ paddingLeft: 12 }}>
             <span style={{
