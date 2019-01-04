@@ -75,7 +75,8 @@ export default class extends React.Component {
             <GridList
               key={section.date}
               cellHeight={115}
-              cols={6}>
+              cols={6}
+              style={{ maxHeight: 510 }}>
               <GridListTile
                 cols={6}
                 style={{height: 'auto'}}>

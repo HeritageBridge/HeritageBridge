@@ -171,13 +171,15 @@ class Image(models.Model):
             lat,long = self.geom.coords[1],self.geom.coords[0]
         else:
             lat,long = None,None
-    
+
         data = {
+            "id":self.id,
             "url":self.image.url,
             "thumbnailURL":self.thumbnail.url,
             "latitude":lat,
             "longitude":long,
             "captureDate":int(self.captureDate.timestamp()),
+            "caption":self.caption,
         }
 
         return data

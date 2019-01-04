@@ -131,11 +131,11 @@ export default class extends React.Component {
 
   render() {
     return (
-      <Paper style={{height: '100%'}}>
+      <Paper>
         <div
           ref={ref => this.containerRef = ref}
           style={{
-            height: '100%',
+            height: 510,
             width: '100%',
           }}>
           <ReactMapGL

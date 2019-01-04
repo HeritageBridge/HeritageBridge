@@ -45,17 +45,20 @@ export default class extends React.Component {
         style={{
           opacity: isLoading ? 0.4 : 1,
           padding: '8px 16px',
-          transition: 'opacity 300ms',
+          transition: 'opacity 300ms'
         }}>
         <Grid
           item
           xs={12}
-          sm={5}>
+          sm={7}>
           <Grid
             container
             direction="column">
             <Grid item>
-              <Typography variant="body2">{resource ? resource.resource_name : 'EAMENA-?'}</Typography>
+              <Typography
+                variant="body2"
+                color={resource ? "textPrimary" : "error"}
+              >{resource ? resource.resource_name : "Select a resource above"}</Typography>
             </Grid>
             <Grid item>
               <Typography variant="headline">{imageCount} selected</Typography>
@@ -65,16 +68,16 @@ export default class extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={2}
-          style={{display: 'flex'}}>
-          <Button
-            color="default"
-            onClick={onArchive}
-            style={buttonStyle}>Archive</Button>
-        </Grid>
+        {/*<Grid*/}
+          {/*item*/}
+          {/*xs={12}*/}
+          {/*sm={2}*/}
+          {/*style={{display: 'flex'}}>*/}
+          {/*<Button*/}
+            {/*color="default"*/}
+            {/*onClick={onArchive}*/}
+            {/*style={buttonStyle}>Archive</Button>*/}
+        {/*</Grid>*/}
         <Grid
           item
           xs={12}
@@ -82,6 +85,7 @@ export default class extends React.Component {
           style={{display: 'flex'}}>
           <Button
             color="primary"
+            disabled={isLoading || !resource}
             variant="raised"
             onClick={onSubmit}
             style={buttonStyle}>Submit & Archive</Button>
@@ -114,6 +118,7 @@ export default class extends React.Component {
           <Paper
             style={{
               width: 'fit-content',
+              maxWidth: 500,
               display: 'block',
               margin: '0 auto',
               position: 'relative'
