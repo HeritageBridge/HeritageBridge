@@ -489,7 +489,6 @@ class App extends React.Component {
 
   getSubmissionSnackbar = () => {
     const { selectedPhotos, submitted, submitError } = this.state
-    console.log('submit error', submitError)
     if (submitted) {
       const selectedPhotoCount = selectedPhotos.length
       const imageDescriptor = selectedPhotoCount > 1 ? "images" : "image"

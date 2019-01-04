@@ -12,7 +12,7 @@ export default class extends React.Component {
   
   static defaultProps = {
     imageCount: 0,
-    isLoading: true,
+    isLoading: false,
     resource: null,
     onArchive: () => {
     },
@@ -57,7 +57,7 @@ export default class extends React.Component {
             <Grid item>
               <Typography
                 variant="body2"
-                color={resource === null ? "error" : "textPrimary"}
+                color={resource ? "textPrimary" : "error"}
               >{resource ? resource.resource_name : "Select a resource above"}</Typography>
             </Grid>
             <Grid item>
@@ -85,7 +85,7 @@ export default class extends React.Component {
           style={{display: 'flex'}}>
           <Button
             color="primary"
-            disabled={isLoading || resource === null}
+            disabled={isLoading || !resource}
             variant="raised"
             onClick={onSubmit}
             style={buttonStyle}>Submit & Archive</Button>

@@ -82,7 +82,6 @@ class EventSerializer(serializers.ModelSerializer):
 
 class ImageSerializer(serializers.ModelSerializer):
 
-    id = serializers.UUIDField()
     image = serializers.ImageField()
     latitude = serializers.FloatField()
     longitude = serializers.FloatField()
@@ -120,7 +119,6 @@ class ImageSerializer(serializers.ModelSerializer):
             captureDate = obj.captureDate.timestamp()
 
         return {
-            'id':obj.pk,
             'url':obj.image.url,
             'thumbnailUrl':obj.thumbnail.url,
             'latitude':lat,
@@ -132,7 +130,6 @@ class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
         fields = (
-            'id',
             'image',
             'url',
             'latitude',

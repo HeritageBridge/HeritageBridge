@@ -137,7 +137,6 @@ def submit_image_for_resource(request):
 # DEPRECATED JULY 17 - WAS PART OF EARLY API
 from main.utils.serializers import HBSerializer
 from main.models import Assessor, Event, Image, Report, Resource
-from main.serializers import ImageSerializer
 
 def api_dispatch(request, model_name=None, id=None):
     lookup = {
