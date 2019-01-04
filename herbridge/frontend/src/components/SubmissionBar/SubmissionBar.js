@@ -55,7 +55,10 @@ export default class extends React.Component {
             container
             direction="column">
             <Grid item>
-              <Typography variant="body2">{resource ? resource.resource_name : 'EAMENA-?'}</Typography>
+              <Typography
+                variant="body2"
+                color={resource === null ? "error" : "textPrimary"}
+              >{resource ? resource.resource_name : "Select a resource above"}</Typography>
             </Grid>
             <Grid item>
               <Typography variant="headline">{imageCount} selected</Typography>
@@ -82,7 +85,7 @@ export default class extends React.Component {
           style={{display: 'flex'}}>
           <Button
             color="primary"
-            disabled={isLoading}
+            disabled={isLoading || resource === null}
             variant="raised"
             onClick={onSubmit}
             style={buttonStyle}>Submit & Archive</Button>

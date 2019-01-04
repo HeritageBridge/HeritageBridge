@@ -481,7 +481,10 @@ class App extends React.Component {
   }
 
   handleSubmissionSnackbarClosed = () => {
-    this.setState({ submitted: false, submitError: null })
+    this.setState({
+      submitted: false,
+      submitError: null
+    })
   }
 
   getSubmissionSnackbar = () => {
