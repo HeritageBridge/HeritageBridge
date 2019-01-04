@@ -20,7 +20,7 @@ import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import {imageSectionsFromImages} from '../../lib/image'
 import {flatMap} from '../../utils/utils'
 import moment from "moment";
-import SubmissionSnackbar from "../SubmissionSnackbar/SubmissionSnackbar"
+import SubmissionSnackbar from "../SubmissionSnackbar"
 
 const theme = createMuiTheme({
   palette: {
