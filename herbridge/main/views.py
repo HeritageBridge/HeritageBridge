@@ -100,7 +100,7 @@ def get_eamena_resource_for_polygon(request):
     if request.method != "POST":
         raise Http404()
     elif request.body:
-        response = requests.post('http://34.248.167.252/api/herbridge/get', data=request.body)
+        response = requests.post('http://eamena-hb.legiongis.com/api/herbridge/get', data=request.body)
         if response.status_code == 200:
             return JsonResponse(response.json(), safe=False)
         else:
@@ -126,7 +126,7 @@ def submit_image_for_resource(request):
     if request.method != "POST":
         raise Http404()
     elif request.body:
-        response = requests.post('http://34.248.167.252/api/herbridge/put', data=request.body)
+        response = requests.post('http://eamena-hb.legiongis.com/api/herbridge/put', data=request.body)
         if response.status_code == 201:
             return JsonResponse(response.json(), safe=False)
         else:
