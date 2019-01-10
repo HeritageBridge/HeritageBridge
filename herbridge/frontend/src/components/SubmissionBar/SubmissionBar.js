@@ -88,7 +88,7 @@ export default class extends React.Component {
             disabled={isLoading || !resource}
             variant="raised"
             onClick={onSubmit}
-            style={buttonStyle}>Submit & Archive</Button>
+            style={buttonStyle}>Submit</Button>
         </Grid>
       </Grid>
     )
