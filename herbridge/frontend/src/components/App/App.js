@@ -324,8 +324,8 @@ class App extends React.Component {
       // Update the selected photo in the confirmation component
       let newSelectedPhotoConfirmationIndex = 0
       if (selectedPhotos.length > selectedPhotoConfirmationIndex) {
-        const selectedPhoto = selectedPhotos[selectedPhotoConfirmationIndex]
-        const newIndex = newSelectedPhotos.findIndex(p => p.id === selectedPhoto.id)
+        const selected = selectedPhotos[selectedPhotoConfirmationIndex]
+        const newIndex = newSelectedPhotos.findIndex(p => p.id === selected.id)
         newSelectedPhotoConfirmationIndex = newIndex !== -1 ? newIndex : 0
       }
 
