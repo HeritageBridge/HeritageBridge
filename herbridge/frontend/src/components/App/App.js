@@ -292,7 +292,6 @@ class App extends React.Component {
     Promise.all(promises).then(responses => {
       const images = responses[0]
       const imageSections = imageSectionsFromImages(images)
-
       const {
         selectedPhotoConfirmationIndex,
         selectedPhotos
