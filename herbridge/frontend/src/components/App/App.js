@@ -293,14 +293,16 @@ class App extends React.Component {
       const images = responses[0]
       const imageSections = imageSectionsFromImages(images)
 
-      let { selectedPhotos } = this.state
+      const { selectedPhotoConfirmationIndex } = this.state
+      const { selectedPhotos } = this.state
 
       // Calculate new selected photos from old selections
+      let mutableSelectedPhotos = selectedPhotos.slice(0)
       const newSelectedPhotos = images.filter(p => {
-        for (let i = 0; i < selectedPhotos.length; i++) {
-          const selected = selectedPhotos[i]
+        for (let i = 0; i < mutableSelectedPhotos.length; i++) {
+          const selected = mutableSelectedPhotos[i]
           if (selected.id === p.id) {
-            selectedPhotos.splice(i, 1)
+            mutableSelectedPhotos.splice(i, 1)
             return true
           }
         }
@@ -318,7 +320,12 @@ class App extends React.Component {
       })
 
       // Update the selected photo in the confirmation component
-      const newSelectedPhotoConfirmationIndex = this.nextConfirmationIndex(newSelectedPhotos)
+      let newSelectedPhotoConfirmationIndex = 0
+      if (selectedPhotos.length > selectedPhotoConfirmationIndex) {
+        const selectedPhoto = selectedPhotos[selectedPhotoConfirmationIndex]
+        const newIndex = newSelectedPhotos.findIndex(p => p.id === selectedPhoto.id)
+        newSelectedPhotoConfirmationIndex = newIndex !== -1 ? newIndex : 0
+      }
 
       let state = {
         isLoadingImages: false,
