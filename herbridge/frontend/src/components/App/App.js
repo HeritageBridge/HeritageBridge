@@ -293,8 +293,10 @@ class App extends React.Component {
       const images = responses[0]
       const imageSections = imageSectionsFromImages(images)
 
-      const { selectedPhotoConfirmationIndex } = this.state
-      const { selectedPhotos } = this.state
+      const {
+        selectedPhotoConfirmationIndex,
+        selectedPhotos
+      } = this.state
 
       // Calculate new selected photos from old selections
       let mutableSelectedPhotos = selectedPhotos.slice(0)
