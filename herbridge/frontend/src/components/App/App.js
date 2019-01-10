@@ -292,10 +292,49 @@ class App extends React.Component {
     Promise.all(promises).then(responses => {
       const images = responses[0]
       const imageSections = imageSectionsFromImages(images)
+      const {
+        selectedPhotoConfirmationIndex,
+        selectedPhotos
+      } = this.state
+
+      // Calculate new selected photos from old selections
+      let mutableSelectedPhotos = selectedPhotos.slice(0)
+      const newSelectedPhotos = images.filter(p => {
+        for (let i = 0; i < mutableSelectedPhotos.length; i++) {
+          const selected = mutableSelectedPhotos[i]
+          if (selected.id === p.id) {
+            mutableSelectedPhotos.splice(i, 1)
+            return true
+          }
+        }
+        return false
+      })
+
+      // Calculate new selected photos indexes from new selected photo array
+      const newSelectedPhotoIndexes = imageSections.map(section => {
+        const sectionImages = section.images
+        let indexes = []
+        for (let i = 0; i < sectionImages.length; i++) {
+          newSelectedPhotos.indexOf(sectionImages[i]) !== -1 ? indexes.push(i) : 0
+        }
+        return indexes
+      })
+
+      // Update the selected photo in the confirmation component
+      let newSelectedPhotoConfirmationIndex = 0
+      if (selectedPhotos.length > selectedPhotoConfirmationIndex) {
+        const selected = selectedPhotos[selectedPhotoConfirmationIndex]
+        const newIndex = newSelectedPhotos.findIndex(p => p.id === selected.id)
+        newSelectedPhotoConfirmationIndex = newIndex !== -1 ? newIndex : 0
+      }
+
       let state = {
         isLoadingImages: false,
         isLoadingResources: false,
-        imageSections
+        imageSections,
+        selectedPhotos: newSelectedPhotos,
+        selectedPhotoIndexes: newSelectedPhotoIndexes,
+        selectedPhotoConfirmationIndex: newSelectedPhotoConfirmationIndex,
       }
       if (isLoadingResources) {
         state['resources'] = responses[1]
