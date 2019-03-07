@@ -119,6 +119,7 @@ class ImageSerializer(serializers.ModelSerializer):
             captureDate = obj.captureDate.timestamp()
 
         return {
+            'id':obj.pk,
             'url':obj.image.url,
             'thumbnailUrl':obj.thumbnail.url,
             'latitude':lat,
@@ -130,6 +131,7 @@ class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
         fields = (
+            'id',
             'image',
             'url',
             'latitude',
