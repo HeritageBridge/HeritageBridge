@@ -37,7 +37,7 @@ export default class extends React.Component {
     const { image } = this.props
     return (
       <List style={{ padding: '0 32px' }}>
-        { this.getListItem("Captured", moment(image.captureDate/1000).format("D MMMM YYYY [at] h:mm a")) }
+        { this.getListItem("Captured", moment(image.captureDate*1000).format("D MMMM YYYY [at] h:mm a")) }
         <Divider/>
         { this.getListItem("Location", `${image.latitude}, ${image.longitude}`) }
         <Divider/>
