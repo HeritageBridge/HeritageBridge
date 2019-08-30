@@ -4,7 +4,7 @@ const imageSectionsFromImages = (images) => {
   let sections = {}
   for (let i = 0; i < images.length; i++) {
     const image = images[i]
-    const date = moment(image.captureDate).startOf('day').toISOString()
+    const date = moment(image.captureDate*1000).startOf('day').toISOString()
     if (date in sections) {
       const section = sections[date]
       section.push(image)
