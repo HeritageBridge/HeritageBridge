@@ -110,7 +110,7 @@ export default class extends React.Component {
                       right: 0,
                       top: 0,
                       bottom: 0,
-                      backgroundImage: `url(${image.url})`,
+                      backgroundImage: `url(${image.thumbnailURL})`,
                       backgroundSize: 'cover',
                       backgroundPosition: 'center 40%',
                       opacity: this.isImageAtIndexSelected(index, sectionIndex) ? 0.75 : 1
