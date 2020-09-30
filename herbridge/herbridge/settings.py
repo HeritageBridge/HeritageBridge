@@ -134,6 +134,8 @@ STATIC_URL = '/static/'
 MEDIA_ROOT =  os.path.join(BASE_DIR,'herbridge','media')
 MEDIA_URL = '/media/'
 
+IMAGEKIT_DEFAULT_CACHEFILE_STRATEGY = 'imagekit.cachefiles.strategies.Optimistic'
+
 # setup default admin user who will be created whenever db setup is run
 ADMIN_USERNAME = 'admin'
 ADMIN_PW = 'admin'
