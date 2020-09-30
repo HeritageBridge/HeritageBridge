@@ -115,7 +115,7 @@ def get_images_for_polygon(request):
     elif request.body:
         try:
             polygon = GEOSGeometry(request.body)
-            qs = Image.objects.filter(geom__intersects=polygon)
+            qs = Image.objects.filter(geom__intersects=polygon)[:500]
             return JsonResponse(status=200, data=HBSerializer().serialize(qs), safe=False)
         except Exception as e:
             return JsonResponse(status=400, data={"message": "Invalid geopolygon"})
